@@ -1,0 +1,57 @@
+[
+  {
+    "Name": "neorv32_cpu_control.csr.mstatus_mpp",
+    "threat": "fault_injection",
+    "Structural Path": "csr.mstatus_mpp -> MPRV privilege mux -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient fault on neorv32_cpu_control.csr.mstatus_mpp during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {},
+    "Justification": "MPP supplies the effective LSU privilege under MPRV, so a fault can elevate or corrupt ctrl_o.lsu_priv.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr.mstatus_mprv",
+    "threat": "fault_injection",
+    "Structural Path": "csr.mstatus_mprv -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient fault on neorv32_cpu_control.csr.mstatus_mprv during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {},
+    "Justification": "MPRV selects whether data accesses use MPP, making a fault capable of switching the privilege source seen by the LSU.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr.prv_level",
+    "threat": "fault_injection",
+    "Structural Path": "csr.prv_level -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient fault on neorv32_cpu_control.csr.prv_level during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {},
+    "Justification": "The architectural privilege register directly feeds effective LSU privilege, so its corruption can change access authority.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.ctrl.csr_we",
+    "threat": "fault_injection",
+    "Structural Path": "ctrl.csr_we -> privilege CSR update -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient fault on neorv32_cpu_control.ctrl.csr_we during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {},
+    "Justification": "A spurious or suppressed CSR write can corrupt the privilege state subsequently used to form ctrl_o.lsu_priv.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.env_exit",
+    "threat": "fault_injection",
+    "Structural Path": "env_exit -> privilege restoration -> csr.prv_level -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient fault on neorv32_cpu_control.env_exit during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {},
+    "Justification": "This environment-return control triggers privilege restoration; a fault can apply the wrong privilege transition to LSU accesses.",
+    "decision": "retain"
+  }
+]

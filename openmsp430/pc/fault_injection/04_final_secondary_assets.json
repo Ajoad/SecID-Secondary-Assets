@@ -1,0 +1,212 @@
+[
+  {
+    "Name": "frontend_0.i_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.i_state during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.958333333333,
+      "fault_masking": 0.0416666666667
+    },
+    "Justification": "The instruction FSM selects fetch and interrupt PC-update behavior, so a state fault can place the PC on the wrong transition.",
+    "decision": "retain"
+  },
+  {
+    "Name": "e_state",
+    "threat": "fault_injection",
+    "Structural Path": "e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on e_state during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.899884259259,
+      "fault_masking": 0.703703703704
+    },
+    "Justification": "The execution FSM controls completion and writeback phases that authorize PC updates; faults propagated with low masking.",
+    "decision": "retain"
+  },
+  {
+    "Name": "pc_sw_wr",
+    "threat": "fault_injection",
+    "Structural Path": "pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on pc_sw_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.0
+    },
+    "Justification": "This signal directly enables the software/debug PC replacement path, giving a one-step corruption mechanism.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_wr",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on dbg_reg_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111111,
+      "fault_masking": 0.0416666666667
+    },
+    "Justification": "A spurious debug register write can target R0/PC and overwrite the protected control-flow value.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.exec_src_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.916666666667,
+      "fault_masking": 0.0856481481481
+    },
+    "Justification": "This write-phase control changes the execution-state sequence feeding PC selection and was fully fault-sensitive.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.exec_dst_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.962962962963,
+      "fault_masking": 0.025462962963
+    },
+    "Justification": "This write-phase control changes terminal execution sequencing and can mis-time a PC update.",
+    "decision": "retain"
+  },
+  {
+    "Name": "exec_done",
+    "threat": "fault_injection",
+    "Structural Path": "exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on exec_done during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111111,
+      "fault_masking": 0.087962962963
+    },
+    "Justification": "Execution completion gates ordinary PC progress; perturbation advances or suppresses a control-flow step.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.reg_pc_call",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on execution_unit_0.reg_pc_call during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.00617283950617
+    },
+    "Justification": "This control selects the call-related PC value in the register-file path and directly influences the next PC.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.fetch during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.00231481481481
+    },
+    "Justification": "Fetch qualification controls when instruction memory is consumed and when the PC increments.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.pc_incr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.pc_incr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.188888888889
+    },
+    "Justification": "This is the immediate incremented-PC datapath value; a fault is consumed by the next-PC selector.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.irq_detect during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.296296296296
+    },
+    "Justification": "Interrupt detection redirects the frontend toward the interrupt-vector PC path.",
+    "decision": "retain"
+  },
+  {
+    "Name": "watchdog_0.wdtpw_error",
+    "threat": "fault_injection",
+    "Structural Path": "watchdog_0.wdtpw_error -> reset/recovery control -> frontend restart path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on watchdog_0.wdtpw_error during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.0
+    },
+    "Justification": "A false watchdog password error invokes reset/control recovery and deterministically disrupts the PC trajectory.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_type",
+    "threat": "fault_injection",
+    "Structural Path": "inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on inst_type during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.644290123457,
+      "fault_masking": 0.567901234568
+    },
+    "Justification": "Decoded instruction class selects control-flow and execution paths that determine the next PC.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sz_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_sz_nxt -> instruction-length control -> PC increment -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.inst_sz_nxt during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.8,
+      "fault_masking": 0.694444444444
+    },
+    "Justification": "The retained next-size signal determines extension-word fetches and therefore the number and timing of PC increments.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.e_first_state during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.863425925926,
+      "fault_masking": 0.326388888889
+    },
+    "Justification": "This phase marker controls entry into execution and can move PC-related completion onto an incorrect cycle.",
+    "decision": "retain"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "neorv32_cpu_control.debug_ctrl.run",
+    "threat": "unauthorized_access",
+    "Structural Path": "debug_ctrl.run -> debug execution control -> privilege-control path -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Manipulating neorv32_cpu_control.debug_ctrl.run during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.3333333333333333,
+      "bypass_sensitivity": 0.7619047619047619
+    },
+    "Justification": "A false debug-run state changes the privilege/control context and showed the strongest authorization-bypass response.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr.prv_level",
+    "threat": "unauthorized_access",
+    "Structural Path": "csr.prv_level -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Manipulating neorv32_cpu_control.csr.prv_level during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.4126984126984127,
+      "bypass_sensitivity": 0.19047619047619047
+    },
+    "Justification": "The current privilege level directly contributes to effective LSU privilege and is both reachable and bypass-sensitive.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr.mstatus_mpp",
+    "threat": "unauthorized_access",
+    "Structural Path": "csr.mstatus_mpp -> MPRV privilege mux -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Manipulating neorv32_cpu_control.csr.mstatus_mpp during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.45238095238095233,
+      "bypass_sensitivity": 0.2857142857142857
+    },
+    "Justification": "MPP supplies the effective privilege for MPRV accesses; corruption can turn a denied user access into an elevated one.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr.mstatus_mprv",
+    "threat": "unauthorized_access",
+    "Structural Path": "csr.mstatus_mprv -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Manipulating neorv32_cpu_control.csr.mstatus_mprv during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.027777777777777776,
+      "bypass_sensitivity": 0.2857142857142857
+    },
+    "Justification": "MPRV selects whether M-mode data accesses inherit MPP, making it a direct authorization control.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.ctrl.csr_we",
+    "threat": "unauthorized_access",
+    "Structural Path": "ctrl.csr_we -> privilege CSR update -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Manipulating neorv32_cpu_control.ctrl.csr_we during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.2698412698412699,
+      "bypass_sensitivity": 0.14285714285714285
+    },
+    "Justification": "A spurious CSR write can modify the privilege state that feeds LSU authorization.",
+    "decision": "retain"
+  }
+]

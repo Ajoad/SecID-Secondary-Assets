@@ -1,0 +1,282 @@
+[
+  {
+    "Name": "aes_cipher_top.u0.w[0]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Attack Scenarios": [
+      "Exposing aes_cipher_top.u0.w[0] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent key-schedule word directly stores 32 key bits and influences every round key and the ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[1]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[1] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Attack Scenarios": [
+      "Exposing aes_cipher_top.u0.w[1] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent key-schedule word directly stores 32 key bits and influences every round key and the ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[2]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Attack Scenarios": [
+      "Exposing aes_cipher_top.u0.w[2] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent key-schedule word directly stores 32 key bits and influences every round key and the ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[3]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[3] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Attack Scenarios": [
+      "Exposing aes_cipher_top.u0.w[3] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent key-schedule word directly stores 32 key bits and influences every round key and the ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa00",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa00 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8525926959651349,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa01",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa01 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8595860472072872,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa02",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa02 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8592206793211533,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa03",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa03 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724405538073227,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa10",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa10 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8597025417349266,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa11",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa11 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8594989739663381,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa12",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa12 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8726203449799843,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa13",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa13 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724075674115211,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa20",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa20 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8527281514185157,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa21",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa21 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8659322860426549,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa22",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa22 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8658576502133549,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa23",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa23 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.872904019146111,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa30",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa30 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8592996506681537,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa31",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa31 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8590728795728072,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa32",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa32 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8660904101330569,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa33",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "Observing aes_cipher_top.sa33 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8659336971190678,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent AES state byte contains AddRoundKey-derived key information and propagates to ciphertext.",
+    "decision": "retain"
+  }
+]

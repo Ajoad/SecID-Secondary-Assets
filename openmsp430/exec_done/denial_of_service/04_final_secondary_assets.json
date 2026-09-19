@@ -1,0 +1,114 @@
+[
+  {
+    "Name": "e_state",
+    "threat": "denial_of_service",
+    "Structural Path": "e_state -> execution-state decode -> terminal execution phase -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting e_state during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.45427268129474013,
+      "service_rate_degradation": 0.9668537414965986
+    },
+    "Justification": "Corrupting the execution state prevents or delays a terminal phase, directly suppressing completion service.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting frontend_0.decode during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "Decode launches execution; corruption repeatedly prevents legal instructions from reaching completion.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting decode_noirq during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "This interrupt-qualified decode gate can suppress normal instruction launch and produce sustained completion loss.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_type",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_type -> execution-path selection -> terminal-state selection -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting inst_type during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.3278690735553481,
+      "service_rate_degradation": 0.6416062707134136
+    },
+    "Justification": "A corrupted instruction class drives the wrong execution sequence and can stall the completion pulse.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.is_sext",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.is_sext -> extension-word fetch sequencing -> execution entry -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting frontend_0.is_sext during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.2,
+      "service_rate_degradation": 0.4938979591836734
+    },
+    "Justification": "False extension-word classification holds the frontend in extra fetch phases and degrades completion rate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting frontend_0.e_first_state during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1838293650793651,
+      "service_rate_degradation": 0.6305707962672249
+    },
+    "Justification": "Incorrect first-state indication disrupts execution entry and subsequent terminal-state selection.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting frontend_0.exec_dst_wr during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.19176915557889823,
+      "service_rate_degradation": 0.578358843537415
+    },
+    "Justification": "This phase control selects a terminal write state; corruption produces measured stalls and service loss.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done",
+    "Attack Scenarios": [
+      "Holding or corrupting frontend_0.exec_src_wr during a legal instruction prevents timely exec_done assertion or reduces the observed completion rate."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1375,
+      "service_rate_degradation": 0.5
+    },
+    "Justification": "This phase control participates in terminal-state sequencing and can prevent timely completion.",
+    "decision": "retain"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "Name": "keccak.padder_.v1",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> keccak.padder_.v1 -> keccak.padder_.out -> permutation state -> keccak.out",
+    "Attack Scenarios": [
+      "Observing the input-buffer state after a legal input beat exposes the accepted message word before cryptographic diffusion."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent input-buffer state captures the sensitive beat with full early information preservation and an output witness.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.padder_.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> keccak.padder_.out -> f_permutation_.round_in -> permutation state -> keccak.out",
+    "Attack Scenarios": [
+      "Observing the assembled padder block exposes multiple input words before the permutation transforms them."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The assembled padded block contains the sensitive input before permutation and is observable at valid output.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.padder_.p0.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> keccak.padder_.p0.out -> padder selection -> f_permutation_.round_in -> keccak.out",
+    "Attack Scenarios": [
+      "Observing the active padder lane under its legal selection phase reveals retained input information before absorption."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.875,
+      "uop_observability": 1.0
+    },
+    "Justification": "The active padder lane preserves input information early; the legal-don't-care audit still yields strong worst-case leakage evidence.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.f_permutation_.round_in",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> padded block -> f_permutation_.round_in -> round_.out -> keccak.out",
+    "Attack Scenarios": [
+      "Observing the absorption-round input exposes the padded message mixed into the still-structured permutation state."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.6190476190476191,
+      "uop_observability": 1.0
+    },
+    "Justification": "This canonical permutation-round input carries the absorbed state and has a concrete path to keccak_out.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.f_permutation_.round_.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> f_permutation_.round_in -> round_.out -> f_permutation_.out -> keccak.out",
+    "Attack Scenarios": [
+      "Observing a round output exposes an input-dependent intermediate state that propagates to a valid digest output."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.6190476190476191,
+      "uop_observability": 1.0
+    },
+    "Justification": "The round output retains input-dependent state immediately upstream of the externally observable permutation chain.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.f_permutation_.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> padded block -> round_.out -> f_permutation_.out -> keccak.out",
+    "Attack Scenarios": [
+      "Reading the registered permutation state between rounds exposes a persistent input-dependent intermediate value."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5714285714285714,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent permutation-state register carries input-dependent state across rounds and has measured temporal information and a valid-output observability witness.",
+    "decision": "retain"
+  }
+]

@@ -1,0 +1,114 @@
+[
+  {
+    "Name": "axi_resp_i.ar_ready",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.ar_ready -> read-address handshake -> adapter FSM progress -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting axi_resp_i.ar_ready during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "Holding read-address readiness in the wrong state prevents request progress and caused complete service failure.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.aw_ready",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.aw_ready -> write-address handshake -> adapter FSM progress -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting axi_resp_i.aw_ready during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "Corruption prevents write-address acceptance across applicable write/AMO paths and fully suppresses service.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.w_ready",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.w_ready -> write-data handshake -> response progression -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting axi_resp_i.w_ready during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "Corruption prevents write-data acceptance and caused complete progress and rate loss.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.r.last",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.r.last -> burst termination -> state_q transition -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting axi_resp_i.r.last during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.75,
+      "service_rate_degradation": 0.75
+    },
+    "Justification": "A false final-beat indication traps or prematurely terminates a burst, strongly disrupting completion.",
+    "decision": "retain"
+  },
+  {
+    "Name": "state_q",
+    "threat": "denial_of_service",
+    "Structural Path": "state_q -> response/transaction state decode -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting state_q during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.67008229677137,
+      "service_rate_degradation": 0.782608695652174
+    },
+    "Justification": "The persistent FSM state controls all valid_o paths; corruption produced broad, often unrecovered stalls.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cnt_q",
+    "threat": "denial_of_service",
+    "Structural Path": "cnt_q -> burst-completion decision -> state_q transition -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting cnt_q during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "The persistent beat counter determines burst completion; corruption nearly eliminated service rate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.r_valid",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.r_valid -> read-response acceptance -> adapter completion -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting axi_resp_i.r_valid during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.17592854115581388,
+      "service_rate_degradation": 0.6336482471776589
+    },
+    "Justification": "Suppressing or fabricating read responses prevents the FSM from reaching valid_o.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.b_valid",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.b_valid -> write-response acceptance -> adapter completion -> valid_o",
+    "Attack Scenarios": [
+      "Blocking or corrupting axi_resp_i.b_valid during an applicable AXI transaction stalls adapter progress or suppresses valid_o service."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.3191778480500285,
+      "service_rate_degradation": 0.9943977591036415
+    },
+    "Justification": "Suppressing the write response leaves write/AMO transactions incomplete and severely degrades service.",
+    "decision": "retain"
+  }
+]

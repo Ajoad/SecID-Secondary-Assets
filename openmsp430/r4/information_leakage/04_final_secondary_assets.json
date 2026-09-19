@@ -1,0 +1,142 @@
+[
+  {
+    "Name": "execution_unit_0.reg_src",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.reg_src -> operand/ALU path -> debug-visible output",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.reg_src can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "A read of R4 is materialized on this source-operand bus with full temporal information preservation and an observable route.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.op_src",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.op_src -> ALU/memory-data path -> debug-visible output",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.op_src can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 0.8645833333333334,
+      "uop_observability": 1.0
+    },
+    "Justification": "R4-derived operand data crosses this execution datapath and can continue toward memory or debug-visible output.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.op_src_in",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.alu_0.op_src_in -> ALU result -> debug-visible output",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.alu_0.op_src_in can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 0.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "This ALU input carries the selected R4 value before transformation and retained complete measured information.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.op_src_inv",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.alu_0.op_src_inv -> ALU result -> debug-visible output",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.alu_0.op_src_inv can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 0.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The conditionally inverted source remains a reversible R4-derived value and has a valid output witness.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.alu_or",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.alu_0.alu_or -> alu_out -> debug-visible output",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.alu_0.alu_or can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 0.71875,
+      "uop_observability": 1.0
+    },
+    "Justification": "Under the OR operation this internal result preserves R4-derived operand information and reaches the output cone.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_out",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> ALU operands -> execution_unit_0.alu_out -> memory/debug path -> dbg_uart_txd",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.alu_out can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 0.9583333333333334,
+      "uop_observability": 1.0
+    },
+    "Justification": "The canonical ALU result exposes R4-derived computation to writeback and bus/debug paths.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.register_file_0.reg_incr_val",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.register_file_0.reg_incr_val -> register/readback path -> debug output",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.register_file_0.reg_incr_val can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "Auto-increment forms a predictable transformation of R4 and preserves its information in the register datapath.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.mdb_out_nxt",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.mdb_out_nxt -> dbg_mem_dout -> dbg_0.mem_data -> dbg_uart_txd",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through execution_unit_0.mdb_out_nxt can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "Store/debug operations place R4-derived data on the outgoing memory-data path.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_mem_dout",
+    "threat": "information_leakage",
+    "Structural Path": "r4-derived memory data -> dbg_mem_dout -> dbg_0.mem_data -> dbg_uart_txd",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through dbg_mem_dout can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "This debug-facing data signal receives R4-derived values and lies immediately upstream of an untrusted observable interface.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_0.mem_data",
+    "threat": "information_leakage",
+    "Structural Path": "r4-derived debug data -> dbg_0.mem_data -> debug UART serialization -> dbg_uart_txd",
+    "Attack Scenarios": [
+      "An operation carrying R4-derived data through dbg_0.mem_data can expose that information at the debug UART output."
+    ],
+    "Normalized Evidence": {
+      "temporal_incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The debug data register can hold R4-derived content for serialization through the debug UART.",
+    "decision": "retain"
+  }
+]

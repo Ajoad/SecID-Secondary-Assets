@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "core_i.id_stage_i.deassert_we",
+    "threat": "unauthorized_access",
+    "Structural Path": "id_stage_i.deassert_we -> CSR-operation suppression -> id_stage_i.csr_op -> core_i.csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "Manipulating core_i.id_stage_i.deassert_we during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.927273,
+      "bypass_sensitivity": 0.161255411
+    },
+    "Justification": "This control forces invalid or stalled CSR operations to READ; perturbing it can release an otherwise suppressed write.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.id_stage_i.decoder_i.csr_op",
+    "threat": "unauthorized_access",
+    "Structural Path": "decoder_i.csr_op -> deassert_we gate -> id_stage_i.csr_op -> core_i.csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "Manipulating core_i.id_stage_i.decoder_i.csr_op during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.546753,
+      "bypass_sensitivity": 0.017316017
+    },
+    "Justification": "The raw decoder operation classifies CSR reads and writes before suppression, so its corruption can create a protected write request.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.id_stage_i.csr_op",
+    "threat": "unauthorized_access",
+    "Structural Path": "id_stage_i.csr_op -> ID/EX transfer -> core_i.csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "Manipulating core_i.id_stage_i.csr_op during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.490260,
+      "bypass_sensitivity": 0.008658009
+    },
+    "Justification": "This post-suppression CSR operation is transferred toward execution and can carry an unauthorized write classification.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.csr_op",
+    "threat": "unauthorized_access",
+    "Structural Path": "core_i.csr_op -> CSR operation decode -> core_i.cs_registers_i.csr_we_int",
+    "Attack Scenarios": [
+      "Manipulating core_i.csr_op during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.540260,
+      "bypass_sensitivity": 0.004329004
+    },
+    "Justification": "The execution-stage CSR operation directly determines whether csr_we_int remains asserted.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.if_stage_i.branch_addr_n",
+    "threat": "unauthorized_access",
+    "Structural Path": "if_stage_i.branch_addr_n -> fetched instruction -> decoder_i.csr_op -> core_i.csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "Manipulating core_i.if_stage_i.branch_addr_n during a denied operation can change authorization control and enable a protected action."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.977273,
+      "bypass_sensitivity": 0.003246753
+    },
+    "Justification": "Fetch redirection can select an unintended CSR-writing instruction and produced a measurable bounded bypass.",
+    "decision": "retain"
+  }
+]
