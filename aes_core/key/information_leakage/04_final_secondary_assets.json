@@ -4,7 +4,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out",
     "Attack Scenarios": [
-      "Exposing aes_cipher_top.u0.w[0] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+      "When aes_cipher_top.u0.w[0] carries data derived from key, observation of that value or its propagation through aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.5357142857142857,
@@ -18,7 +18,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> aes_cipher_top.u0.w[1] -> round-key generation -> AddRoundKey -> AES state -> text_out",
     "Attack Scenarios": [
-      "Exposing aes_cipher_top.u0.w[1] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+      "When aes_cipher_top.u0.w[1] carries data derived from key, observation of that value or its propagation through aes_cipher_top.u0.w[1] -> round-key generation -> AddRoundKey -> AES state can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.5357142857142857,
@@ -32,7 +32,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out",
     "Attack Scenarios": [
-      "Exposing aes_cipher_top.u0.w[2] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+      "When aes_cipher_top.u0.w[2] carries data derived from key, observation of that value or its propagation through aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.5357142857142857,
@@ -46,7 +46,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> aes_cipher_top.u0.w[3] -> round-key generation -> AddRoundKey -> AES state -> text_out",
     "Attack Scenarios": [
-      "Exposing aes_cipher_top.u0.w[3] reveals a persistent key-schedule word and its key-dependent contribution to subsequent round keys."
+      "When aes_cipher_top.u0.w[3] carries data derived from key, observation of that value or its propagation through aes_cipher_top.u0.w[3] -> round-key generation -> AddRoundKey -> AES state can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.5357142857142857,
@@ -60,7 +60,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa00 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa00 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8525926959651349,
@@ -74,7 +74,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa01 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa01 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8595860472072872,
@@ -88,7 +88,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa02 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa02 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8592206793211533,
@@ -102,7 +102,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa03 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa03 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8724405538073227,
@@ -116,7 +116,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa10 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa10 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8597025417349266,
@@ -130,7 +130,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa11 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa11 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8594989739663381,
@@ -144,7 +144,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa12 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa12 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8726203449799843,
@@ -158,7 +158,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa13 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa13 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8724075674115211,
@@ -172,7 +172,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa20 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa20 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8527281514185157,
@@ -186,7 +186,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa21 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa21 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8659322860426549,
@@ -200,7 +200,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa22 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa22 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8658576502133549,
@@ -214,7 +214,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa23 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa23 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.872904019146111,
@@ -228,7 +228,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa30 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa30 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8592996506681537,
@@ -242,7 +242,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa31 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa31 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8590728795728072,
@@ -256,7 +256,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa32 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa32 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8660904101330569,
@@ -270,7 +270,7 @@
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa33 during encryption exposes a persistent key-dependent intermediate state byte before ciphertext output."
+      "When aes_cipher_top.sa33 carries data derived from key, observation of that value or its propagation through round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations can expose primary-dependent information at text_out."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8659336971190678,

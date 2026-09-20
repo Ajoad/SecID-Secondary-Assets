@@ -4,7 +4,7 @@
     "threat": "fault_injection",
     "Structural Path": "csr.mstatus_mpp -> MPRV privilege mux -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "A transient fault on neorv32_cpu_control.csr.mstatus_mpp during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on neorv32_cpu_control.csr.mstatus_mpp can perturb MPRV privilege mux, producing an unintended value, enable, or transition at ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.498389694042,
@@ -18,7 +18,7 @@
     "threat": "fault_injection",
     "Structural Path": "csr.mstatus_mprv -> effective-privilege selection -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "A transient fault on neorv32_cpu_control.csr.mstatus_mprv during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on neorv32_cpu_control.csr.mstatus_mprv can perturb effective-privilege selection, producing an unintended value, enable, or transition at ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.567632850242,
@@ -32,7 +32,7 @@
     "threat": "fault_injection",
     "Structural Path": "csr.prv_level -> effective-privilege selection -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "A transient fault on neorv32_cpu_control.csr.prv_level during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on neorv32_cpu_control.csr.prv_level can perturb effective-privilege selection, producing an unintended value, enable, or transition at ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.971014492754,
@@ -46,7 +46,7 @@
     "threat": "fault_injection",
     "Structural Path": "ctrl.csr_we -> privilege CSR update -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "A transient fault on neorv32_cpu_control.ctrl.csr_we during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on neorv32_cpu_control.ctrl.csr_we can perturb privilege CSR update, producing an unintended value, enable, or transition at ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.650953984287,
@@ -60,13 +60,97 @@
     "threat": "fault_injection",
     "Structural Path": "env_exit -> privilege restoration -> csr.prv_level -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "A transient fault on neorv32_cpu_control.env_exit during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on neorv32_cpu_control.env_exit can perturb privilege restoration -> csr.prv_level, producing an unintended value, enable, or transition at ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
       "fault_masking": 0.729166666667
     },
     "Justification": "This environment-return control triggers privilege restoration; a fault can apply the wrong privilege transition to LSU accesses.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr.dcsr_prv",
+    "threat": "fault_injection",
+    "Structural Path": "csr.dcsr_prv -> debug-return privilege restoration -> csr.prv_level -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "During a legal DRET, a transient fault on dcsr_prv can restore machine privilege instead of user privilege, immediately changing the effective privilege used by later LSU accesses."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.289173789174,
+      "fault_masking": 0.966049382716
+    },
+    "Justification": "Although the measured escape window is rare, dcsr_prv is the direct architectural source loaded into prv_level on debug return; the narrow legal-mode condition explains the high masking without invalidating the mechanism. The measured threat evidence is weak because the legal activation window is rare, but SecID retains it for the direct privilege-transition mechanism.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.ctrl.csr_addr",
+    "threat": "fault_injection",
+    "Structural Path": "ctrl.csr_addr -> mstatus CSR decode -> mstatus_mpp/mstatus_mprv -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "While a legal CSR write is active, a transient address fault can redirect that write to mstatus, corrupting MPP or MPRV and therefore the LSU effective privilege."
+    ],
+    "Normalized Evidence": {
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
+    },
+    "Justification": "Restored by mechanism-led review: csr_addr is the exact selector of the privilege-bearing mstatus write case. Threat evidence is absent rather than contradictory, and the attack requires a bounded legal CSR-write window.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.csr_valid",
+    "threat": "fault_injection",
+    "Structural Path": "csr_valid -> illegal_cmd -> instruction exception control -> CSR write suppression -> privilege CSRs -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient fault forcing csr_valid to 111 can make an unimplemented, read-only, or privilege-disallowed CSR access appear legal, allowing a privilege-state write to proceed."
+    ],
+    "Normalized Evidence": {
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
+    },
+    "Justification": "Restored because csr_valid is the explicit implemented/read-write/privilege authorization vector used by illegal_cmd. Its mechanism is a direct legality bypass, not generic control influence.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.illegal_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "illegal_cmd -> instr_il/exception buffer -> S_SYSTEM CSR-write suppression -> privilege CSRs -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient deassertion of illegal_cmd during an unauthorized SYSTEM instruction can suppress the illegal-instruction exception and permit its CSR operation to reach privilege state."
+    ],
+    "Normalized Evidence": {
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
+    },
+    "Justification": "Restored because illegal_cmd is the canonical rejection boundary whose value directly determines whether the SYSTEM operation is trapped before a CSR write.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.exec.ir",
+    "threat": "fault_injection",
+    "Structural Path": "exec.ir -> SYSTEM/CSR decode and operand fields -> privilege CSR update -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A transient instruction-register fault can change a legal instruction into a CSR write, alter its CSR address, or change the immediate/register operand bits that update MPP or MPRV."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.973039215686
+    },
+    "Justification": "Retained as a rare-window mechanism override: feasibility is maximal and the executed instruction directly supplies the CSR opcode, address, and operand; high masking reflects that only a small subset of instruction faults form a privilege-changing operation. The measured threat evidence is weak because the legal activation window is rare, but SecID retains it for the direct privilege-transition mechanism.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.debug_ctrl.run",
+    "threat": "fault_injection",
+    "Structural Path": "debug_ctrl.run -> trap-exit source selection -> dcsr_prv/mstatus_mpp -> csr.prv_level -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "At trap exit, a transient fault on debug_ctrl.run can select the debug-return privilege source instead of the machine-return source, restoring an unintended privilege level."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.974358974359
+    },
+    "Justification": "Retained because feasibility is maximal and this bit directly chooses the privilege-restoration branch at environment exit; the high masking is consistent with the narrow trap-exit activation window. The measured threat evidence is weak because the legal activation window is rare, but SecID retains it for the direct privilege-transition mechanism.",
     "decision": "retain"
   }
 ]

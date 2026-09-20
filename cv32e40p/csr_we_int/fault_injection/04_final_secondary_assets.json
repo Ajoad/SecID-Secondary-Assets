@@ -4,7 +4,7 @@
     "threat": "fault_injection",
     "Structural Path": "id_stage_i.deassert_we -> CSR-operation suppression -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.id_stage_i.deassert_we during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on core_i.id_stage_i.deassert_we can perturb CSR-operation suppression -> core_i.csr_op, producing an unintended value, enable, or transition at csr_we_int."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.5324074074074074,
@@ -18,7 +18,7 @@
     "threat": "fault_injection",
     "Structural Path": "core_i.data_misaligned -> ID/EX hold/flush control -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.data_misaligned during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on core_i.data_misaligned can perturb ID/EX hold/flush control -> core_i.csr_op, producing an unintended value, enable, or transition at csr_we_int."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
@@ -32,7 +32,7 @@
     "threat": "fault_injection",
     "Structural Path": "core_i.csr_op -> CSR operation decode -> core_i.cs_registers_i.csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.csr_op during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on core_i.csr_op can perturb CSR operation decode, producing an unintended value, enable, or transition at core_i.cs_registers_i.csr_we_int."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.9950396825396827,
@@ -46,7 +46,7 @@
     "threat": "fault_injection",
     "Structural Path": "decoder_i.csr_op -> ID-stage CSR control -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.id_stage_i.decoder_i.csr_op during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on core_i.id_stage_i.decoder_i.csr_op can perturb ID-stage CSR control -> core_i.csr_op, producing an unintended value, enable, or transition at csr_we_int."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.8716931216931217,
@@ -56,11 +56,25 @@
     "decision": "retain"
   },
   {
+    "Name": "core_i.id_stage_i.csr_op",
+    "threat": "fault_injection",
+    "Structural Path": "id_stage_i.csr_op -> ID/EX CSR-operation register -> core_i.csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "A transient fault on core_i.id_stage_i.csr_op can perturb ID/EX CSR-operation register -> core_i.csr_op, producing an unintended value, enable, or transition at csr_we_int."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.8167989417989416,
+      "fault_masking": 0.05767896219833091
+    },
+    "Justification": "This qualified decode-stage operation is captured into the ID/EX pipeline; a fault can convert a read into a write before commit.",
+    "decision": "retain"
+  },
+  {
     "Name": "core_i.id_ready",
     "threat": "fault_injection",
     "Structural Path": "core_i.id_ready -> ID/EX advancement -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.id_ready during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on core_i.id_ready can perturb ID/EX advancement -> core_i.csr_op, producing an unintended value, enable, or transition at csr_we_int."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.9768518518518517,
@@ -74,7 +88,7 @@
     "threat": "fault_injection",
     "Structural Path": "core_i.ex_ready -> pipeline advancement -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.ex_ready during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on core_i.ex_ready can perturb pipeline advancement -> core_i.csr_op, producing an unintended value, enable, or transition at csr_we_int."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.996031746031746,
@@ -84,31 +98,45 @@
     "decision": "retain"
   },
   {
-    "Name": "core_i.mult_multicycle",
+    "Name": "core_i.id_stage_i.illegal_insn_dec",
     "threat": "fault_injection",
-    "Structural Path": "core_i.mult_multicycle -> pipeline hold/release -> core_i.csr_op -> csr_we_int",
+    "Structural Path": "illegal_insn_dec -> controller deassert_we -> CSR-operation suppression -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.mult_multicycle during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient deassertion of illegal_insn_dec during an illegal CSR instruction prevents write cancellation and can create csr_we_int."
     ],
     "Normalized Evidence": {
-      "fault_injection_feasibility": 1.0,
-      "fault_masking": 0.7777777777777778
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
     },
-    "Justification": "This stall condition gates pipeline readiness; corruption can hold or release a pending CSR operation on the wrong cycle.",
+    "Justification": "Restored by mechanism-led review because this bit is the canonical illegal-CSR rejection boundary immediately upstream of deassert_we and CSR-operation suppression.",
     "decision": "retain"
   },
   {
-    "Name": "core_i.if_stage_i.branch_addr_n",
+    "Name": "core_i.id_stage_i.decoder_i.current_priv_lvl_i",
     "threat": "fault_injection",
-    "Structural Path": "if_stage_i.branch_addr_n -> instruction fetch/decode -> core_i.csr_op -> csr_we_int",
+    "Structural Path": "current_priv_lvl_i -> CSR privilege comparison -> csr_illegal/illegal_insn_dec -> deassert_we -> csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "A transient fault on core_i.if_stage_i.branch_addr_n during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient privilege-level fault during CSR decode can make a user-mode access appear machine-authorized, suppressing the illegal-instruction response and allowing csr_we_int."
     ],
     "Normalized Evidence": {
-      "fault_injection_feasibility": 0.5920138888888888,
-      "fault_masking": 0.0374086486989712
+      "phase3_status": "not_scored_not_emitted_as_canonical_candidate",
+      "rtl_path_verified": true
     },
-    "Justification": "Fault-induced fetch redirection changes the instruction reaching CSR decode and produced a strong measured write-enable effect.",
+    "Justification": "Restored because the signal is a direct operand of the CSR authorization comparison. Its absence from the extracted candidate cohort is not negative threat evidence.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.debug_mode",
+    "threat": "fault_injection",
+    "Structural Path": "debug_mode -> debug-only CSR authorization -> csr_illegal/illegal_insn_dec -> deassert_we -> csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "A transient assertion of debug_mode during a debug-CSR instruction bypasses the debug-only access check and permits an otherwise rejected internal CSR write."
+    ],
+    "Normalized Evidence": {
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
+    },
+    "Justification": "Restored because debug_mode is the explicit security gate for debug CSR accesses and a single-cycle fault has a direct, address-conditioned path to csr_we_int.",
     "decision": "retain"
   }
 ]

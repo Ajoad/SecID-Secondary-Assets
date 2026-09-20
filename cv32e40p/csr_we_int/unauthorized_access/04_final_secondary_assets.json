@@ -4,7 +4,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "id_stage_i.deassert_we -> CSR-operation suppression -> id_stage_i.csr_op -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "Manipulating core_i.id_stage_i.deassert_we during a denied operation can change authorization control and enable a protected action."
+      "Manipulating core_i.id_stage_i.deassert_we through an untrusted control can corrupt CSR-operation suppression -> id_stage_i.csr_op -> core_i.csr_op, allowing an otherwise disallowed operation to affect csr_we_int."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.927273,
@@ -18,7 +18,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "decoder_i.csr_op -> deassert_we gate -> id_stage_i.csr_op -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "Manipulating core_i.id_stage_i.decoder_i.csr_op during a denied operation can change authorization control and enable a protected action."
+      "Manipulating core_i.id_stage_i.decoder_i.csr_op through an untrusted control can corrupt deassert_we gate -> id_stage_i.csr_op -> core_i.csr_op, allowing an otherwise disallowed operation to affect csr_we_int."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.546753,
@@ -32,10 +32,10 @@
     "threat": "unauthorized_access",
     "Structural Path": "id_stage_i.csr_op -> ID/EX transfer -> core_i.csr_op -> csr_we_int",
     "Attack Scenarios": [
-      "Manipulating core_i.id_stage_i.csr_op during a denied operation can change authorization control and enable a protected action."
+      "Manipulating core_i.id_stage_i.csr_op through an untrusted control can corrupt ID/EX transfer -> core_i.csr_op, allowing an otherwise disallowed operation to affect csr_we_int."
     ],
     "Normalized Evidence": {
-      "ucp_controllability": 0.490260,
+      "ucp_controllability": 0.49026,
       "bypass_sensitivity": 0.008658009
     },
     "Justification": "This post-suppression CSR operation is transferred toward execution and can carry an unauthorized write classification.",
@@ -46,27 +46,55 @@
     "threat": "unauthorized_access",
     "Structural Path": "core_i.csr_op -> CSR operation decode -> core_i.cs_registers_i.csr_we_int",
     "Attack Scenarios": [
-      "Manipulating core_i.csr_op during a denied operation can change authorization control and enable a protected action."
+      "Manipulating core_i.csr_op through an untrusted control can corrupt CSR operation decode, allowing an otherwise disallowed operation to affect core_i.cs_registers_i.csr_we_int."
     ],
     "Normalized Evidence": {
-      "ucp_controllability": 0.540260,
+      "ucp_controllability": 0.54026,
       "bypass_sensitivity": 0.004329004
     },
     "Justification": "The execution-stage CSR operation directly determines whether csr_we_int remains asserted.",
     "decision": "retain"
   },
   {
-    "Name": "core_i.if_stage_i.branch_addr_n",
+    "Name": "core_i.id_stage_i.illegal_insn_dec",
     "threat": "unauthorized_access",
-    "Structural Path": "if_stage_i.branch_addr_n -> fetched instruction -> decoder_i.csr_op -> core_i.csr_op -> csr_we_int",
+    "Structural Path": "decoder CSR legality checks -> illegal_insn_dec -> controller deassert_we -> csr_op suppression -> csr_we_int",
     "Attack Scenarios": [
-      "Manipulating core_i.if_stage_i.branch_addr_n during a denied operation can change authorization control and enable a protected action."
+      "Suppressing illegal_insn_dec for a privilege-disallowed or debug-only CSR instruction prevents the controller from cancelling its CSR write operation."
     ],
     "Normalized Evidence": {
-      "ucp_controllability": 0.977273,
-      "bypass_sensitivity": 0.003246753
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
     },
-    "Justification": "Fetch redirection can select an unintended CSR-writing instruction and produced a measurable bounded bypass.",
+    "Justification": "Restored by mechanism-led review: this is the canonical illegal-CSR rejection result and directly drives the write-suppression path. Missing phase-3 scores are not evidence that the bypass is impossible.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.id_stage_i.decoder_i.current_priv_lvl_i",
+    "threat": "unauthorized_access",
+    "Structural Path": "current_priv_lvl_i -> CSR privilege comparison -> csr_illegal/illegal_insn_dec -> deassert_we -> csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "Presenting an unauthorized CSR operation while corrupting the decoder-visible privilege level to machine mode bypasses the CSR privilege comparison and permits csr_we_int to assert."
+    ],
+    "Normalized Evidence": {
+      "phase3_status": "not_scored_not_emitted_as_canonical_candidate",
+      "rtl_path_verified": true
+    },
+    "Justification": "Restored because current_priv_lvl_i is a direct operand of the authorization comparison at the CSR decoder. The candidate-extraction omission provides no contradictory threat result.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.debug_mode",
+    "threat": "unauthorized_access",
+    "Structural Path": "debug_mode -> debug-CSR authorization -> csr_illegal/illegal_insn_dec -> deassert_we -> csr_op -> csr_we_int",
+    "Attack Scenarios": [
+      "Falsely asserting debug_mode while executing a DCSR, DPC, or DSCRATCH access bypasses the debug-only CSR check and permits the internal CSR write enable."
+    ],
+    "Normalized Evidence": {
+      "phase3_status": "not_scored_after_functional_pruning",
+      "functional_pruning_retained": false
+    },
+    "Justification": "Restored because debug_mode is the explicit authorization predicate for debug-only CSRs. Its effect is address-conditioned but direct and security-specific.",
     "decision": "retain"
   }
 ]

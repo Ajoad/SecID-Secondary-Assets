@@ -4,7 +4,7 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.i_state during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.i_state can perturb fetch/decode sequencing -> PC-update selection, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.958333333333,
@@ -14,25 +14,25 @@
     "decision": "retain"
   },
   {
-    "Name": "e_state",
+    "Name": "frontend_0.e_state",
     "threat": "fault_injection",
-    "Structural Path": "e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
+    "Structural Path": "frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on e_state during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.e_state can perturb execution-state sequencing -> PC-update enable, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.899884259259,
       "fault_masking": 0.703703703704
     },
-    "Justification": "The execution FSM controls completion and writeback phases that authorize PC updates; faults propagated with low masking.",
+    "Justification": "The execution FSM directly governs completion and the cycles in which the PC may advance or redirect; its strong RTL role supports retention despite substantial measured masking.",
     "decision": "retain"
   },
   {
-    "Name": "pc_sw_wr",
+    "Name": "execution_unit_0.pc_sw_wr",
     "threat": "fault_injection",
-    "Structural Path": "pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
+    "Structural Path": "execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on pc_sw_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on execution_unit_0.pc_sw_wr can perturb software PC-write selection -> next-PC mux, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
@@ -46,7 +46,7 @@
     "threat": "fault_injection",
     "Structural Path": "dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on dbg_reg_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on dbg_reg_wr can perturb debug register-write decode -> R0/PC write path, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.986111111111,
@@ -60,13 +60,13 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.exec_src_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.exec_src_wr can perturb execution phase control -> PC-update sequencing, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.916666666667,
       "fault_masking": 0.0856481481481
     },
-    "Justification": "This write-phase control changes the execution-state sequence feeding PC selection and was fully fault-sensitive.",
+    "Justification": "This write-phase control changes the execution-state sequence feeding PC selection and showed high feasibility with limited, but nonzero, masking.",
     "decision": "retain"
   },
   {
@@ -74,7 +74,7 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.exec_dst_wr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.exec_dst_wr can perturb terminal write phase -> PC-update sequencing, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.962962962963,
@@ -84,11 +84,11 @@
     "decision": "retain"
   },
   {
-    "Name": "exec_done",
+    "Name": "frontend_0.exec_done",
     "threat": "fault_injection",
-    "Structural Path": "exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
+    "Structural Path": "frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on exec_done during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.exec_done can perturb instruction completion -> PC progress control, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.986111111111,
@@ -102,7 +102,7 @@
     "threat": "fault_injection",
     "Structural Path": "execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on execution_unit_0.reg_pc_call during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on execution_unit_0.reg_pc_call can perturb call-target datapath -> next-PC selection, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
@@ -116,7 +116,7 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.fetch during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.fetch can perturb instruction-fetch qualification -> PC increment/update, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
@@ -130,7 +130,7 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.pc_incr during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.pc_incr can perturb incremented-PC datapath -> next-PC mux, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
@@ -144,7 +144,7 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.irq_detect during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.irq_detect can perturb interrupt-vector selection -> next-PC mux, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
@@ -156,23 +156,23 @@
   {
     "Name": "watchdog_0.wdtpw_error",
     "threat": "fault_injection",
-    "Structural Path": "watchdog_0.wdtpw_error -> reset/recovery control -> frontend restart path -> omsp_frontend.pc",
+    "Structural Path": "watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on watchdog_0.wdtpw_error during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault that asserts watchdog_0.wdtpw_error during a legal watchdog-control write sets wdt_reset; the clock module folds that reset into puc_rst, asynchronously restarting the frontend and replacing the intended PC trajectory with the reset sequence."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 1.0,
       "fault_masking": 0.0
     },
-    "Justification": "A false watchdog password error invokes reset/control recovery and deterministically disrupts the PC trajectory.",
+    "Justification": "The evidence is very high (feasibility 1.0 and masking 0.0), and the RTL gives a concrete reset-mediated PC corruption path through wdt_reset and puc_rst.",
     "decision": "retain"
   },
   {
-    "Name": "inst_type",
+    "Name": "frontend_0.inst_type",
     "threat": "fault_injection",
-    "Structural Path": "inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
+    "Structural Path": "frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on inst_type during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.inst_type can perturb instruction-class control -> PC-update selection, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.644290123457,
@@ -186,7 +186,7 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.inst_sz_nxt -> instruction-length control -> PC increment -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.inst_sz_nxt during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.inst_sz_nxt can perturb instruction-length control -> PC increment, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.8,
@@ -200,13 +200,69 @@
     "threat": "fault_injection",
     "Structural Path": "frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "A transient fault on frontend_0.e_first_state during legal execution can corrupt, suppress, or mis-time the protected primary asset."
+      "A transient fault on frontend_0.e_first_state can perturb execution-entry sequencing -> PC-update timing, producing an unintended value, enable, or transition at omsp_frontend.pc."
     ],
     "Normalized Evidence": {
       "fault_injection_feasibility": 0.863425925926,
       "fault_masking": 0.326388888889
     },
     "Justification": "This phase marker controls entry into execution and can move PC-related completion onto an incorrect cycle.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on execution_unit_0.pc_sw can perturb next-PC selection, producing an unintended value, enable, or transition at omsp_frontend.pc."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.604938271605,
+      "fault_masking": 0.506172839506
+    },
+    "Justification": "execution_unit_0.pc_sw carries the replacement address selected whenever execution_unit_0.pc_sw_wr is asserted, so a fault changes the exact control-flow destination.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.mdb_in",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.mdb_in (frontend_0.mdb_in) -> interrupt-vector load -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient fault on frontend_0.mdb_in can perturb interrupt-vector load, producing an unintended value, enable, or transition at omsp_frontend.pc."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.494965277778,
+      "fault_masking": 0.507465277778
+    },
+    "Justification": "The frontend loads this memory word into the PC in I_IRQ_DONE; a fault therefore substitutes the interrupt destination directly.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "During a conditional jump, a transient fault on the one-hot inst_jmp decode can change which status predicate is evaluated. The ALU can then mask a valid displacement or apply a displacement for a branch that should not be taken, causing the wrong target to reach the PC write path."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.497685185185,
+      "fault_masking": 0.844328703704
+    },
+    "Justification": "The measured FI evidence is weak because feasibility is only 0.498 and masking is 0.844. SecID nevertheless retains the signal because the branch-decision decode has a direct, instruction-conditioned mechanism for converting a taken branch to not-taken, or vice versa, and thereby changing the PC.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sext",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_sext -> execution_unit_0.op_src/op_dst -> ALU target calculation -> pc_sw/PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "When inst_sext holds a sign-extended jump displacement or an extension operand used by a PC-writing instruction, a transient data fault changes the ALU-computed destination. If the legal instruction commits its PC write, the corrupted target is loaded into the protected PC."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.25,
+      "fault_masking": 0.736111111111
+    },
+    "Justification": "The measured FI evidence is weak (feasibility 0.25 and masking 0.736). SecID retains inst_sext because, in the bounded branch or PC-write window, it supplies the target-forming operand directly and therefore supports a precise wrong-destination mechanism.",
     "decision": "retain"
   }
 ]

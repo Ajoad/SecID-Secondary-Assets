@@ -4,7 +4,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "debug_ctrl.run -> debug execution control -> privilege-control path -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "Manipulating neorv32_cpu_control.debug_ctrl.run during a denied operation can change authorization control and enable a protected action."
+      "Manipulating neorv32_cpu_control.debug_ctrl.run through an untrusted control can corrupt debug execution control -> privilege-control path, allowing an otherwise disallowed operation to affect ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.3333333333333333,
@@ -18,7 +18,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "csr.prv_level -> effective-privilege selection -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "Manipulating neorv32_cpu_control.csr.prv_level during a denied operation can change authorization control and enable a protected action."
+      "Manipulating neorv32_cpu_control.csr.prv_level through an untrusted control can corrupt effective-privilege selection, allowing an otherwise disallowed operation to affect ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.4126984126984127,
@@ -32,7 +32,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "csr.mstatus_mpp -> MPRV privilege mux -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "Manipulating neorv32_cpu_control.csr.mstatus_mpp during a denied operation can change authorization control and enable a protected action."
+      "Manipulating neorv32_cpu_control.csr.mstatus_mpp through an untrusted control can corrupt MPRV privilege mux, allowing an otherwise disallowed operation to affect ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.45238095238095233,
@@ -46,7 +46,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "csr.mstatus_mprv -> effective-privilege selection -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "Manipulating neorv32_cpu_control.csr.mstatus_mprv during a denied operation can change authorization control and enable a protected action."
+      "Manipulating neorv32_cpu_control.csr.mstatus_mprv through an untrusted control can corrupt effective-privilege selection, allowing an otherwise disallowed operation to affect ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.027777777777777776,
@@ -60,13 +60,97 @@
     "threat": "unauthorized_access",
     "Structural Path": "ctrl.csr_we -> privilege CSR update -> effective-privilege selection -> ctrl_o.lsu_priv",
     "Attack Scenarios": [
-      "Manipulating neorv32_cpu_control.ctrl.csr_we during a denied operation can change authorization control and enable a protected action."
+      "Manipulating neorv32_cpu_control.ctrl.csr_we through an untrusted control can corrupt privilege CSR update -> effective-privilege selection, allowing an otherwise disallowed operation to affect ctrl_o.lsu_priv."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.2698412698412699,
       "bypass_sensitivity": 0.14285714285714285
     },
     "Justification": "A spurious CSR write can modify the privilege state that feeds LSU authorization.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.ctrl_nxt.csr_we",
+    "threat": "unauthorized_access",
+    "Structural Path": "ctrl_nxt.csr_we -> registered ctrl.csr_we -> privilege CSR update -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Manipulating the next-cycle CSR-write authorization can create an unauthorized privilege-CSR update that changes the effective LSU privilege."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.2698412698412699,
+      "bypass_sensitivity": 0.14285714285714285
+    },
+    "Justification": "This is the sampled next-state authorization control for privilege-changing CSR writes.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_frontend.ipb_rdata(0)",
+    "threat": "unauthorized_access",
+    "Structural Path": "ipb_rdata(0) -> instruction decode -> CSR operation/write control -> privilege CSR state -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Unauthorized influence over the fetched instruction halfword can convert the decoded operation into a privilege-changing CSR command."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.6666666666666667,
+      "bypass_sensitivity": 0.11904761904761904
+    },
+    "Justification": "The fetched instruction encoding causally controls the CSR operation that can update effective privilege state.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu.frontend.i32",
+    "threat": "unauthorized_access",
+    "Structural Path": "frontend.i32 -> instruction decode -> CSR address/data/write control -> privilege CSR state -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Corrupting the assembled 32-bit instruction can synthesize an unauthorized CSR write that changes MPRV or MPP."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.6944444444444445,
+      "bypass_sensitivity": 0.16666666666666666
+    },
+    "Justification": "The assembled instruction is the canonical decoded command source for privilege-changing CSR operations.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_frontend.ipb_rdata(1)",
+    "threat": "unauthorized_access",
+    "Structural Path": "ipb_rdata(1) -> instruction assembly/decode -> CSR operation/write control -> privilege CSR state -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Unauthorized influence over the second fetched halfword can change the decoded CSR address or operands and cause a privilege-changing operation."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.6944444444444445,
+      "bypass_sensitivity": 0.16666666666666666
+    },
+    "Justification": "This instruction halfword supplies decoded fields that control privilege-changing CSR operations.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu_control.env_exit",
+    "threat": "unauthorized_access",
+    "Structural Path": "env_exit -> privilege restoration (csr.prv_level/csr.mstatus_mpp) -> effective-privilege selection -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "A spurious or mistimed environment-exit transition can restore an attacker-chosen saved privilege and elevate the effective LSU access privilege."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.2420634920634921,
+      "bypass_sensitivity": 0.0
+    },
+    "Justification": "Retained by explicit expert mechanism adjudication: environment return directly changes privilege state even though the measured bypass set did not activate it. The measured threat evidence is weak because bypass sensitivity is zero, but SecID retains it for the direct, security-specific privilege-restoration mechanism.",
+    "decision": "retain"
+  },
+  {
+    "Name": "neorv32_cpu.ctrl.csr_wdata",
+    "threat": "unauthorized_access",
+    "Structural Path": "ctrl.csr_wdata -> mstatus CSR write -> csr.mstatus_mpp/csr.mstatus_mprv -> ctrl_o.lsu_priv",
+    "Attack Scenarios": [
+      "Unauthorized modification of CSR write data can set MPP or MPRV during a legal mstatus write and thereby elevate effective LSU privilege."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.6388888888888888,
+      "bypass_sensitivity": 0.0
+    },
+    "Justification": "The canonical CSR write-data signal directly supplies the privilege bits written into mstatus; its mechanism is strong despite zero activation in the measured bypass scenarios.",
     "decision": "retain"
   }
 ]

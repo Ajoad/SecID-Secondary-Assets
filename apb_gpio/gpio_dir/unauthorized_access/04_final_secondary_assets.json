@@ -4,7 +4,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "PADDR[6:2] -> s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance -> gpio_dir",
     "Attack Scenarios": [
-      "Changing the decoded APB address can redirect a transaction to PADDIR or GPIOLOCK and enable an otherwise denied direction update."
+      "Manipulating PADDR[6:2] through an untrusted control can corrupt s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance, allowing an otherwise disallowed operation to affect gpio_dir."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.5,
@@ -18,7 +18,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir",
     "Attack Scenarios": [
-      "Changing the GPIOLOCK data bit can prevent lock establishment or create an unlock state before a protected PADDIR write."
+      "Manipulating PWDATA[0] through an untrusted control can corrupt GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization, allowing an otherwise disallowed operation to affect gpio_dir."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.5,
@@ -32,7 +32,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir",
     "Attack Scenarios": [
-      "Corrupting the stored lock bit removes the authorization guard and permits a protected direction-register update."
+      "Manipulating r_gpio_lock[0] through an untrusted control can corrupt PADDIR write authorization -> r_gpio_dir, allowing an otherwise disallowed operation to affect gpio_dir."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 1.0,
