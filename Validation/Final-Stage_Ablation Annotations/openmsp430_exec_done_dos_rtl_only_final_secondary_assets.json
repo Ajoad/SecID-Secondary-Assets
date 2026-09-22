@@ -1,0 +1,128 @@
+[
+  {
+    "Name": "e_state",
+    "threat": "denial_of_service",
+    "Structural Path": "e_state -> execution-state decode -> terminal execution phase -> exec_done",
+    "Justification": "RTL inspection identifies `e_state` as the element that records the active execution phase used by the completion decoder. Because an incorrect phase can prevent the terminal condition that raises exec_done, `e_state` is a credible secondary asset for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done",
+    "Justification": "Although `frontend_0.e_state_nxt` is not the protected object, it selects the execution phase that will be entered on the next clock. The dependency matters because a nonterminal next state can prolong an instruction indefinitely, placing `frontend_0.e_state_nxt` inside the security-relevant RTL cone of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done",
+    "Justification": "The structural analysis retains `frontend_0.e_first_state` because it chooses the first micro-state for the decoded instruction class; in that position, starting in the wrong phase can keep completion from being reached. This gives `frontend_0.e_first_state` a plausible supporting role in compromise of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_jmp",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
+    "Justification": "A review of the local logic shows that `frontend_0.exec_jmp` marks jump execution and changes the state-machine completion route. Since misclassifying a jump can suppress the expected completion pulse, excluding `frontend_0.exec_jmp` would omit a meaningful dependency of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done",
+    "Justification": "For `frontend_0.exec_dst_wr`, the relevant RTL role is that it qualifies the destination-write phase before instruction retirement. That role is security-sensitive: holding or skipping that phase can block normal execution completion, so `frontend_0.exec_dst_wr` warrants treatment as a secondary asset around `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done",
+    "Justification": "The path through `frontend_0.exec_src_wr` is consequential because this signal controls whether the source-write phase participates in execution. In particular, altered source-write sequencing can leave the instruction short of its terminal state; the relationship of `frontend_0.exec_src_wr` to `exec_done` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sext_rdy",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done",
+    "Justification": "Within the analyzed cone, `frontend_0.inst_sext_rdy` reports readiness of the extended source operand. This behavior can matter to `exec_done` because withholding readiness can strand the execution FSM before completion, which supports retaining `frontend_0.inst_sext_rdy` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpuoff",
+    "threat": "denial_of_service",
+    "Structural Path": "cpuoff -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "`cpuoff` sits at a functional boundary where it requests the low-power condition that halts normal processor progress. Because `cpuoff` occupies that point, an asserted low-power request can stop further exec_done events, so the signal can mediate behavior of `exec_done` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
+    "Justification": "Tracing the RTL dependency of `exec_done` reaches `decode_noirq`, which qualifies instruction decoding when no interrupt supersedes the instruction. The resulting concern is that loss of this launch condition can deny the execution unit new work to complete, making `decode_noirq` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
+    "Justification": "The significance of `frontend_0.decode` follows from its role: it launches decoded work into the execution state machine. Consequently, disturbing the launch boundary can stall or repeatedly restart completion sequencing, and `frontend_0.decode` remains relevant to protection of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.dst_acalc_pre",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.dst_acalc_pre -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "Structural and functional analysis gives `frontend_0.dst_acalc_pre` a concrete role because it prepares destination-address calculation before later execution phases. With a blocked address-calculation precursor can delay the route to exec_done, `frontend_0.dst_acalc_pre` can influence the security behavior surrounding `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.irq_detect -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "Rather than being a passive neighbor of `exec_done`, `frontend_0.irq_detect` arbitrates interrupt entry against ordinary instruction progress. Because persistent interrupt selection can prevent normal instructions from reaching completion, the RTL evidence supports classifying `frontend_0.irq_detect` as a secondary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.is_sext",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.is_sext -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "RTL inspection identifies `frontend_0.is_sext` as the element that identifies instructions that require an extended source operand. Because a false classification can send execution through a phase that never becomes ready, `frontend_0.is_sext` is a credible secondary asset for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.src_acalc_pre",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.src_acalc_pre -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "Although `frontend_0.src_acalc_pre` is not the protected object, it initiates source-address calculation for memory-oriented instructions. The dependency matters because failure to advance this precursor can keep the FSM away from its completion state, placing `frontend_0.src_acalc_pre` inside the security-relevant RTL cone of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_type",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_type -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "The structural analysis retains `inst_type` because it encodes the instruction class that selects the execution path; in that position, a wrong class can choose a path whose completion predicate is not satisfied. This gives `inst_type` a plausible supporting role in compromise of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_halt_st",
+    "threat": "denial_of_service",
+    "Structural Path": "cpu_halt_st -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "A review of the local logic shows that `cpu_halt_st` holds the architectural halt state seen by frontend sequencing. Since remaining halted prevents legitimate instruction retirement, excluding `cpu_halt_st` would omit a meaningful dependency of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_branch",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.inst_branch -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "For `frontend_0.inst_branch`, the relevant RTL role is that it labels branch-class instructions for control-flow sequencing. That role is security-sensitive: incorrect branch classification can divert the FSM from its normal terminal transition, so `frontend_0.inst_branch` warrants treatment as a secondary asset around `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_so_nxt",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.inst_so_nxt -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "The path through `frontend_0.inst_so_nxt` is consequential because this signal carries next-cycle source-operand state used during instruction progression. In particular, corrupt operand-state tracking can prolong an intermediate execution phase; the relationship of `frontend_0.inst_so_nxt` to `exec_done` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  }
+]

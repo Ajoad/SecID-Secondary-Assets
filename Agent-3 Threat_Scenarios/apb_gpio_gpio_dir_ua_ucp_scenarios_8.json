@@ -1,0 +1,414 @@
+{
+  "threat feature": "ucp_controllability",
+  "design": {
+    "name": "APB GPIO",
+    "top": "apb_gpio",
+    "rtl_language": "SystemVerilog"
+  },
+  "primary": {
+    "signal": "gpio_dir[31:0]",
+    "security_objective": "integrity"
+  },
+  "threat": "unauthorized_access",
+  "feature": "ucp_controllability",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "gpio_dir[31:0]"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "HCLK",
+    "reset": {
+      "signal": "HRESETn",
+      "active_level": "low"
+    },
+    "ucps": [
+      "PADDR",
+      "PWDATA"
+    ]
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Measure whether changing only a declared untrusted controllable point in paired legal scenarios changes the candidate trace.",
+    "execution_model": "paired runs differing only in the selected UCP value or legal event timing",
+    "calculation": "equal-UCP aggregation of valid causal candidate divergences",
+    "required_observation_roles": [
+      "selected UCP difference",
+      "pre-intervention equivalence",
+      "post-anchor candidate divergence"
+    ],
+    "validity_policy": [
+      "both runs establish the same legal state",
+      "only the selected UCP differs",
+      "no candidate divergence precedes the intervention",
+      "candidate observations are known"
+    ],
+    "classification": {
+      "controllable": "known causal candidate divergence follows the UCP change",
+      "not_controllable": "no divergence over the valid scenario/value basis",
+      "not_applicable": "scenario is outside the candidate's declared scope",
+      "invalid": "setup, pair equivalence, anchor, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "confirm the selected UCP difference",
+        "target": "PADDR, PWDATA"
+      },
+      {
+        "purpose": "detect causal candidate divergence",
+        "target": "$candidate"
+      }
+    ],
+    "validity": [
+      "scenario-specific legal UCP activation and candidate-observation anchor are reached"
+    ],
+    "oracle": {
+      "success": "known post-anchor candidate divergence attributable only to the selected UCP"
+    },
+    "intervention": {
+      "control": "reference_ucp_value",
+      "held_equal": [
+        "all nonselected UCPs",
+        "all non-UCP inputs",
+        "reset history",
+        "initial architectural state"
+      ],
+      "operation": "replace",
+      "test": "alternate_ucp_value",
+      "when": "idle_context"
+    },
+    "ucp": [
+      "PADDR",
+      "PWDATA"
+    ]
+  },
+  "scenario_count": 8,
+  "scenarios": [
+    {
+      "id": "WRITE_LOCK0",
+      "title": "WRITE_LOCK0",
+      "preconditions": {
+        "lock": 0,
+        "transaction": "legal_write",
+        "apb_schedule": "SETUP_TO_ACCESS",
+        "control_trace": [
+          {
+            "PSEL": 1,
+            "PENABLE": 0,
+            "PWRITE": 1
+          },
+          {
+            "PSEL": 1,
+            "PENABLE": 1,
+            "PWRITE": 1
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "write_access",
+        "role": "candidate_controllability_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "replace",
+          "when": "write_transaction_context",
+          "control": "reference_ucp_value",
+          "test": "alternate_ucp_value",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "READ_LOCK0",
+      "title": "READ_LOCK0",
+      "preconditions": {
+        "lock": 0,
+        "transaction": "legal_read",
+        "apb_schedule": "SETUP_TO_ACCESS",
+        "control_trace": [
+          {
+            "PSEL": 1,
+            "PENABLE": 0,
+            "PWRITE": 0
+          },
+          {
+            "PSEL": 1,
+            "PENABLE": 1,
+            "PWRITE": 0
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "read_access",
+        "role": "candidate_controllability_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "replace",
+          "when": "read_transaction_context",
+          "control": "reference_ucp_value",
+          "test": "alternate_ucp_value",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "IDLE_R_LOCK0",
+      "title": "IDLE_R_LOCK0",
+      "preconditions": {
+        "lock": 0,
+        "transaction": "idle_read_control",
+        "apb_schedule": "IDLE_TWO_CYCLES",
+        "control_trace": [
+          {
+            "PSEL": 0,
+            "PENABLE": 0,
+            "PWRITE": 0
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "idle_context",
+        "role": "candidate_controllability_probe"
+      }
+    },
+    {
+      "id": "IDLE_W_LOCK0",
+      "title": "IDLE_W_LOCK0",
+      "preconditions": {
+        "lock": 0,
+        "transaction": "idle_write_control",
+        "apb_schedule": "IDLE_TWO_CYCLES",
+        "control_trace": [
+          {
+            "PSEL": 0,
+            "PENABLE": 0,
+            "PWRITE": 1
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "idle_context",
+        "role": "candidate_controllability_probe"
+      }
+    },
+    {
+      "id": "WRITE_LOCK1",
+      "title": "WRITE_LOCK1",
+      "preconditions": {
+        "lock": 1,
+        "transaction": "legal_write",
+        "apb_schedule": "SETUP_TO_ACCESS",
+        "control_trace": [
+          {
+            "PSEL": 1,
+            "PENABLE": 0,
+            "PWRITE": 1
+          },
+          {
+            "PSEL": 1,
+            "PENABLE": 1,
+            "PWRITE": 1
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "write_access",
+        "role": "candidate_controllability_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "replace",
+          "when": "write_transaction_context",
+          "control": "reference_ucp_value",
+          "test": "alternate_ucp_value",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "READ_LOCK1",
+      "title": "READ_LOCK1",
+      "preconditions": {
+        "lock": 1,
+        "transaction": "legal_read",
+        "apb_schedule": "SETUP_TO_ACCESS",
+        "control_trace": [
+          {
+            "PSEL": 1,
+            "PENABLE": 0,
+            "PWRITE": 0
+          },
+          {
+            "PSEL": 1,
+            "PENABLE": 1,
+            "PWRITE": 0
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "read_access",
+        "role": "candidate_controllability_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "replace",
+          "when": "read_transaction_context",
+          "control": "reference_ucp_value",
+          "test": "alternate_ucp_value",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "IDLE_R_LOCK1",
+      "title": "IDLE_R_LOCK1",
+      "preconditions": {
+        "lock": 1,
+        "transaction": "idle_read_control",
+        "apb_schedule": "IDLE_TWO_CYCLES",
+        "control_trace": [
+          {
+            "PSEL": 0,
+            "PENABLE": 0,
+            "PWRITE": 0
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "idle_context",
+        "role": "candidate_controllability_probe"
+      }
+    },
+    {
+      "id": "IDLE_W_LOCK1",
+      "title": "IDLE_W_LOCK1",
+      "preconditions": {
+        "lock": 1,
+        "transaction": "idle_write_control",
+        "apb_schedule": "IDLE_TWO_CYCLES",
+        "control_trace": [
+          {
+            "PSEL": 0,
+            "PENABLE": 0,
+            "PWRITE": 1
+          }
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "idle_context",
+        "role": "candidate_controllability_probe"
+      }
+    }
+  ]
+}

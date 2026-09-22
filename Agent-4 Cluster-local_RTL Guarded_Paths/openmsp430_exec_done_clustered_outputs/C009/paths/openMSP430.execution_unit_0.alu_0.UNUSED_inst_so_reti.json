@@ -1,0 +1,37 @@
+{
+  "candidate": "openMSP430.execution_unit_0.alu_0.UNUSED_inst_so_reti",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.execution_unit_0.alu_0.UNUSED_inst_so_reti",
+          "destination": "openMSP430.frontend_0.dst_rd",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.dst_rd",
+          "destination": "openMSP430.frontend_0.e_state_nxt",
+          "control_signal": [
+            "openMSP430.frontend_0.dst_acalc",
+            "openMSP430.frontend_0.dst_rd"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state_nxt",
+          "destination": "openMSP430.frontend_0.e_state",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_jmp"
+          ]
+        }
+      ]
+    }
+  ]
+}

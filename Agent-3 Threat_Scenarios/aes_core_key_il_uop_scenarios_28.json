@@ -1,0 +1,1405 @@
+{
+  "threat feature": "uop_observability",
+  "design": {
+    "name": "AES core",
+    "top": "aes_cipher_top",
+    "rtl_language": "Verilog"
+  },
+  "primary": {
+    "signal": "aes_cipher_top.key",
+    "security_objective": "confidentiality"
+  },
+  "threat": "information_leakage",
+  "feature": "uop_observability",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "aes_cipher_top.key"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk",
+    "reset": {
+      "signal": "rst",
+      "active_level": "low"
+    },
+    "uop": {
+      "placeholder": "$uop",
+      "rtl_signal": "aes_cipher_top.text_out"
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor"
+    },
+    "symbolic_predicates": {
+      "$candidate_intervention_in_the_paired_execution": "symbolic condition over the named bound object; underscores delimit words",
+      "$candidate_is_primary_sensitive_under_this_scenario": "symbolic condition over the named bound object; underscores delimit words",
+      "$candidate_is_secret_dependent_on_": "symbolic condition over the named bound object; underscores delimit words",
+      "$primary_under_the_same_legal_history": "symbolic condition over the named bound object; underscores delimit words",
+      "$uop_difference_occurs_after_the_": "symbolic condition over the named bound object; underscores delimit words",
+      "$uop_differences_as_dynamic_witnesses": "symbolic condition over the named bound object; underscores delimit words",
+      "$uop_divergence": "symbolic condition over the named bound object; underscores delimit words",
+      "$uop_downstream_path_is_enabled_under_this_scenario": "symbolic condition over the named bound object; underscores delimit words"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Determine whether a legal, payload-qualified candidate perturbation has a witness at the declared untrusted observable point.",
+    "execution_model": "paired baseline and candidate-perturbed executions with identical legal history before intervention",
+    "calculation": "observable when a known, valid UOP divergence follows the candidate intervention; a bounded no-witness result remains unresolved",
+    "required_observation_roles": [
+      "candidate intervention",
+      "UOP validity",
+      "post-intervention UOP divergence"
+    ],
+    "validity_policy": [
+      "candidate is primary-sensitive in the scenario",
+      "paired executions agree before intervention",
+      "the UOP is known and valid when compared"
+    ],
+    "classification": {
+      "observable": "valid UOP witness",
+      "unresolved": "valid bounded run without a witness",
+      "not_applicable": "required candidate-to-UOP context is absent",
+      "invalid": "setup, pairing, intervention, UOP-validity, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "measure the candidate response",
+        "target": "$candidate"
+      },
+      {
+        "purpose": "detect a valid attacker-visible divergence",
+        "target": "$uop"
+      },
+      {
+        "purpose": "validate the scenario condition represented by scenario_phase",
+        "target": "scenario_phase"
+      },
+      {
+        "purpose": "validate the scenario condition represented by ld",
+        "target": "ld"
+      },
+      {
+        "purpose": "validate the scenario condition represented by ld_r",
+        "target": "ld_r"
+      },
+      {
+        "purpose": "validate the scenario condition represented by rst",
+        "target": "rst"
+      },
+      {
+        "purpose": "validate the scenario condition represented by candidate_4state_knownness",
+        "target": "candidate_4state_knownness"
+      },
+      {
+        "purpose": "validate the scenario condition represented by uop_4state_knownness",
+        "target": "uop_4state_knownness"
+      }
+    ],
+    "validity": [
+      "scenario_preconditions_established",
+      "anchor_observed",
+      "$candidate_is_primary_sensitive_under_this_scenario",
+      "candidate_to_$uop_downstream_path_is_enabled_under_this_scenario",
+      "candidate_known_at_intervention",
+      "perturbed_candidate_differs_from_baseline_candidate",
+      "baseline_and_perturbed_runs_are_equivalent_before_intervention",
+      "no_pre_intervention_$uop_divergence",
+      "count_only_known_0_or_1_$uop_differences_as_dynamic_witnesses",
+      "candidate_specific_downstream_guard_failures_are_NOT_APPLICABLE_not_UNOBSERVABLE"
+    ],
+    "oracle": {
+      "information_dependence": [
+        "scenario_is_UOP_applicable_only_when_$candidate_is_secret_dependent_on_$primary_under_the_same_legal_history"
+      ],
+      "leakage": [
+        "OBSERVABLE_if_a_known_$uop_difference_occurs_after_the_$candidate_intervention_in_the_paired_execution",
+        "dynamic_no_witness_is_UNRESOLVED_not_UNOBSERVABLE",
+        "formal_fallback_may_be_used_only_for_dynamically_unresolved_applicable_cases"
+      ],
+      "scenario_success": "known valid UOP divergence after candidate intervention"
+    },
+    "intervention": {
+      "comparison": "unmodified baseline versus otherwise-identical perturbed run",
+      "operation": "paired_transient_candidate_perturbation",
+      "release": "after the scenario-defined sensitized interval",
+      "target": "$candidate",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 28,
+  "scenarios": [
+    {
+      "id": "A01",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "present_fixed_plaintext"
+        },
+        {
+          "action": "load_secret",
+          "parameters": {
+            "source": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "key_load",
+        "where": {
+          "phase": "KEY_LOAD",
+          "reference_cycle": 0,
+          "ld": 1,
+          "ld_r": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      },
+      "overrides": {
+        "validity": [
+          "scenario_preconditions_established",
+          "anchor_observed",
+          "$candidate_is_primary_sensitive_under_this_scenario",
+          "candidate_to_$uop_downstream_path_is_enabled_under_this_scenario",
+          "candidate_known_at_intervention",
+          "perturbed_candidate_differs_from_baseline_candidate",
+          "baseline_and_perturbed_runs_are_equivalent_before_intervention",
+          "no_pre_intervention_$uop_divergence",
+          "count_only_known_0_or_1_$uop_differences_as_dynamic_witnesses",
+          "candidate_specific_downstream_guard_failures_are_NOT_APPLICABLE_not_UNOBSERVABLE",
+          "for_aes_cipher_top.saXX_next_candidates_require_next_capture_ld_r_equals_0;otherwise_this_candidate_scenario_pair_is_NOT_APPLICABLE"
+        ]
+      }
+    },
+    {
+      "id": "A02",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "deassert_load"
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "initial_addroundkey",
+        "where": {
+          "phase": "INITIAL_ADDROUNDKEY",
+          "reference_cycle": 1,
+          "ld": 0,
+          "ld_r": 1,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A03",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 1
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_1",
+        "where": {
+          "phase": "ROUND_1",
+          "reference_cycle": 2,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A04",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 2
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_2",
+        "where": {
+          "phase": "ROUND_2",
+          "reference_cycle": 3,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A05",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 3
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_3",
+        "where": {
+          "phase": "ROUND_3",
+          "reference_cycle": 4,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A06",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 4
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_4",
+        "where": {
+          "phase": "ROUND_4",
+          "reference_cycle": 5,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A07",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 5
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_5",
+        "where": {
+          "phase": "ROUND_5",
+          "reference_cycle": 6,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A08",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 6
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_6",
+        "where": {
+          "phase": "ROUND_6",
+          "reference_cycle": 7,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A09",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 7
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_7",
+        "where": {
+          "phase": "ROUND_7",
+          "reference_cycle": 8,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A10",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 8
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_8",
+        "where": {
+          "phase": "ROUND_8",
+          "reference_cycle": 9,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A11",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_initial_addroundkey"
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 9
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution"
+        }
+      ],
+      "anchor": {
+        "event": "round_9",
+        "where": {
+          "phase": "ROUND_9",
+          "reference_cycle": 10,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A12",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_uninterrupted_aes_rounds",
+          "parameters": {
+            "through_round": 10
+          }
+        },
+        {
+          "action": "reach_completion_boundary"
+        },
+        {
+          "action": "continue_for_post_completion_observation"
+        }
+      ],
+      "anchor": {
+        "event": "round_10_done_boundary",
+        "where": {
+          "phase": "ROUND_10_DONE_BOUNDARY",
+          "reference_cycle": 11,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "A13",
+      "family": "normal_lifecycle",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "normal_lifecycle",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_uninterrupted_aes_to_completion"
+        },
+        {
+          "action": "clock_once_after_done_without_reload"
+        },
+        {
+          "action": "continue_for_post_done_observation"
+        }
+      ],
+      "anchor": {
+        "event": "post_done_continuation",
+        "where": {
+          "phase": "POST_DONE_CONTINUATION",
+          "reference_cycle": 12,
+          "ld": 0,
+          "rst": 1
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "B01",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "reload_immediately_next_cycle",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_immediate",
+        "where": {
+          "phase": "REKEY_IMMEDIATE",
+          "reference_cycle": 1,
+          "ld": 1,
+          "ld_r": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 13
+      }
+    },
+    {
+      "id": "B02",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 1
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_1",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_1",
+          "reference_cycle": 2,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 14
+      }
+    },
+    {
+      "id": "B03",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 2
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_2",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_2",
+          "reference_cycle": 3,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 15
+      }
+    },
+    {
+      "id": "B04",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 3
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_3",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_3",
+          "reference_cycle": 4,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 16
+      }
+    },
+    {
+      "id": "B05",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 4
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_4",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_4",
+          "reference_cycle": 5,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 17
+      }
+    },
+    {
+      "id": "B06",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 5
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_5",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_5",
+          "reference_cycle": 6,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 18
+      }
+    },
+    {
+      "id": "B07",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 6
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_6",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_6",
+          "reference_cycle": 7,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 19
+      }
+    },
+    {
+      "id": "B08",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 7
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_7",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_7",
+          "reference_cycle": 8,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 20
+      }
+    },
+    {
+      "id": "B09",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 8
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_8",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_8",
+          "reference_cycle": 9,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 21
+      }
+    },
+    {
+      "id": "B10",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "advance_to_aes_round",
+          "parameters": {
+            "round": 9
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_during_round_9",
+        "where": {
+          "phase": "REKEY_DURING_ROUND_9",
+          "reference_cycle": 10,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 22
+      }
+    },
+    {
+      "id": "B11",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_to_round_10_completion_boundary"
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_at_round_10_done_boundary",
+        "where": {
+          "phase": "REKEY_AT_ROUND_10_DONE_BOUNDARY",
+          "reference_cycle": 11,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 23
+      }
+    },
+    {
+      "id": "B12",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_to_normal_completion"
+        },
+        {
+          "action": "rekey_on_first_post_done_clock",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_first_post_done",
+        "where": {
+          "phase": "REKEY_FIRST_POST_DONE",
+          "reference_cycle": 12,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 24
+      }
+    },
+    {
+      "id": "B13",
+      "family": "rekey_interruption",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "rekey_interruption",
+        "secret_epochs": {
+          "measured": "K_old",
+          "replacement": "K_new",
+          "constraint": "K_new_is_stable_and_independent_of_K_old_and_K_new_ne_K_old"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_to_normal_completion"
+        },
+        {
+          "action": "continue_without_reload",
+          "parameters": {
+            "minimum_extra_post_done_clocks": 2
+          }
+        },
+        {
+          "action": "rekey_at_anchor",
+          "parameters": {
+            "secret": "K_new",
+            "plaintext": "same_fixed_plaintext"
+          }
+        },
+        {
+          "action": "continue_legal_aes_execution_after_rekey"
+        }
+      ],
+      "anchor": {
+        "event": "rekey_extended_post_done",
+        "where": {
+          "phase": "REKEY_EXTENDED_POST_DONE",
+          "reference_cycle": 14,
+          "ld": 1,
+          "rst": 1,
+          "key_epoch": "K_new"
+        },
+        "observation_end_reference_cycle": 26
+      }
+    },
+    {
+      "id": "C01",
+      "family": "reset_retention",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "reset_retention",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "assert_reset",
+          "parameters": {
+            "rst": 0
+          }
+        },
+        {
+          "action": "load_secret_and_plaintext_while_reset_asserted",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "release_reset",
+          "parameters": {
+            "rst": 1
+          }
+        },
+        {
+          "action": "continue_without_reloading_secret"
+        }
+      ],
+      "anchor": {
+        "event": "load_while_reset_asserted",
+        "where": {
+          "phase": "LOAD_WHILE_RESET_ASSERTED",
+          "reference_cycle": 0,
+          "ld": 1,
+          "ld_r": 0,
+          "rst": 0
+        },
+        "observation_end_reference_cycle": 15
+      },
+      "overrides": {
+        "validity": [
+          "scenario_preconditions_established",
+          "anchor_observed",
+          "$candidate_is_primary_sensitive_under_this_scenario",
+          "candidate_to_$uop_downstream_path_is_enabled_under_this_scenario",
+          "candidate_known_at_intervention",
+          "perturbed_candidate_differs_from_baseline_candidate",
+          "baseline_and_perturbed_runs_are_equivalent_before_intervention",
+          "no_pre_intervention_$uop_divergence",
+          "count_only_known_0_or_1_$uop_differences_as_dynamic_witnesses",
+          "candidate_specific_downstream_guard_failures_are_NOT_APPLICABLE_not_UNOBSERVABLE",
+          "for_aes_cipher_top.saXX_next_candidates_require_next_capture_ld_r_equals_0;otherwise_this_candidate_scenario_pair_is_NOT_APPLICABLE"
+        ]
+      }
+    },
+    {
+      "id": "C02",
+      "family": "reset_retention",
+      "preconditions": {
+        "plaintext": "fixed_legal_context",
+        "scenario_family": "reset_retention",
+        "secret_epoch": "K_old"
+      },
+      "stimulus": [
+        {
+          "action": "load_secret_and_plaintext",
+          "parameters": {
+            "secret": "$primary",
+            "epoch": "K_old"
+          }
+        },
+        {
+          "action": "execute_aes_until_secret_is_resident",
+          "parameters": {
+            "through_round": 5
+          }
+        },
+        {
+          "action": "assert_reset_without_new_load",
+          "parameters": {
+            "rst": 0
+          }
+        },
+        {
+          "action": "release_reset_without_reloading_secret",
+          "parameters": {
+            "rst": 1
+          }
+        },
+        {
+          "action": "continue_legal_clocking_and_observe_retention"
+        }
+      ],
+      "anchor": {
+        "event": "secret_retention_across_reset",
+        "where": {
+          "phase": "SECRET_RETENTION_ACROSS_RESET",
+          "reference_cycle": 7,
+          "ld": 0,
+          "ld_r": 0,
+          "rst": 0
+        },
+        "observation_end_reference_cycle": 18
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "PADDR[6:2]",
+    "threat": "unauthorized_access",
+    "Structural Path": "PADDR[6:2] -> s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance -> gpio_dir",
+    "Attack Scenarios": [
+      "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PADDR` supplies the address decode that distinguishes `REG_PADDIR` from the other GPIO registers. An attacker can alter `apb_gpio_gpio_dir_cone.PADDR` during an otherwise valid APB write so that a transaction intended for another register is decoded as `REG_PADDIR`. The supporting RTL chain is `apb_gpio_gpio_dir_cone.PADDR -> apb_gpio_gpio_dir_cone.gpio_dir`. The presented `PWDATA` is captured into `r_gpio_dir`, changing pad directions without the intended direction-register access."
+    ],
+    "Justification": "For `PADDR[6:2]`, one authoritative exploitation route shows that the signal selects which APB register receives a write. Because an altered address slice can redirect an otherwise legal transaction to PADDIR, the documented behavior makes `PADDR[6:2]` relevant to compromise of `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWDATA[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir",
+    "Attack Scenarios": [
+      "`apb_gpio_gpio_dir_cone.PWDATA` carries the direction bitmap selected by the lock check immediately before `r_gpio_dir <= pwdata_l`. The relevant dataflow is `apb_gpio_gpio_dir_cone.PWDATA -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Once a PADDIR write is admitted, controlling `apb_gpio_gpio_dir_cone.PWDATA` substitutes attacker-selected input/output directions. Pins are configured as outputs or inputs contrary to the authorized software value."
+    ],
+    "Justification": "The source provides one authoritative exploitation route for `PWDATA[0]`, demonstrating how its RTL role can be abused. Since `PWDATA[0]` provides the lock bit written through the APB data channel and changing this bit can clear the authorization barrier protecting direction updates, this evidence supports its secondary-asset status for `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "r_gpio_lock[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir",
+    "Attack Scenarios": [
+      "`apb_gpio_gpio_dir_cone.r_gpio_lock[0]` selects whether `PWDATA` or zero is assigned to `pwdata_l` in the PADDIR case. The relevant dataflow is `apb_gpio_gpio_dir_cone.r_gpio_lock -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Clearing `apb_gpio_gpio_dir_cone.r_gpio_lock[0]` before the access bypasses the lock and lets attacker-controlled `PWDATA` reach `r_gpio_dir`. The lock policy no longer preserves the authorized pad-direction configuration."
+    ],
+    "Justification": "Mechanism evidence for `r_gpio_lock[0]` consists of one authoritative exploitation route. The candidate stores the active PADDIR write-permission state, so a false unlocked value allows direction data to be accepted; this connects `r_gpio_lock[0]` causally to adverse behavior of `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "r_gpio_dir",
+    "threat": "unauthorized_access",
+    "Structural Path": "r_gpio_dir -> PDG fan-in layer 0 -> gpio_dir",
+    "Attack Scenarios": [
+      "Writing or forcing `apb_gpio_gpio_dir_cone.r_gpio_dir` changes the protected direction state without relying on the normal PADDIR authorization path. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.r_gpio_dir` is the clocked storage directly assigned to the external `gpio_dir` output. Signal propagation follows `apb_gpio_gpio_dir_cone.r_gpio_dir -> apb_gpio_gpio_dir_cone.gpio_dir`. The primary direction value and the physical pad configuration are corrupted."
+    ],
+    "Justification": "`r_gpio_dir` is retained on the basis of one authoritative exploitation route. In the documented behavior it stores the internal direction value that directly drives gpio_dir, and unauthorized modification immediately changes the protected direction output, providing a direct threat-specific link to `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWRITE",
+    "threat": "unauthorized_access",
+    "Structural Path": "PWRITE -> PDG fan-in layer 1 -> gpio_dir",
+    "Attack Scenarios": [
+      "By forcing `apb_gpio_gpio_dir_cone.PWRITE` active at the required APB phase while the other terms and PADDIR address are present, an attacker can manufacture the missing write authorization. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PWRITE` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PWRITE -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+    ],
+    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `PWRITE` in operation. As it distinguishes write transfers from reads in the PADDIR guard, forcing write intent can turn a non-writing access into a direction update, which makes the candidate security-relevant to `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "pwdata_l",
+    "threat": "unauthorized_access",
+    "Structural Path": "pwdata_l -> PDG fan-in layer 1 -> gpio_dir",
+    "Attack Scenarios": [
+      "`apb_gpio_gpio_dir_cone.pwdata_l` carries the direction bitmap selected by the lock check immediately before `r_gpio_dir <= pwdata_l`. The relevant dataflow is `apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Once a PADDIR write is admitted, controlling `apb_gpio_gpio_dir_cone.pwdata_l` substitutes attacker-selected input/output directions. Pins are configured as outputs or inputs contrary to the authorized software value."
+    ],
+    "Justification": "A practical role for `pwdata_l` is established through one authoritative exploitation route. The source uses the fact that `pwdata_l` holds the write payload consumed by the GPIO register logic; therefore tampering with the latched payload controls the unauthorized direction value, justifying inclusion relative to `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "s_apb_addr",
+    "threat": "unauthorized_access",
+    "Structural Path": "s_apb_addr -> PDG fan-in layer 1 -> gpio_dir",
+    "Attack Scenarios": [
+      "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.s_apb_addr` supplies the address decode that distinguishes `REG_PADDIR` from the other GPIO registers. An attacker can alter `apb_gpio_gpio_dir_cone.s_apb_addr` during an otherwise valid APB write so that a transaction intended for another register is decoded as `REG_PADDIR`. The supporting RTL chain is `apb_gpio_gpio_dir_cone.s_apb_addr -> apb_gpio_gpio_dir_cone.gpio_dir`. The presented `PWDATA` is captured into `r_gpio_dir`, changing pad directions without the intended direction-register access."
+    ],
+    "Justification": "Evidence for `s_apb_addr` comes from one authoritative exploitation route. The documented conditions exploit the fact that it is the local decoded address used to recognize PADDIR; the resulting concern is that corrupting the decode can make an unrelated access satisfy the protected-register case, thereby affecting `gpio_dir`.",
+    "decision": "retain"
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "candidate": "neorv32_cpu.ctrl.rf_wb_en",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.rf_wb_en",
+          "destination": "neorv32_cpu_regfile.addr",
+          "control_signal": [
+            "neorv32_cpu.ctrl.rf_wb_en",
+            "neorv32_cpu.ctrl.rf_zero"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_regfile.addr",
+          "destination": "neorv32_cpu.rs1",
+          "control_signal": [
+            "neorv32_cpu_regfile.addr"
+          ]
+        },
+        {
+          "source": "neorv32_cpu.rs1",
+          "destination": "neorv32_cpu_control.csr_wdata",
+          "control_signal": [
+            "neorv32_cpu.ctrl.ir_funct3"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_mprv",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mprv",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    }
+  ]
+}

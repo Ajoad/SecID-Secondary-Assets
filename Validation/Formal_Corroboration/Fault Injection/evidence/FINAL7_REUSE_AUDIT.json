@@ -1,0 +1,108 @@
+{
+  "schema": "secid_cv32_final7_zero_rerun_reuse_audit_v1",
+  "current_final_assets": [
+    "core_i.id_stage_i.deassert_we",
+    "core_i.data_misaligned",
+    "core_i.csr_op",
+    "core_i.id_stage_i.decoder_i.csr_op",
+    "core_i.id_stage_i.csr_op",
+    "core_i.id_ready",
+    "core_i.ex_ready"
+  ],
+  "current_final_asset_count": 7,
+  "prior_final10_asset_count": 10,
+  "removed_from_prior_final10": [
+    "core_i.id_stage_i.illegal_insn_dec",
+    "core_i.id_stage_i.decoder_i.current_priv_lvl_i",
+    "core_i.debug_mode"
+  ],
+  "selected_jobs_reused": 10,
+  "selected_jobs_expected": 10,
+  "selected_reuse_fraction": 1.0,
+  "random_cohorts": [
+    {
+      "seed": 20260914,
+      "control_signals": [
+        "core_i.id_stage_i.controller_i.illegal_insn_n",
+        "core_i.ex_stage_i.alu_i.alu_div_i.Cnt_DP",
+        "core_i.mhpmevent_compressed",
+        "core_i.cs_registers_i.mcause_q",
+        "core_i.if_stage_i.trap_base_addr",
+        "core_i.if_stage_i.prefetch_buffer_i.fifo_i.write_pointer_n",
+        "core_i.id_stage_i.regfile_alu_we_id"
+      ],
+      "control_jobs_reused": 16,
+      "control_valid_jobs": 16
+    },
+    {
+      "seed": 20260915,
+      "control_signals": [
+        "core_i.id_stage_i.irq_wu_ctrl",
+        "core_i.ex_stage_i.alu_i.popcnt_i.cnt_l3",
+        "core_i.ex_stage_i.alu_i.is_equal_vec",
+        "core_i.id_stage_i.minstret",
+        "core_i.id_stage_i.controller_i.branch_in_id",
+        "core_i.load_store_unit_i.data_type_q",
+        "core_i.ex_stage_i.alu_i.result_div"
+      ],
+      "control_jobs_reused": 17,
+      "control_valid_jobs": 17
+    },
+    {
+      "seed": 20260916,
+      "control_signals": [
+        "core_i.id_stage_i.halt_id",
+        "core_i.id_stage_i.alu_op_c_mux_sel",
+        "core_i.id_stage_i.mult_operator",
+        "core_i.ex_stage_i.alu_i.alu_div_i.AReg_DP",
+        "core_i.cs_registers_i.dcsr_n",
+        "core_i.ex_stage_i.alu_i.bset_result",
+        "core_i.id_stage_i.operand_b_fw_mux_sel"
+      ],
+      "control_jobs_reused": 20,
+      "control_valid_jobs": 20
+    },
+    {
+      "seed": 20260917,
+      "control_signals": [
+        "core_i.cs_registers_i.dcsr_n",
+        "core_i.ex_stage_i.alu_i.bitop_result",
+        "core_i.ex_stage_i.alu_i.shift_amt_int",
+        "core_i.id_stage_i.uret_dec",
+        "core_i.id_stage_i.alu_op_a_mux_sel",
+        "core_i.if_stage_i.instr_valid",
+        "core_i.pc_set"
+      ],
+      "control_jobs_reused": 18,
+      "control_valid_jobs": 18
+    },
+    {
+      "seed": 20260918,
+      "control_signals": [
+        "core_i.id_stage_i.regfile_alu_we_id",
+        "core_i.id_stage_i.controller_i.debug_req_q",
+        "core_i.if_stage_i.aligner_i.branch_addr_i",
+        "core_i.ex_stage_i.mult_result",
+        "core_i.ex_stage_i.mult_i.dot_char_op_b",
+        "core_i.ex_stage_i.alu_i.alu_div_i.BRegEn_S",
+        "core_i.cs_registers_i.dscratch1_q"
+      ],
+      "control_jobs_reused": 19,
+      "control_valid_jobs": 19
+    }
+  ],
+  "jasper_rerun_required": false,
+  "reuse_basis": "current final7 is an exact subset of the prior final10; all selected jobs and frozen-prefix random-control jobs were already run under identical formal properties, cutpoints, scenarios, FI duration, and observation horizon",
+  "frozen_prefix_validity": "The previous random sampler first seed-shuffled the eligible signals and then took an ordered sample. The first seven entries of that already-frozen random order form a seven-signal random sample from the same frozen sampling frame. The prefix length is dictated by the new selected-cohort size, not by observed Jasper outcomes.",
+  "sampling_frame_audit": {
+    "current_exact_eligible_pool_size": 481,
+    "frozen_v1_3_0_eligible_pool_size": 479,
+    "frozen_pool_fraction_of_current_exact_pool": 0.9958419958419958,
+    "current_eligible_but_not_in_frozen_pool": [
+      "core_i.debug_mode",
+      "core_i.id_stage_i.illegal_insn_dec"
+    ],
+    "frozen_pool_members_no_longer_current_eligible": []
+  },
+  "publication_boundary": "For zero-rerun reuse, describe controls as sampled from the previously frozen v1.3.0 eligible structural-control pool. Do not state that they were uniformly resampled from the exact updated final7 pool. The frozen pool remains fully disjoint from current final7 assets."
+}

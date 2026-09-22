@@ -1,0 +1,10 @@
+[
+  {
+    "candidate": "openMSP430.dbg_0.cpu_stat_set",
+    "attack_mechanism": "Forcing `openMSP430.dbg_0.cpu_stat_set` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. `openMSP430.dbg_0.cpu_stat_set` lies on this debug-control route into the PC-update logic; the relevant assignment conditions include `openMSP430.clock_module_0.scan_mux_puc_rst.scan_mode`, `openMSP430.clock_module_0.scan_mux_puc_rst.data_out`. The candidate and asset are linked by `openMSP430.dbg_0.cpu_stat_set -> openMSP430.clock_module_0.scan_mux_puc_rst.data_out -> openMSP430.frontend_0.pc`. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  },
+  {
+    "candidate": "openMSP430.dbg_0.dbg_rd_rdy",
+    "attack_mechanism": "Forcing `openMSP430.dbg_0.dbg_rd_rdy` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. `openMSP430.dbg_0.dbg_rd_rdy` lies on this debug-control route into the PC-update logic; the relevant assignment conditions include `openMSP430.dbg_0.dbg_rst`, `openMSP430.dbg_0.mem_addr_wr`, `openMSP430.frontend_0.cpu_halt_st`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. The candidate and asset are linked by `openMSP430.dbg_0.dbg_rd_rdy -> openMSP430.dbg_0.dbg_mem_acc -> openMSP430.frontend_0.inst_dest -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  }
+]

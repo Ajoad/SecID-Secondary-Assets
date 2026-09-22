@@ -1,0 +1,30 @@
+{
+  "run_dir": "<SOURCE_PACKAGE_ROOT>/results/core/60_effort_exclude_07_dbg_reg_din_r01",
+  "exit_code": 0,
+  "properties": [
+    {
+      "property": "SECID_EFFORT_EXCL_SA07_R01_PRIMARY_TO_UOP",
+      "raw_status": "cex",
+      "normalized_status": "FLOW_FOUND",
+      "source": "status.tsv",
+      "cex_cycles": 640,
+      "proof_seconds": 25.08
+    }
+  ],
+  "process_metrics": {
+    "max_rss_kb": 458780,
+    "wall_seconds": 29.59
+  },
+  "audit": {
+    "signoff_file_present": true,
+    "consistency_file_present": true,
+    "signoff_incomplete_items": [],
+    "blackbox_in_coi": false,
+    "taint_feedback_incomplete": false,
+    "stopat_in_coi": false,
+    "reset_audit_seen": true,
+    "reset_all_concrete": false,
+    "auto_multiplier_blackboxed": false,
+    "material_signoff_risk": false
+  }
+}

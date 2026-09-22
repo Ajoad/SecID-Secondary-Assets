@@ -1,0 +1,49 @@
+{
+  "candidate": "openMSP430.execution_unit_0.alu_0.op_dst_in",
+  "relation": "fan-out",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.r4",
+          "destination": "openMSP430.execution_unit_0.register_file_0.reg_dest",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.reg_dest",
+          "destination": "openMSP430.execution_unit_0.alu_0.op_dst_in",
+          "control_signal": [
+            "openMSP430.execution_unit_0.dbg_halt_st",
+            "openMSP430.execution_unit_0.dst_inst_sext_sel",
+            "openMSP430.execution_unit_0.dst_mdb_in_bw_sel",
+            "openMSP430.execution_unit_0.dst_reg_dest_sel"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.r4",
+          "destination": "openMSP430.execution_unit_0.register_file_0.reg_dest",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.reg_dest",
+          "destination": "openMSP430.execution_unit_0.op_dst",
+          "control_signal": [
+            "openMSP430.execution_unit_0.dbg_halt_st",
+            "openMSP430.execution_unit_0.dst_inst_sext_sel",
+            "openMSP430.execution_unit_0.dst_mdb_in_bw_sel",
+            "openMSP430.execution_unit_0.dst_reg_dest_sel"
+          ]
+        },
+        {
+          "source": "openMSP430.execution_unit_0.op_dst",
+          "destination": "openMSP430.execution_unit_0.alu_0.op_dst_in",
+          "control_signal": []
+        }
+      ]
+    }
+  ]
+}

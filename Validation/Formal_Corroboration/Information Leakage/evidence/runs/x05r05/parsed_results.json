@@ -1,0 +1,30 @@
+{
+  "run_dir": "<SOURCE_PACKAGE_ROOT>/results/core/60_effort_exclude_05_dbg_mem_dout_r05",
+  "exit_code": 0,
+  "properties": [
+    {
+      "property": "SECID_EFFORT_EXCL_SA05_R05_PRIMARY_TO_UOP",
+      "raw_status": "cex",
+      "normalized_status": "FLOW_FOUND",
+      "source": "status.tsv",
+      "cex_cycles": 986,
+      "proof_seconds": 4.18
+    }
+  ],
+  "process_metrics": {
+    "max_rss_kb": 455620,
+    "wall_seconds": 10.55
+  },
+  "audit": {
+    "signoff_file_present": true,
+    "consistency_file_present": true,
+    "signoff_incomplete_items": [],
+    "blackbox_in_coi": false,
+    "taint_feedback_incomplete": false,
+    "stopat_in_coi": false,
+    "reset_audit_seen": true,
+    "reset_all_concrete": false,
+    "auto_multiplier_blackboxed": false,
+    "material_signoff_risk": false
+  }
+}

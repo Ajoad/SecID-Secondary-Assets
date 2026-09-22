@@ -1,0 +1,1 @@
+[JASPER] jg -spv -batch <SOURCE_PACKAGE_ROOT>/generated/core/60_effort_exclude_09_dbg_0_dbg_uart_0_xfer_buf_nxt_r03.tcl

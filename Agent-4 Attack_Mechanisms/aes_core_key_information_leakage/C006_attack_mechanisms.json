@@ -1,0 +1,34 @@
+[
+  {
+    "candidate": "aes_cipher_top.sa00",
+    "attack_mechanism": "`aes_cipher_top.sa00` contains the byte at state position (0,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa00`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa00` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa00",
+    "attack_mechanism": "`aes_cipher_top.sa00` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa00`. Cycle-aligned observations of `aes_cipher_top.sa00` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa10",
+    "attack_mechanism": "`aes_cipher_top.sa10` contains the byte at state position (1,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa10`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa10` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa10",
+    "attack_mechanism": "`aes_cipher_top.sa10` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa10`. Cycle-aligned observations of `aes_cipher_top.sa10` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa20",
+    "attack_mechanism": "`aes_cipher_top.sa20` contains the byte at state position (2,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa20`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa20` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa20",
+    "attack_mechanism": "`aes_cipher_top.sa20` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa20`. Cycle-aligned observations of `aes_cipher_top.sa20` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.us10.d",
+    "attack_mechanism": "`aes_cipher_top.us10.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w0 -> aes_cipher_top.us10.a -> aes_cipher_top.us10.d`. An attacker who probes `aes_cipher_top.us10.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  },
+  {
+    "candidate": "aes_cipher_top.us20.d",
+    "attack_mechanism": "`aes_cipher_top.us20.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w0 -> aes_cipher_top.us20.a -> aes_cipher_top.us20.d`. An attacker who probes `aes_cipher_top.us20.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  }
+]

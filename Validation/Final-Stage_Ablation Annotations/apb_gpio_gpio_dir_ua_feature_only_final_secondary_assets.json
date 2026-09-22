@@ -1,0 +1,46 @@
+[
+  {
+    "Name": "PADDR[6:2]",
+    "threat": "unauthorized_access",
+    "Structural Path": "PADDR[6:2] -> s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance -> gpio_dir",
+    "Normalized Evidence": {
+      "ucp_controllability": 0.5,
+      "bypass_sensitivity": 0.001312336
+    },
+    "Justification": "For `PADDR[6:2]`, the measured profile shows moderate UCP controllability (0.5) paired with weak bypass sensitivity (0.001312336). Because the signal selects which APB register receives a write, this quantitative behavior supports relevance to `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWDATA[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir",
+    "Normalized Evidence": {
+      "ucp_controllability": 0.5,
+      "bypass_sensitivity": 0.001312336
+    },
+    "Justification": "`PWDATA[0]` is selected from its feature evidence: moderate UCP controllability (0.5) paired with weak bypass sensitivity (0.001312336). Its RTL role, where it provides the lock bit written through the APB data channel, gives those measurements a meaningful connection to `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "r_gpio_lock[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir",
+    "Normalized Evidence": {
+      "ucp_controllability": 1,
+      "bypass_sensitivity": 0.16666666666666666
+    },
+    "Justification": "The quantitative case for `r_gpio_lock[0]` combines very strong UCP controllability (1) paired with limited bypass sensitivity (0.16666666666666666). As `r_gpio_lock[0]` stores the active PADDIR write-permission state, the score pattern is consistent with a secondary asset influencing `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "s_apb_addr",
+    "threat": "unauthorized_access",
+    "Structural Path": "s_apb_addr -> PDG fan-in layer 1 -> gpio_dir",
+    "Normalized Evidence": {
+      "ucp_controllability": 0.5,
+      "bypass_sensitivity": 0.001312336
+    },
+    "Justification": "Measurements for `s_apb_addr` indicate moderate UCP controllability (0.5) paired with weak bypass sensitivity (0.001312336). This is significant because it is the local decoded address used to recognize PADDIR; consequently, the feature response supports retaining the candidate around `gpio_dir`.",
+    "decision": "retain"
+  }
+]

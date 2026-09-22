@@ -1,0 +1,18 @@
+[
+  {
+    "candidate": "cv32e40p_top.core_i.apu_lat_ex",
+    "attack_mechanism": "Execution-result and register-file controls feed instruction operands and decode feedback used when the CSR operation is advanced. `cv32e40p_top.core_i.apu_lat_ex` is an RTL-supported element of that indirect path; the intervening RTL assignments are qualified by `cv32e40p_top.core_i.id_stage_i.id_valid_o`. A fault on `cv32e40p_top.core_i.apu_lat_ex` during the affected instruction can corrupt the decoded/advanced CSR operation or keep stale write controls alive. The supporting RTL chain is `cv32e40p_top.core_i.apu_lat_ex -> cv32e40p_top.core_i.id_stage_i.csr_apu_stall -> cv32e40p_top.core_i.id_stage_i.id_ready_o -> cv32e40p_top.core_i.id_stage_i.id_valid_o -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. The CSR block asserts or suppresses `csr_we_int` in the wrong cycle, producing an unintended CSR state transition."
+  },
+  {
+    "candidate": "cv32e40p_top.core_i.ex_ready",
+    "attack_mechanism": "CSR operation and write controls are transferred from ID only on a valid, advancing pipeline cycle; halt and deassert-write logic suppress side effects on killed instructions. `cv32e40p_top.core_i.ex_ready` participates in that valid/ready or write-deassert decision before the CSR operation reaches `csr_we_int`; the intervening RTL assignments are qualified by `cv32e40p_top.core_i.ex_ready`, `cv32e40p_top.core_i.id_stage_i.id_valid_o`. Faulting `cv32e40p_top.core_i.ex_ready` at the ID/EX handoff can retain a stale CSR write or clear a valid one. The supporting RTL chain is `cv32e40p_top.core_i.ex_ready -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. A wrong-cycle CSR write enable is generated, causing a spurious update or loss of the intended protected-state transition."
+  },
+  {
+    "candidate": "cv32e40p_top.core_i.id_ready",
+    "attack_mechanism": "CSR operation and write controls are transferred from ID only on a valid, advancing pipeline cycle; halt and deassert-write logic suppress side effects on killed instructions. `cv32e40p_top.core_i.id_ready` participates in that valid/ready or write-deassert decision before the CSR operation reaches `csr_we_int`; the intervening RTL assignments are qualified by `cv32e40p_top.core_i.id_stage_i.id_valid_o`. Faulting `cv32e40p_top.core_i.id_ready` at the ID/EX handoff can retain a stale CSR write or clear a valid one. The supporting RTL chain is `cv32e40p_top.core_i.id_ready -> cv32e40p_top.core_i.id_stage_i.id_valid_o -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. A wrong-cycle CSR write enable is generated, causing a spurious update or loss of the intended protected-state transition."
+  },
+  {
+    "candidate": "cv32e40p_top.core_i.id_valid",
+    "attack_mechanism": "CSR operation and write controls are transferred from ID only on a valid, advancing pipeline cycle; halt and deassert-write logic suppress side effects on killed instructions. `cv32e40p_top.core_i.id_valid` participates in that valid/ready or write-deassert decision before the CSR operation reaches `csr_we_int`; the intervening RTL assignments are qualified by `cv32e40p_top.core_i.id_valid`. Faulting `cv32e40p_top.core_i.id_valid` at the ID/EX handoff can retain a stale CSR write or clear a valid one. The supporting RTL chain is `cv32e40p_top.core_i.id_valid -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. A wrong-cycle CSR write enable is generated, causing a spurious update or loss of the intended protected-state transition."
+  }
+]

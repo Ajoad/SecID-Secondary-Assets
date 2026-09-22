@@ -1,0 +1,4 @@
+asset
+neorv32_cpu_control.csr.mstatus_mpp
+neorv32_cpu_control.csr.mstatus_mprv
+neorv32_cpu_control.csr.prv_level

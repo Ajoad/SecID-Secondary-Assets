@@ -1,0 +1,18 @@
+[
+  {
+    "candidate": "openMSP430.cpu_halt_st",
+    "attack_mechanism": "Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. `openMSP430.cpu_halt_st` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. Holding or toggling `openMSP430.cpu_halt_st` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. The supporting RTL chain is `openMSP430.cpu_halt_st -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.e_first_state",
+    "attack_mechanism": "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_first_state` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_first_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.e_state_nxt",
+    "attack_mechanism": "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_state_nxt` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_state_nxt` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.multiplier_0.reg_dec",
+    "attack_mechanism": "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.multiplier_0.reg_dec` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.mem_backbone_0.eu_mdb_in_sel`, `openMSP430.execution_unit_0.inst_bw`, `openMSP430.execution_unit_0.dbg_halt_st`, `openMSP430.execution_unit_0.dst_inst_sext_sel`, and the remaining path guards. An attacker who forces `openMSP430.multiplier_0.reg_dec` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.multiplier_0.reg_dec -> openMSP430.multiplier_0.reg_rd -> openMSP430.execution_unit_0.alu_0.alu_add -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  }
+]

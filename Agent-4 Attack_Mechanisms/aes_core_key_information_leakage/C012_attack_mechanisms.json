@@ -1,0 +1,14 @@
+[
+  {
+    "candidate": "aes_cipher_top.us00.d",
+    "attack_mechanism": "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us00.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. `aes_cipher_top.us00.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key. The pertinent register-transfer chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w0 -> aes_cipher_top.us00.a -> aes_cipher_top.us00.d`."
+  },
+  {
+    "candidate": "aes_cipher_top.us23.d",
+    "attack_mechanism": "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us23.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. `aes_cipher_top.us23.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key. The pertinent register-transfer chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w3 -> aes_cipher_top.us23.a -> aes_cipher_top.us23.d`."
+  },
+  {
+    "candidate": "aes_cipher_top.us33.d",
+    "attack_mechanism": "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us33.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. `aes_cipher_top.us33.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key. The pertinent register-transfer chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w3 -> aes_cipher_top.us33.a -> aes_cipher_top.us33.d`."
+  }
+]

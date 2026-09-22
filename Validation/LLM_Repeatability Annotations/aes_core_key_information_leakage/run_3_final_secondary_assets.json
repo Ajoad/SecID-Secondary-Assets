@@ -1,0 +1,268 @@
+[
+  {
+    "Name": "aes_cipher_top.u0.w[2]",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ aes_cipher_top.u0.w[2] ⇒ round-key generation ⇒ AddRoundKey ⇒ AES state ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.u0.w[2] can collect values carried along key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out: changing or observing aes_cipher_top.u0.w[2] can affect the protected behavior. Quantitative support is incremental_mutual_information=0.535714, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[3]",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ aes_cipher_top.u0.w[3] ⇒ round-key generation ⇒ AddRoundKey ⇒ AES state ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.u0.w[3] can collect values carried along key -> aes_cipher_top.u0.w[3] -> round-key generation -> AddRoundKey -> AES state -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> aes_cipher_top.u0.w[3] -> round-key generation -> AddRoundKey -> AES state -> text_out: changing or observing aes_cipher_top.u0.w[3] can affect the protected behavior. Quantitative support is incremental_mutual_information=0.535714, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa00",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa00 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa00 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8525926959651349,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa00 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.852593, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa01",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa01 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa01 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8595860472072872,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa01 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.859586, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa02",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa02 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa02 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8592206793211533,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa02 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.859221, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa03",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa03 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa03 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724405538073227,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa03 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.872441, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa10",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa10 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa10 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8597025417349266,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa10 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.859703, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa11",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa11 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa11 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8594989739663381,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa11 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.859499, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa12",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa12 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa12 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8726203449799843,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa12 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.87262, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa13",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa13 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa13 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724075674115211,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa13 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.872408, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa20",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa20 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa20 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8527281514185157,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa20 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.852728, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa21",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa21 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa21 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8659322860426549,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa21 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.865932, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa22",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa22 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa22 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8658576502133549,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa22 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.865858, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa23",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa23 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa23 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.872904019146111,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa23 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.872904, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa30",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa30 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa30 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8592996506681537,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa30 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.8593, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa31",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa31 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa31 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8590728795728072,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa31 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.859073, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa32",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa32 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa32 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8660904101330569,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa32 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.86609, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa33",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round key ⇒ AddRoundKey ⇒ aes_cipher_top.sa33 ⇒ AES round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.sa33 can collect values carried along key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8659336971190678,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out: changing or observing aes_cipher_top.sa33 can affect the protected behavior. Quantitative support is incremental_mutual_information=0.865934, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us23.d",
+    "threat": "information_leakage",
+    "Structural Path": "Security propagation chain: key ⇒ round-key addition ⇒ AES state byte ⇒ aes_cipher_top.us23.d ⇒ round transformations ⇒ text_out",
+    "Attack Scenarios": [
+      "An adversary monitoring aes_cipher_top.us23.d can collect values carried along key -> round-key addition -> AES state byte -> aes_cipher_top.us23.d -> round transformations -> text_out; those observations retain information about key material and support key inference."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.872904019146111,
+      "uop_observability": 1.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through key -> round-key addition -> AES state byte -> aes_cipher_top.us23.d -> round transformations -> text_out: changing or observing aes_cipher_top.us23.d can affect the protected behavior. Quantitative support is incremental_mutual_information=0.872904, uop_observability=1.",
+    "decision": "retain"
+  }
+]

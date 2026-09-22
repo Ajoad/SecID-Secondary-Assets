@@ -1,0 +1,7 @@
+type=GOLDEN
+scenario=U_UNMATCHED_DEFAULT_DENY
+tag=s0_a0
+bound=900
+elapsed_ms=4007
+report_rc=0
+

@@ -1,0 +1,1 @@
+[JASPER] jg -spv -batch <SOURCE_PACKAGE_ROOT>/generated/core/60_effort_exclude_05_dbg_mem_dout_r02.tcl

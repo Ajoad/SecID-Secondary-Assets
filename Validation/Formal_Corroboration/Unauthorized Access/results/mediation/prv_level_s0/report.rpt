@@ -1,0 +1,56 @@
+
+==============================================================
+    Jasper Verification Results
+==============================================================
+    2024.09p001 64 bits for Linux64 4.18.0-372.26.1.el8_6.x86_64
+    Host Name: [redacted]
+    User Name: [redacted]
+    Printed on: Sunday, Sep13, 2026 10:33:35 PM EDT
+    Working Directory: [redacted]
+
+
+==============================================================
+SUMMARY
+==============================================================
+    Total Tasks           : 1
+    Total Properties      : 17
+          assumptions     : 5                   
+           - approved     : 0                   ( 0.0% )
+           - temporary    : 5                   ( 100.0% )
+          assertions      : 2                   
+           - proven       : 1                   ( 50.0% )
+           - marked_proven: 0                   ( 0.0% )
+           - cex          : 1                   ( 50.0% )
+           - ar_cex       : 0                   ( 0.0% )
+           - undetermined : 0                   ( 0.0% )
+           - unprocessed  : 0                   ( 0.0% )
+           - error        : 0                   ( 0.0% )
+          covers          : 10                  
+           - unreachable  : 0                   ( 0.0% )
+           - covered      : 10                  ( 100.0% )
+           - ar_covered   : 0                   ( 0.0% )
+           - undetermined : 0                   ( 0.0% )
+           - unprocessed  : 0                   ( 0.0% )
+           - error        : 0                   ( 0.0% )
+
+==============================================================
+RESULTS
+==============================================================
+
+------------------------------------------------------------------------------------------------------------------------------------------
+       Name                                                                              |    Result    |  Engine  |  Bound  |  Time    
+------------------------------------------------------------------------------------------------------------------------------------------
+
+---[ <embedded> ]-------------------------------------------------------------------------------------------------------------------------
+[1]   ua_mediation_prv_level_s0.UA_ATTACK_KIND_VALID:precondition1                            covered         Bm           42    0.182 s      
+[2]   ua_mediation_prv_level_s0.UA_ATTACK_ONE_CYCLE:precondition1                             covered         Bm           43    0.243 s      
+[3]   ua_mediation_prv_level_s0.UA_ATTACK_ONLY_ELIGIBLE:precondition1                         covered         Bm           42    0.182 s      
+[4]   ua_mediation_prv_level_s0.UA_DATA_ATTACK_ONE_BIT:precondition1                          covered         Bm           42    0.213 s      
+[5]   ua_mediation_prv_level_s0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1                   covered         Ht          901    35.147 s     
+[6]   ua_mediation_prv_level_s0.UA_COVER_ATTACK                                               covered         Bm           42    0.182 s      
+[7]   ua_mediation_prv_level_s0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP                         covered         Bm           64    2.312 s      
+[8]   ua_mediation_prv_level_s0.UA_GOLDEN_NONVACUOUS_BY_BOUND                                 proven          Ht     Infinite    35.178 s     
+[9]   ua_mediation_prv_level_s0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1                   covered         Ht          901    35.147 s     
+[10]  ua_mediation_prv_level_s0.UA_COVER_SA_DIVERGENCE_AFTER_UCP                              covered         Bm           64    2.312 s      
+[11]  ua_mediation_prv_level_s0.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND                         cex             Ht          901    212.735 s    
+[12]  ua_mediation_prv_level_s0.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1           covered         Ht          901    35.147 s     

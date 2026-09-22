@@ -1,0 +1,14 @@
+[
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PSEL",
+    "attack_mechanism": "By forcing `apb_gpio_gpio_dir_cone.PSEL` active at the required APB phase while the other terms and PADDIR address are present, an attacker can manufacture the missing write authorization. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PSEL` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PSEL -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PWRITE",
+    "attack_mechanism": "By forcing `apb_gpio_gpio_dir_cone.PWRITE` active at the required APB phase while the other terms and PADDIR address are present, an attacker can manufacture the missing write authorization. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PWRITE` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PWRITE -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.r_gpio_dir",
+    "attack_mechanism": "Writing or forcing `apb_gpio_gpio_dir_cone.r_gpio_dir` changes the protected direction state without relying on the normal PADDIR authorization path. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.r_gpio_dir` is the clocked storage directly assigned to the external `gpio_dir` output. Signal propagation follows `apb_gpio_gpio_dir_cone.r_gpio_dir -> apb_gpio_gpio_dir_cone.gpio_dir`. The primary direction value and the physical pad configuration are corrupted."
+  }
+]

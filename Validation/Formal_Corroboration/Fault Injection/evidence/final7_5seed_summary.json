@@ -1,0 +1,84 @@
+{
+  "schema": "secid_cv32_final7_frozenprefix_five_seed_sensitivity_v1",
+  "seeds": [
+    20260914,
+    20260915,
+    20260916,
+    20260917,
+    20260918
+  ],
+  "selected_signal_count": 7,
+  "random_signal_count_per_seed": 7,
+  "selected_primary_yield": 1.0,
+  "selected_semantic_yield": 0.7857142857142857,
+  "random_primary_mean": 0.17857142857142855,
+  "random_primary_median": 0.17857142857142858,
+  "random_primary_min": 0.0,
+  "random_primary_max": 0.2857142857142857,
+  "random_semantic_mean": 0.17857142857142855,
+  "random_semantic_median": 0.17857142857142858,
+  "random_semantic_min": 0.0,
+  "random_semantic_max": 0.2857142857142857,
+  "selected_over_mean_random_primary_ratio": 5.6000000000000005,
+  "selected_over_mean_random_semantic_ratio": 4.4,
+  "all_five_primary_selected_gt_random": true,
+  "all_five_semantic_selected_gt_random": true,
+  "per_seed": [
+    {
+      "seed": 20260914,
+      "selected_primary_yield": 1.0,
+      "random_primary_yield": 0.2857142857142857,
+      "primary_difference": 0.7142857142857143,
+      "selected_semantic_yield": 0.7857142857142857,
+      "random_semantic_yield": 0.2857142857142857,
+      "semantic_difference": 0.5,
+      "primary_p_one_sided_exact": 0.01048951048951049,
+      "semantic_p_one_sided_exact": 0.03817016317016317
+    },
+    {
+      "seed": 20260915,
+      "selected_primary_yield": 1.0,
+      "random_primary_yield": 0.0,
+      "primary_difference": 1.0,
+      "selected_semantic_yield": 0.7857142857142857,
+      "random_semantic_yield": 0.0,
+      "semantic_difference": 0.7857142857142857,
+      "primary_p_one_sided_exact": 0.0002913752913752914,
+      "semantic_p_one_sided_exact": 0.0002913752913752914
+    },
+    {
+      "seed": 20260916,
+      "selected_primary_yield": 1.0,
+      "random_primary_yield": 0.14285714285714285,
+      "primary_difference": 0.8571428571428572,
+      "selected_semantic_yield": 0.7857142857142857,
+      "random_semantic_yield": 0.14285714285714285,
+      "semantic_difference": 0.6428571428571428,
+      "primary_p_one_sided_exact": 0.002331002331002331,
+      "semantic_p_one_sided_exact": 0.007575757575757576
+    },
+    {
+      "seed": 20260917,
+      "selected_primary_yield": 1.0,
+      "random_primary_yield": 0.2857142857142857,
+      "primary_difference": 0.7142857142857143,
+      "selected_semantic_yield": 0.7857142857142857,
+      "random_semantic_yield": 0.2857142857142857,
+      "semantic_difference": 0.5,
+      "primary_p_one_sided_exact": 0.01048951048951049,
+      "semantic_p_one_sided_exact": 0.03817016317016317
+    },
+    {
+      "seed": 20260918,
+      "selected_primary_yield": 1.0,
+      "random_primary_yield": 0.17857142857142858,
+      "primary_difference": 0.8214285714285714,
+      "selected_semantic_yield": 0.7857142857142857,
+      "random_semantic_yield": 0.17857142857142858,
+      "semantic_difference": 0.6071428571428571,
+      "primary_p_one_sided_exact": 0.002331002331002331,
+      "semantic_p_one_sided_exact": 0.007575757575757576
+    }
+  ],
+  "inference_boundary": "Five previously frozen random orders are reused by taking the first seven signals from each. This is an outcome-independent prefix rule. Do not pool the 35 control signal observations as independent because signals may recur across seeds and the same selected cohort is reused."
+}

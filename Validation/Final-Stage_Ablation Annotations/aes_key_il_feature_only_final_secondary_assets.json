@@ -1,0 +1,244 @@
+[
+  {
+    "Name": "aes_cipher_top.u0.w[0]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1
+    },
+    "Justification": "For `aes_cipher_top.u0.w[0]`, the measured profile shows moderate incremental information (0.5357142857142857) together with very strong UOP observability (1). Because the signal holds expanded-key word 0 before its bytes enter AddRoundKey, this quantitative behavior supports relevance to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[1]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[1] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1
+    },
+    "Justification": "`aes_cipher_top.u0.w[1]` is selected from its feature evidence: moderate incremental information (0.5357142857142857) together with very strong UOP observability (1). Its RTL role, where it holds expanded-key word 1 before its bytes enter AddRoundKey, gives those measurements a meaningful connection to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[2]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1
+    },
+    "Justification": "The quantitative case for `aes_cipher_top.u0.w[2]` combines moderate incremental information (0.5357142857142857) together with very strong UOP observability (1). As `aes_cipher_top.u0.w[2]` holds expanded-key word 2 before its bytes enter AddRoundKey, the score pattern is consistent with a secondary asset influencing `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa00",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8525926959651349,
+      "uop_observability": 1
+    },
+    "Justification": "Measurements for `aes_cipher_top.sa00` indicate strong incremental information (0.8525926959651349) together with very strong UOP observability (1). This is significant because it stores the round-state byte at row 0, column 0; consequently, the feature response supports retaining the candidate around `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa01",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8595860472072872,
+      "uop_observability": 1
+    },
+    "Justification": "A feature-based review of `aes_cipher_top.sa01` finds strong incremental information (0.8595860472072872) together with very strong UOP observability (1). Coupled with the fact that the signal stores the round-state byte at row 0, column 1, the observed values make it pertinent to protection of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa02",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8592206793211533,
+      "uop_observability": 1
+    },
+    "Justification": "The evidence pair for `aes_cipher_top.sa02` reflects strong incremental information (0.8592206793211533) together with very strong UOP observability (1). Since `aes_cipher_top.sa02` stores the round-state byte at row 0, column 2, the quantitative response is not incidental and favors its inclusion for `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa03",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724405538073227,
+      "uop_observability": 1
+    },
+    "Justification": "Retention of `aes_cipher_top.sa03` follows from strong incremental information (0.8724405538073227) together with very strong UOP observability (1). The candidate stores the round-state byte at row 0, column 3, so this score combination points to measurable influence on the behavior surrounding `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa10",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8597025417349266,
+      "uop_observability": 1
+    },
+    "Justification": "For the `key` case, `aes_cipher_top.sa10` exhibits strong incremental information (0.8597025417349266) together with very strong UOP observability (1). Given its function—where it stores the round-state byte at row 1, column 0—the feature values provide sufficient quantitative support for selection.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa11",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8594989739663381,
+      "uop_observability": 1
+    },
+    "Justification": "`aes_cipher_top.sa11` receives quantitative support through strong incremental information (0.8594989739663381) together with very strong UOP observability (1). That profile matters in context because the signal stores the round-state byte at row 1, column 1, linking the measurements to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa12",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8726203449799843,
+      "uop_observability": 1
+    },
+    "Justification": "The normalized results distinguish `aes_cipher_top.sa12` through strong incremental information (0.8726203449799843) together with very strong UOP observability (1). Its RTL role is that it stores the round-state byte at row 1, column 2; therefore, the feature evidence favors treating it as secondary to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa13",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724075674115211,
+      "uop_observability": 1
+    },
+    "Justification": "Feature analysis assigns `aes_cipher_top.sa13` a profile of strong incremental information (0.8724075674115211) together with very strong UOP observability (1). Because `aes_cipher_top.sa13` stores the round-state byte at row 1, column 3, these values substantiate a measurable relationship with `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa20",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8527281514185157,
+      "uop_observability": 1
+    },
+    "Justification": "What supports `aes_cipher_top.sa20` quantitatively is strong incremental information (0.8527281514185157) together with very strong UOP observability (1). The signal stores the round-state byte at row 2, column 0, and that functional position makes the measured response relevant to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa21",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8659322860426549,
+      "uop_observability": 1
+    },
+    "Justification": "For `aes_cipher_top.sa21`, the measured profile shows strong incremental information (0.8659322860426549) together with very strong UOP observability (1). Because the signal stores the round-state byte at row 2, column 1, this quantitative behavior supports relevance to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa22",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8658576502133549,
+      "uop_observability": 1
+    },
+    "Justification": "`aes_cipher_top.sa22` is selected from its feature evidence: strong incremental information (0.8658576502133549) together with very strong UOP observability (1). Its RTL role, where it stores the round-state byte at row 2, column 2, gives those measurements a meaningful connection to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa23",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.872904019,
+      "uop_observability": 1
+    },
+    "Justification": "The quantitative case for `aes_cipher_top.sa23` combines strong incremental information (0.872904019) together with very strong UOP observability (1). As `aes_cipher_top.sa23` stores the round-state byte at row 2, column 3, the score pattern is consistent with a secondary asset influencing `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa30",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8592996506681537,
+      "uop_observability": 1
+    },
+    "Justification": "Measurements for `aes_cipher_top.sa30` indicate strong incremental information (0.8592996506681537) together with very strong UOP observability (1). This is significant because it stores the round-state byte at row 3, column 0; consequently, the feature response supports retaining the candidate around `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa31",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8590728795728072,
+      "uop_observability": 1
+    },
+    "Justification": "A feature-based review of `aes_cipher_top.sa31` finds strong incremental information (0.8590728795728072) together with very strong UOP observability (1). Coupled with the fact that the signal stores the round-state byte at row 3, column 1, the observed values make it pertinent to protection of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa32",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8660904101330569,
+      "uop_observability": 1
+    },
+    "Justification": "The evidence pair for `aes_cipher_top.sa32` reflects strong incremental information (0.8660904101330569) together with very strong UOP observability (1). Since `aes_cipher_top.sa32` stores the round-state byte at row 3, column 2, the quantitative response is not incidental and favors its inclusion for `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa33",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8659336971190678,
+      "uop_observability": 1
+    },
+    "Justification": "Retention of `aes_cipher_top.sa33` follows from strong incremental information (0.8659336971190678) together with very strong UOP observability (1). The candidate stores the round-state byte at row 3, column 3, so this score combination points to measurable influence on the behavior surrounding `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us23.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us23.d",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.872904019,
+      "uop_observability": 1
+    },
+    "Justification": "For the `key` case, `aes_cipher_top.us23.d` exhibits strong incremental information (0.872904019) together with very strong UOP observability (1). Given its function—where it emits the substitution result for state position (2,3)—the feature values provide sufficient quantitative support for selection.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us12.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us12.d",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8726203449799843,
+      "uop_observability": 1
+    },
+    "Justification": "`aes_cipher_top.us12.d` receives quantitative support through strong incremental information (0.8726203449799843) together with very strong UOP observability (1). That profile matters in context because the signal emits the substitution result for state position (1,2), linking the measurements to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us03.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us03.d",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724405538073227,
+      "uop_observability": 1
+    },
+    "Justification": "The normalized results distinguish `aes_cipher_top.us03.d` through strong incremental information (0.8724405538073227) together with very strong UOP observability (1). Its RTL role is that it emits the substitution result for state position (0,3); therefore, the feature evidence favors treating it as secondary to `key`.",
+    "decision": "retain"
+  }
+]

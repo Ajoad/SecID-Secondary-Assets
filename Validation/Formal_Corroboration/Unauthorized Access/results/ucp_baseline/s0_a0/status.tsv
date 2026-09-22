@@ -1,0 +1,17 @@
+property	status
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID	temporary
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE	temporary
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE	temporary
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_DATA_ATTACK_ONE_BIT	temporary
+<embedded>::ua_ucp_baseline_s0_a0.UA_DATA_ATTACK_ONE_BIT:precondition1	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND	temporary
+<embedded>::ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_COVER_ATTACK	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND	proven
+<embedded>::ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1	covered
+<embedded>::ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND	cex
+<embedded>::ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1	covered

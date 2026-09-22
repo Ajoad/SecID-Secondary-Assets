@@ -1,0 +1,153 @@
+[
+  {
+    "Name": "e_state",
+    "threat": "denial_of_service",
+    "Structural Path": "e_state -> execution-state decode -> terminal execution phase -> exec_done",
+    "Attack Scenarios": [
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.e_state` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.e_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "For `e_state`, one authoritative exploitation route shows that the signal records the active execution phase used by the completion decoder. Because an incorrect phase can prevent the terminal condition that raises exec_done, the documented behavior makes `e_state` relevant to compromise of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done",
+    "Attack Scenarios": [
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_state_nxt` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_state_nxt` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "The source provides one authoritative exploitation route for `frontend_0.e_state_nxt`, demonstrating how its RTL role can be abused. Since `frontend_0.e_state_nxt` selects the execution phase that will be entered on the next clock and a nonterminal next state can prolong an instruction indefinitely, this evidence supports its secondary-asset status for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done",
+    "Attack Scenarios": [
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_first_state` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_first_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "Mechanism evidence for `frontend_0.e_first_state` consists of one authoritative exploitation route. The candidate chooses the first micro-state for the decoded instruction class, so starting in the wrong phase can keep completion from being reached; this connects `frontend_0.e_first_state` causally to adverse behavior of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_jmp",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
+    "Attack Scenarios": [
+      "The corresponding control/data route is `openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_jmp` sets the selected completion class, execution state, or transition into the required terminal state; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. An attacker who forces `openMSP430.frontend_0.exec_jmp` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "`frontend_0.exec_jmp` is retained on the basis of one authoritative exploitation route. In the documented behavior it marks jump execution and changes the state-machine completion route, and misclassifying a jump can suppress the expected completion pulse, providing a direct threat-specific link to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.exec_dst_wr` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.exec_dst_wr -> openMSP430.frontend_0.exec_done`. For a destination-write instruction, `exec_done` is produced by `exec_dst_wr ? (e_state == E_DST_WR)`. An attacker who forces `openMSP430.frontend_0.exec_dst_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `frontend_0.exec_dst_wr` in operation. As it qualifies the destination-write phase before instruction retirement, holding or skipping that phase can block normal execution completion, which makes the candidate security-relevant to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.frontend_0.exec_src_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_src_wr` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`. For a source-writeback instruction, `exec_done` is produced by `exec_src_wr ? (e_state == E_SRC_WR)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "A practical role for `frontend_0.exec_src_wr` is established through one authoritative exploitation route. The source uses the fact that `frontend_0.exec_src_wr` controls whether the source-write phase participates in execution; therefore altered source-write sequencing can leave the instruction short of its terminal state, justifying inclusion relative to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sext_rdy",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.inst_sext_rdy` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.inst_sext_rdy`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.inst_sext_rdy -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.inst_sext_rdy` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "Evidence for `frontend_0.inst_sext_rdy` comes from one authoritative exploitation route. The documented conditions exploit the fact that it reports readiness of the extended source operand; the resulting concern is that withholding readiness can strand the execution FSM before completion, thereby affecting `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpuoff",
+    "threat": "denial_of_service",
+    "Structural Path": "cpuoff -> PDG fan-in layer 1 -> exec_done",
+    "Attack Scenarios": [
+      "Holding or toggling `openMSP430.cpuoff` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. `openMSP430.cpuoff` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the active mux/state branches are selected by `openMSP430.cpuoff`, `openMSP430.frontend_0.exec_jmp`. Signal propagation follows `openMSP430.cpuoff -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+    ],
+    "Justification": "`cpuoff` is not merely adjacent to `exec_done`: one authoritative exploitation route shows how it can be exercised. Because the signal requests the low-power condition that halts normal processor progress, an asserted low-power request can stop further exec_done events, making it a plausible point of compromise.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.decode_noirq` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.decode_noirq -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.decode_noirq` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "The source descriptions place `decode_noirq` on an actionable route through one authoritative exploitation route. Its RTL function—where it qualifies instruction decoding when no interrupt supersedes the instruction—allows loss of this launch condition can deny the execution unit new work to complete, so the candidate merits retention for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.frontend_0.decode` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.decode` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "A causal basis for `frontend_0.decode` is provided by one authoritative exploitation route. This evidence leverages how the signal launches decoded work into the execution state machine; as a result, disturbing the launch boundary can stall or repeatedly restart completion sequencing, with consequences for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.dst_acalc_pre",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.dst_acalc_pre -> PDG fan-in layer 1 -> exec_done",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.dst_acalc_pre` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.cpuoff`, `openMSP430.frontend_0.dst_acalc_pre`, `openMSP430.frontend_0.src_acalc_pre`, `openMSP430.frontend_0.src_rd_pre`, and the remaining path guards. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. The implemented dependency runs through `openMSP430.frontend_0.dst_acalc_pre -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. An attacker who forces `openMSP430.frontend_0.dst_acalc_pre` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "The scenario source ties `frontend_0.dst_acalc_pre` to the threat using one authoritative exploitation route. Given that `frontend_0.dst_acalc_pre` prepares destination-address calculation before later execution phases, a blocked address-calculation precursor can delay the route to exec_done; this supports treating it as secondary to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.irq_detect -> PDG fan-in layer 1 -> exec_done",
+    "Attack Scenarios": [
+      "For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. `openMSP430.frontend_0.irq_detect` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.irq_detect` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "For the protected `exec_done`, `frontend_0.irq_detect` becomes relevant through one authoritative exploitation route. The documented behavior exploits its role in which it arbitrates interrupt entry against ordinary instruction progress, allowing the condition that persistent interrupt selection can prevent normal instructions from reaching completion.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.is_sext",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.is_sext -> PDG fan-in layer 1 -> exec_done",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.is_sext` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.inst_sext_rdy`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.is_sext -> openMSP430.frontend_0.inst_sext_rdy -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.is_sext` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "For `frontend_0.is_sext`, one authoritative exploitation route shows that the signal identifies instructions that require an extended source operand. Because a false classification can send execution through a phase that never becomes ready, the documented behavior makes `frontend_0.is_sext` relevant to compromise of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.src_acalc_pre",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.src_acalc_pre -> PDG fan-in layer 1 -> exec_done",
+    "Attack Scenarios": [
+      "The corresponding control/data route is `openMSP430.frontend_0.src_acalc_pre -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.src_acalc_pre` sets the selected completion class, execution state, or transition into the required terminal state; the implementation qualifies this propagation with `openMSP430.frontend_0.cpuoff`, `openMSP430.frontend_0.src_acalc_pre`, `openMSP430.frontend_0.exec_jmp`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.src_acalc_pre` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "The source provides one authoritative exploitation route for `frontend_0.src_acalc_pre`, demonstrating how its RTL role can be abused. Since `frontend_0.src_acalc_pre` initiates source-address calculation for memory-oriented instructions and failure to advance this precursor can keep the FSM away from its completion state, this evidence supports its secondary-asset status for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_type",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_type -> PDG fan-in layer 1 -> exec_done",
+    "Attack Scenarios": [
+      "`openMSP430.inst_type` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`. The relevant dataflow is `openMSP430.inst_type -> openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.exec_done`. For a source-writeback instruction, `exec_done` is produced by `exec_src_wr ? (e_state == E_SRC_WR)`. An attacker who forces `openMSP430.inst_type` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement.",
+      "`openMSP430.inst_type` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.cpu_halt_st`, `openMSP430.inst_type`, `openMSP430.execution_unit_0.register_file_0.cpuoff`, `openMSP430.frontend_0.exec_jmp`. The relevant dataflow is `openMSP430.inst_type -> openMSP430.frontend_0.inst_dest -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.inst_type` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "Mechanism evidence for `inst_type` consists of 2 authoritative exploitation routes covering distinct timing windows or propagation paths. The candidate encodes the instruction class that selects the execution path, so a wrong class can choose a path whose completion predicate is not satisfied; this connects `inst_type` causally to adverse behavior of `exec_done`.",
+    "decision": "retain"
+  }
+]

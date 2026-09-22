@@ -1,0 +1,59 @@
+{
+  "candidate": "openMSP430.dbg_en_s",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.dbg_en_s",
+          "destination": "openMSP430.dbg_0.halt_rst",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.dbg_0.halt_rst",
+          "destination": "openMSP430.dbg_0.halt_flag_set",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.dbg_0.halt_flag_set",
+          "destination": "openMSP430.dbg_0.dbg_halt_cmd",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.dbg_0.dbg_halt_cmd",
+          "destination": "openMSP430.mem_backbone_0.cpu_halt_cmd",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.mem_backbone_0.cpu_halt_cmd",
+          "destination": "openMSP430.frontend_0.cpu_halt_req",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.cpu_halt_req",
+          "destination": "openMSP430.frontend_0.e_first_state",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.e_first_state",
+          "destination": "openMSP430.frontend_0.e_state_nxt",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state_nxt",
+          "destination": "openMSP430.frontend_0.e_state",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_jmp"
+          ]
+        }
+      ]
+    }
+  ]
+}

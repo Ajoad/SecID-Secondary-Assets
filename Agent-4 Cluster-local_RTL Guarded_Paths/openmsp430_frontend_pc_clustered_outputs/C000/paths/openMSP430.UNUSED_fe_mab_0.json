@@ -1,0 +1,17 @@
+{
+  "candidate": "openMSP430.UNUSED_fe_mab_0",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.UNUSED_fe_mab_0",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

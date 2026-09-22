@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "neorv32_cpu_control.csr.mstatus_mpp",
+    "attack_mechanism": "`neorv32_cpu_control.csr.mstatus_mpp` can alter the CSR write, trap/debug return, or stored `mstatus_mpp` value used by that MPRV branch; the state and data choices on this path depend on `neorv32_cpu_control.csr.mstatus_mprv`. The hardware dependence follows `neorv32_cpu_control.csr.mstatus_mpp -> neorv32_cpu_control.ctrl_o.lsu_priv`. For a load or store issued while `mstatus_mprv = 1`, the control unit assigns `ctrl_o.lsu_priv <= csr.mstatus_mpp`. A transient or persistent fault on `neorv32_cpu_control.csr.mstatus_mpp` during CSR update or request issue can flip the effective privilege used for that load/store. The LSU request metadata carries an unintended effective privilege, allowing a memory access to be checked as a more privileged operation."
+  },
+  {
+    "candidate": "neorv32_cpu_control.csr.mstatus_mprv",
+    "attack_mechanism": "`neorv32_cpu_control.csr.mstatus_mprv` reaches that selector or one of its CSR update controls; the state and data choices on this path depend on `neorv32_cpu_control.csr.mstatus_mprv`. The hardware dependence follows `neorv32_cpu_control.csr.mstatus_mprv -> neorv32_cpu_control.ctrl_o.lsu_priv`. The assignment `lsu_priv <= mstatus_mpp when mstatus_mprv = '1' else prv_level` makes `mstatus_mprv` the privilege-source selector. A transient or persistent fault on `neorv32_cpu_control.csr.mstatus_mprv` during CSR update or request issue can flip the effective privilege used for that load/store. The LSU selects the wrong privilege source and applies an unintended protection domain to the pending memory request."
+  },
+  {
+    "candidate": "neorv32_cpu_control.csr.prv_level",
+    "attack_mechanism": "`neorv32_cpu_control.csr.prv_level` affects the state transition or CSR path that establishes `prv_level`; the state and data choices on this path depend on `neorv32_cpu_control.csr.mstatus_mprv`. The hardware dependence follows `neorv32_cpu_control.csr.prv_level -> neorv32_cpu_control.ctrl_o.lsu_priv`. When `mstatus_mprv = 0`, the effective load/store privilege is taken directly from `csr.prv_level`. A transient or persistent fault on `neorv32_cpu_control.csr.prv_level` during CSR update or request issue can flip the effective privilege used for that load/store. A user-mode load or store can be emitted with machine-level privilege, bypassing the protection expected for the current execution mode."
+  },
+  {
+    "candidate": "neorv32_cpu_control.ctrl.csr_we",
+    "attack_mechanism": "`neorv32_cpu_control.ctrl.csr_we` can alter the CSR write, trap/debug return, or stored `mstatus_mpp` value used by that MPRV branch; the state and data choices on this path depend on `neorv32_cpu_control.ctrl.csr_we`, `neorv32_cpu_control.csr.mstatus_mprv`. The hardware dependence follows `neorv32_cpu_control.ctrl.csr_we -> neorv32_cpu_control.csr.mstatus_mpp -> neorv32_cpu_control.ctrl_o.lsu_priv`. For a load or store issued while `mstatus_mprv = 1`, the control unit assigns `ctrl_o.lsu_priv <= csr.mstatus_mpp`. A transient or persistent fault on `neorv32_cpu_control.ctrl.csr_we` during CSR update or request issue can flip the effective privilege used for that load/store. The LSU request metadata carries an unintended effective privilege, allowing a memory access to be checked as a more privileged operation."
+  },
+  {
+    "candidate": "neorv32_cpu_control.ctrl.csr_we",
+    "attack_mechanism": "`neorv32_cpu_control.ctrl.csr_we` reaches that selector or one of its CSR update controls; the state and data choices on this path depend on `neorv32_cpu_control.ctrl.csr_we`, `neorv32_cpu_control.csr.mstatus_mprv`. The hardware dependence follows `neorv32_cpu_control.ctrl.csr_we -> neorv32_cpu_control.csr.mstatus_mprv -> neorv32_cpu_control.ctrl_o.lsu_priv`. The assignment `lsu_priv <= mstatus_mpp when mstatus_mprv = '1' else prv_level` makes `mstatus_mprv` the privilege-source selector. A transient or persistent fault on `neorv32_cpu_control.ctrl.csr_we` during CSR update or request issue can flip the effective privilege used for that load/store. The LSU selects the wrong privilege source and applies an unintended protection domain to the pending memory request."
+  }
+]

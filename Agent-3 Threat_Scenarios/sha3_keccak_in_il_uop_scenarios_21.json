@@ -1,0 +1,1068 @@
+{
+  "threat feature": "uop_observability",
+  "design": {
+    "name": "SHA-3",
+    "top": "keccak",
+    "rtl_language": "Verilog"
+  },
+  "primary": {
+    "signal": "keccak.in[63:0]",
+    "security_objective": "confidentiality"
+  },
+  "threat": "information_leakage",
+  "feature": "uop_observability",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "keccak.in[63:0]"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk",
+    "reset": {
+      "signal": "reset",
+      "active_level": "high"
+    },
+    "uop": {
+      "placeholder": "$uop",
+      "rtl_signal": "keccak.out[511:0]",
+      "source_aliases": [
+        "$observation"
+      ]
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Determine whether a legal, payload-qualified candidate perturbation has a witness at the declared untrusted observable point.",
+    "execution_model": "paired baseline and candidate-perturbed executions with identical legal history before intervention",
+    "calculation": "observable when a known, valid UOP divergence follows the candidate intervention; a bounded no-witness result remains unresolved",
+    "required_observation_roles": [
+      "candidate intervention",
+      "UOP validity",
+      "post-intervention UOP divergence"
+    ],
+    "validity_policy": [
+      "candidate is primary-sensitive in the scenario",
+      "paired executions agree before intervention",
+      "the UOP is known and valid when compared"
+    ],
+    "classification": {
+      "observable": "valid UOP witness",
+      "unresolved": "valid bounded run without a witness",
+      "not_applicable": "required candidate-to-UOP context is absent",
+      "invalid": "setup, pairing, intervention, UOP-validity, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "confirm the intended candidate perturbation/activation at the scenario anchor",
+        "target": "$candidate"
+      },
+      {
+        "purpose": "detect whether the candidate perturbation becomes externally observable",
+        "target": "$observation"
+      }
+    ],
+    "validity": [
+      "Baseline and intervened executions use the same legal SHA-3 workload and primary input values.",
+      "The candidate perturbation is applied only at the scenario-defined anchor and is released according to the scenario semantics.",
+      "A leakage witness is counted only when $observation is architecturally valid."
+    ],
+    "oracle": {
+      "leakage": {
+        "baseline": "unperturbed execution",
+        "intervened": "candidate-perturbed execution",
+        "success": "valid_observation_difference"
+      },
+      "scenario_success": "known valid UOP divergence after candidate intervention"
+    },
+    "intervention": {
+      "comparison": "unmodified baseline versus otherwise-identical perturbed run",
+      "operation": "perturb",
+      "release": "after the scenario-defined sensitized interval",
+      "target": "$candidate",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 21,
+  "scenarios": [
+    {
+      "id": "UOP01",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.padder_.p0.out"
+        ],
+        "message_phase": "sensitive non-final beat"
+      },
+      "stimulus": [
+        {
+          "action": "present_sensitive_nonfinal_beat",
+          "parameters": {
+            "detail": "Present the sensitive non-final input beat in an otherwise legal transaction."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb $candidate in the strict same-phase interval immediately before the acceptance edge and release after that edge."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Continue the legal padding/permutation sequence to a valid output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "sensitive_nonfinal_beat_same_phase",
+        "condition": "$candidate is p0.out during the first sensitive non-final beat before its acceptance edge",
+        "timing": "PRE_EDGE",
+        "cycle": 1,
+        "hold": "through the acceptance edge only"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.padder_.p0.out"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "validity": [
+          "Baseline and intervened executions use the same legal SHA-3 workload and primary input values.",
+          "The candidate perturbation is applied only at the scenario-defined anchor and is released according to the scenario semantics.",
+          "A leakage witness is counted only when $observation is architecturally valid.",
+          "A zero witness count is valid evidence for this scenario; the scenario is not discarded merely because p0.out is bypassed by v1 when the beat is non-final."
+        ]
+      }
+    },
+    {
+      "id": "UOP02",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.padder_.p0.out"
+        ],
+        "message_phase": "transition from sensitive non-final beat to following final-beat phase"
+      },
+      "stimulus": [
+        {
+          "action": "accept_sensitive_nonfinal_beat",
+          "parameters": {
+            "detail": "Accept the sensitive non-final beat."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Immediately after that edge, perturb $candidate and hold it across the following final-beat phase."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Allow the final beat, padding, permutation, and valid output to complete."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "cross_edge_p0_hold",
+        "condition": "p0.out is perturbed after the first acceptance edge and remains perturbed into the following final-beat selection phase",
+        "timing": "POST_EDGE",
+        "cycle": 1,
+        "hold": "across the following edge/phase"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.padder_.p0.out"
+          ],
+          "outside_scope": "not_applicable"
+        }
+      }
+    },
+    {
+      "id": "UOP03",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.padder_.v1"
+        ],
+        "message_phase": "accepted sensitive beat"
+      },
+      "stimulus": [
+        {
+          "action": "present_sensitive_beat",
+          "parameters": {
+            "detail": "Present the sensitive beat in a legal transaction."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb v1 before the acceptance edge so the altered value can be captured into padder state."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Continue through padding/permutation to valid output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accepted_sensitive_beat_capture",
+        "condition": "v1 is active as the selected 64-bit value immediately before the first acceptance edge",
+        "timing": "PRE_EDGE",
+        "cycle": 1
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.padder_.v1"
+          ],
+          "outside_scope": "not_applicable"
+        }
+      }
+    },
+    {
+      "id": "UOP04",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.padder_.out"
+        ],
+        "message_phase": "mid-fill rate-buffer accumulation"
+      },
+      "stimulus": [
+        {
+          "action": "partially_fill_rate_buffer",
+          "parameters": {
+            "detail": "Accept enough legal non-final beats to place the 576-bit padder register in a partially filled state."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb padder.out during the mid-fill state and hold the perturbation through the next update edge."
+          }
+        },
+        {
+          "action": "complete_block_and_transaction",
+          "parameters": {
+            "detail": "Finish the block and transaction to a valid output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "padder_accumulation_update",
+        "condition": "padder.out contains an accumulated partial rate block and is about to undergo a subsequent update",
+        "timing": "POST_EDGE",
+        "cycle": 4,
+        "hold": "through the next padder update edge"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.padder_.out"
+          ],
+          "outside_scope": "not_applicable"
+        }
+      }
+    },
+    {
+      "id": "UOP05",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.padder_.out"
+        ],
+        "message_phase": "full rate-buffer to permutation handoff"
+      },
+      "stimulus": [
+        {
+          "action": "fill_rate_buffer",
+          "parameters": {
+            "detail": "Form a complete 576-bit rate block."
+          }
+        },
+        {
+          "action": "reach_handoff",
+          "parameters": {
+            "detail": "Wait until the complete padder output is ready for permutation acceptance."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb padder.out at the handoff and hold through the first permutation update edge."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Continue to a valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "full_buffer_permutation_handoff",
+        "condition": "padder output is complete and permutation accept is active",
+        "timing": "POST_EDGE",
+        "cycle": 9,
+        "hold": "through the first permutation update edge"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.padder_.out"
+          ],
+          "outside_scope": "not_applicable"
+        }
+      }
+    },
+    {
+      "id": "UOP06",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.f_permutation_.round_in"
+        ],
+        "message_phase": "absorb/XOR handoff"
+      },
+      "stimulus": [
+        {
+          "action": "form_complete_rate_block",
+          "parameters": {
+            "detail": "Prepare a legal complete rate block for permutation acceptance."
+          }
+        },
+        {
+          "action": "reach_round_input",
+          "parameters": {
+            "detail": "Allow the block to be combined with the current permutation state to form round_in."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb round_in before the first round result is committed."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Continue all remaining permutation rounds to valid output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "round_input_absorb_handoff",
+        "condition": "round_in represents the accepted rate block combined with current permutation state",
+        "timing": "POST_EDGE",
+        "cycle": 9,
+        "hold": "through the next permutation update edge"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.f_permutation_.round_in"
+          ],
+          "outside_scope": "not_applicable"
+        }
+      }
+    },
+    {
+      "id": "UOP07",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 1
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 1 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 1 of 12",
+        "two_round_window": 1,
+        "timing": "POST_EDGE",
+        "cycle": 9,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP08",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 2
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 2 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 2 of 12",
+        "two_round_window": 2,
+        "timing": "POST_EDGE",
+        "cycle": 10,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP09",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 3
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 3 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 3 of 12",
+        "two_round_window": 3,
+        "timing": "POST_EDGE",
+        "cycle": 11,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP10",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 4
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 4 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 4 of 12",
+        "two_round_window": 4,
+        "timing": "POST_EDGE",
+        "cycle": 12,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP11",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 5
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 5 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 5 of 12",
+        "two_round_window": 5,
+        "timing": "POST_EDGE",
+        "cycle": 13,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP12",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 6
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 6 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 6 of 12",
+        "two_round_window": 6,
+        "timing": "POST_EDGE",
+        "cycle": 14,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP13",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 7
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 7 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 7 of 12",
+        "two_round_window": 7,
+        "timing": "POST_EDGE",
+        "cycle": 15,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP14",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 8
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 8 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 8 of 12",
+        "two_round_window": 8,
+        "timing": "POST_EDGE",
+        "cycle": 16,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP15",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 9
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 9 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 9 of 12",
+        "two_round_window": 9,
+        "timing": "POST_EDGE",
+        "cycle": 17,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP16",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 10
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 10 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 10 of 12",
+        "two_round_window": 10,
+        "timing": "POST_EDGE",
+        "cycle": 18,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP17",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 11
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 11 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 11 of 12",
+        "two_round_window": 11,
+        "timing": "POST_EDGE",
+        "cycle": 19,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP18",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "candidates under keccak.f_permutation_.round_.*",
+        "two_round_window": 12
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Reach an active Keccak-f permutation for a legal absorbed block."
+          }
+        },
+        {
+          "action": "advance_to_window",
+          "parameters": {
+            "detail": "Advance to two-round update window 12 of 12."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the applicable round-datapath $candidate immediately after the selected update edge and hold through the following edge."
+          }
+        },
+        {
+          "action": "complete_remaining_rounds",
+          "parameters": {
+            "detail": "Allow all remaining permutation updates to complete and observe the valid architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "keccak_two_round_update_window",
+        "condition": "the permutation is in two-round update window 12 of 12",
+        "two_round_window": 12,
+        "timing": "POST_EDGE",
+        "cycle": 20,
+        "hold": "through the next permutation update edge"
+      }
+    },
+    {
+      "id": "UOP19",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.f_permutation_.out"
+        ],
+        "message_phase": "registered permutation state after first two-round update"
+      },
+      "stimulus": [
+        {
+          "action": "start_permutation",
+          "parameters": {
+            "detail": "Begin a legal Keccak-f permutation."
+          }
+        },
+        {
+          "action": "complete_first_two_round_update",
+          "parameters": {
+            "detail": "Allow the first two-round update to be captured into the registered permutation state."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb the registered permutation-state candidate and hold through the next update edge."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Continue remaining rounds to valid output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "registered_permutation_state_after_first_update",
+        "condition": "f_permutation.out contains state after the first two-round update",
+        "timing": "POST_EDGE",
+        "cycle": 10,
+        "hold": "through the next permutation update edge"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.f_permutation_.out"
+          ],
+          "outside_scope": "not_applicable"
+        }
+      }
+    },
+    {
+      "id": "UOP20",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": [
+          "keccak.out1"
+        ],
+        "message_phase": "architecturally valid output"
+      },
+      "stimulus": [
+        {
+          "action": "run_to_valid_output",
+          "parameters": {
+            "detail": "Execute a legal SHA-3 transaction until the architectural output is valid."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "Perturb out1 during the valid-output phase."
+          }
+        },
+        {
+          "action": "observe_same_phase",
+          "parameters": {
+            "detail": "Compare $observation in the same architecturally valid output phase."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "valid_output_direct_alias",
+        "condition": "out_ready is asserted and out1 directly feeds the allowed observation point",
+        "timing": "VALID_OUTPUT_DIRECT"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "keccak.out1"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "validity": [
+          "Baseline and intervened executions use the same legal SHA-3 workload and primary input values.",
+          "The candidate perturbation is applied only at the scenario-defined anchor and is released according to the scenario semantics.",
+          "A leakage witness is counted only when $observation is architecturally valid.",
+          "The witness must be evaluated in the same valid-output phase as the direct-alias intervention."
+        ]
+      }
+    },
+    {
+      "id": "UOP21",
+      "preconditions": {
+        "reset_state": "released",
+        "workload": "legal SHA-3 absorb/pad/permutation sequence",
+        "candidate_scope": "all frozen candidates except the p0.out strict/cross-edge special case and direct out1 alias",
+        "message_phase": "first full non-final block of a two-block transaction",
+        "anchor_resolution": "candidate-specific timing is selected according to the candidate's active RTL phase",
+        "transaction": "two_block"
+      },
+      "stimulus": [
+        {
+          "action": "absorb_first_nonfinal_block",
+          "parameters": {
+            "detail": "Process a complete first block without terminating the message."
+          }
+        },
+        {
+          "action": "perturb_candidate",
+          "parameters": {
+            "detail": "During the first block/permutation, perturb $candidate at its candidate-specific active phase."
+          }
+        },
+        {
+          "action": "continue_to_second_block",
+          "parameters": {
+            "detail": "Remove the perturbation and process a later block that legally terminates the message."
+          }
+        },
+        {
+          "action": "observe_later_output",
+          "parameters": {
+            "detail": "Require any leakage witness to appear at the later out_ready-qualified architectural output."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "candidate_specific_first_block_active_phase",
+        "condition": "$candidate is active during the first non-final block/permutation and a later final block will produce the valid output",
+        "timing": "candidate_specific",
+        "observation_window": "later final-block valid output only"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": "all frozen candidates except the p0.out strict/cross-edge special case and direct out1 alias",
+          "outside_scope": "not_applicable"
+        },
+        "validity": [
+          "Baseline and intervened executions use the same legal SHA-3 workload and primary input values.",
+          "The candidate perturbation is applied only at the scenario-defined anchor and is released according to the scenario semantics.",
+          "A leakage witness is counted only when $observation is architecturally valid.",
+          "A difference observed before the later valid output does not by itself satisfy the leakage oracle.",
+          "The candidate-specific anchor must correspond to a real active phase for that candidate class."
+        ]
+      }
+    }
+  ]
+}

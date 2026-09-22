@@ -1,0 +1,10 @@
+candidate,evaluated_scope,width,ucp_controllability,controllable_ucps,total_ucps,PADDR_controllable,PWDATA_controllable,scenario_count,candidate_ucp_scenario_cells,measurement_status,controllable_ucp_names,ucp_any_controllable
+r_gpio_dir,r_gpio_dir,32,,,2,,,8,112/112,threat_ineligible,NONE,0
+PENABLE,PENABLE,1,0,0,2,0,0,8,112/112,resolved,NONE,0
+PSEL,PSEL,1,0,0,2,0,0,8,112/112,resolved,NONE,0
+PWRITE,PWRITE,1,0,0,2,0,0,8,112/112,resolved,NONE,0
+pwdata_l,pwdata_l,32,,,2,,,8,112/112,threat_ineligible,NONE,0
+s_apb_addr,s_apb_addr[4:0],5,0.5,1,2,1,0,8,112/112,resolved,PADDR,1
+PADDR,PADDR[6:2],5,0.5,1,2,1,0,8,112/112,resolved,PADDR,1
+PWDATA,PWDATA[0],1,0.5,1,2,0,1,8,112/112,resolved,PWDATA,1
+r_gpio_lock,r_gpio_lock[0],1,1,2,2,1,1,8,112/112,resolved,PADDR;PWDATA,1

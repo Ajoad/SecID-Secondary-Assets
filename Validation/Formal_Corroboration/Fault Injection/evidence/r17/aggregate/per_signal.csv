@@ -1,0 +1,8 @@
+candidate,rtl_width,domain,scenario,jobs,valid_jobs,invalid_jobs,c_t_primary_sat,c_t_primary_unsat,c_t_primary_unknown,c_t_semantic_sat,c_t_semantic_unsat,c_t_semantic_unknown,c_t_false_write_semantic_sat,c_t_false_write_semantic_unsat,c_t_false_write_semantic_unknown,c_t_suppression_semantic_sat,c_t_suppression_semantic_unsat,c_t_suppression_semantic_unknown,primary_witness_yield_all_valid,semantic_witness_yield_all_valid,unknown_primary_fraction,unknown_semantic_fraction
+core_i.cs_registers_i.dcsr_n,13,csr,csr_mix,4,4,0,0,0,4,0,0,4,0,0,4,0,0,4,0.0,0.0,1.0,1.0
+core_i.ex_stage_i.alu_i.bitop_result,6,alu,csr_alu,4,4,0,0,0,4,0,0,4,0,0,4,0,0,4,0.0,0.0,1.0,1.0
+core_i.ex_stage_i.alu_i.shift_amt_int,32,alu,csr_alu,4,4,0,0,0,4,0,0,4,0,0,4,0,0,4,0.0,0.0,1.0,1.0
+core_i.id_stage_i.alu_op_a_mux_sel,3,alu,csr_alu,3,3,0,0,0,3,0,0,3,0,0,3,0,0,3,0.0,0.0,1.0,1.0
+core_i.id_stage_i.uret_dec,1,decode_control,csr_mix,1,1,0,0,0,1,0,0,1,0,0,1,0,0,1,0.0,0.0,1.0,1.0
+core_i.if_stage_i.instr_valid,1,ifetch,csr_branch,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,1.0,1.0,0.0,0.0
+core_i.pc_set,1,ifetch,csr_branch,1,1,0,1,0,0,1,0,0,1,0,0,1,0,0,1.0,1.0,0.0,0.0

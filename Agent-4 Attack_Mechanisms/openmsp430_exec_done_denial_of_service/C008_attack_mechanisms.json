@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "openMSP430.e_state",
+    "attack_mechanism": "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.e_state` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.e_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.inst_branch",
+    "attack_mechanism": "For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. `openMSP430.frontend_0.inst_branch` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.inst_branch` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.frontend_0.inst_branch -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.irq_detect",
+    "attack_mechanism": "For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. `openMSP430.frontend_0.irq_detect` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.irq_detect` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.sfr_0.reg_dec",
+    "attack_mechanism": "For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. `openMSP430.sfr_0.reg_dec` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.sfr_0.reg_dec` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.sfr_0.reg_dec -> openMSP430.sfr_0.reg_lo_wr -> openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.sfr_0.reg_dec",
+    "attack_mechanism": "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.sfr_0.reg_dec` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.mem_backbone_0.eu_mdb_in_sel`, `openMSP430.execution_unit_0.inst_bw`, `openMSP430.execution_unit_0.dbg_halt_st`, `openMSP430.execution_unit_0.dst_inst_sext_sel`, and the remaining path guards. An attacker who forces `openMSP430.sfr_0.reg_dec` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.sfr_0.reg_dec -> openMSP430.sfr_0.reg_rd -> openMSP430.execution_unit_0.alu_0.alu_add_inc -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  }
+]

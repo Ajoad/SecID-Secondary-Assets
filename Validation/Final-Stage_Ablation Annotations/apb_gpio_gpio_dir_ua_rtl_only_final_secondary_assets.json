@@ -1,0 +1,65 @@
+[
+  {
+    "Name": "PADDR[6:2]",
+    "threat": "unauthorized_access",
+    "Structural Path": "PADDR[6:2] -> s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance -> gpio_dir",
+    "Justification": "RTL inspection identifies `PADDR[6:2]` as the element that selects which APB register receives a write. Because an altered address slice can redirect an otherwise legal transaction to PADDIR, `PADDR[6:2]` is a credible secondary asset for `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWDATA[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir",
+    "Justification": "Although `PWDATA[0]` is not the protected object, it provides the lock bit written through the APB data channel. The dependency matters because changing this bit can clear the authorization barrier protecting direction updates, placing `PWDATA[0]` inside the security-relevant RTL cone of `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "r_gpio_lock[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir",
+    "Justification": "The structural analysis retains `r_gpio_lock[0]` because it stores the active PADDIR write-permission state; in that position, a false unlocked value allows direction data to be accepted. This gives `r_gpio_lock[0]` a plausible supporting role in compromise of `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "r_gpio_dir",
+    "threat": "unauthorized_access",
+    "Structural Path": "r_gpio_dir -> PDG fan-in layer 0 -> gpio_dir",
+    "Justification": "A review of the local logic shows that `r_gpio_dir` stores the internal direction value that directly drives gpio_dir. Since unauthorized modification immediately changes the protected direction output, excluding `r_gpio_dir` would omit a meaningful dependency of `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PENABLE",
+    "threat": "unauthorized_access",
+    "Structural Path": "PENABLE -> PDG fan-in layer 1 -> gpio_dir",
+    "Justification": "For `PENABLE`, the relevant RTL role is that it marks the APB access phase used by the write qualifier. That role is security-sensitive: forcing the phase indication can manufacture a write cycle, so `PENABLE` warrants treatment as a secondary asset around `gpio_dir`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PSEL",
+    "threat": "unauthorized_access",
+    "Structural Path": "PSEL -> PDG fan-in layer 1 -> gpio_dir",
+    "Justification": "The path through `PSEL` is consequential because this signal selects the GPIO peripheral for the current APB transfer. In particular, an illegitimate selection can admit a transfer that should target another slave; the relationship of `PSEL` to `gpio_dir` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWRITE",
+    "threat": "unauthorized_access",
+    "Structural Path": "PWRITE -> PDG fan-in layer 1 -> gpio_dir",
+    "Justification": "Within the analyzed cone, `PWRITE` distinguishes write transfers from reads in the PADDIR guard. This behavior can matter to `gpio_dir` because forcing write intent can turn a non-writing access into a direction update, which supports retaining `PWRITE` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "pwdata_l",
+    "threat": "unauthorized_access",
+    "Structural Path": "pwdata_l -> PDG fan-in layer 1 -> gpio_dir",
+    "Justification": "`pwdata_l` sits at a functional boundary where it holds the write payload consumed by the GPIO register logic. Because `pwdata_l` occupies that point, tampering with the latched payload controls the unauthorized direction value, so the signal can mediate behavior of `gpio_dir` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "s_apb_addr",
+    "threat": "unauthorized_access",
+    "Structural Path": "s_apb_addr -> PDG fan-in layer 1 -> gpio_dir",
+    "Justification": "Tracing the RTL dependency of `gpio_dir` reaches `s_apb_addr`, which is the local decoded address used to recognize PADDIR. The resulting concern is that corrupting the decode can make an unrelated access satisfy the protected-register case, making `s_apb_addr` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  }
+]

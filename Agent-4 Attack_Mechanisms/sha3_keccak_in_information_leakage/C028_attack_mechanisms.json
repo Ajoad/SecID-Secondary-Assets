@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "keccak.f_permutation_.round_in",
+    "attack_mechanism": "When `accept = in_ready && ~calc`, `round_in` is formed as `{in ^ out[1599:1024], out[1023:0]}` rather than the feedback state alone. Observing `keccak.f_permutation_.round_in` together with a known reset/previous state reveals the absorbed `keccak_in` block; repeated observations disclose block-to-block differences. `keccak.f_permutation_.round_in` therefore contains the newly absorbed 576-bit block XORed with the previous sponge state at the start of permutation. Input confidentiality is lost before the round function's nonlinear mixing can conceal the rate portion. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_out_1 -> keccak.f_permutation_.in -> keccak.f_permutation_.round_in`."
+  },
+  {
+    "candidate": "keccak.f_permutation_.round_in",
+    "attack_mechanism": "While `calc` remains active after acceptance, the same round-input point is driven by the registered permutation output for the next two-round iteration. A probe that samples `keccak.f_permutation_.round_in` over successive calculation cycles obtains temporally aligned internal states. `keccak.f_permutation_.round_in` then exposes a full intermediate sponge state whose rate lanes are deterministic functions of the accepted input. Those states reveal substantially more input-dependent information than the external digest and can support inversion or differential recovery of secret input structure. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_out_1 -> keccak.f_permutation_.in -> keccak.f_permutation_.round_in`."
+  },
+  {
+    "candidate": "keccak.padder_.out",
+    "attack_mechanism": "The padder accepts an input word when `~state && in_ready && ~buffer_full`; on the final word, `is_last` and `byte_num` determine where the SHA-3 suffix and terminal bit are inserted. Reading or probing `keccak.padder_.out` while `padder_out_ready` is asserted exposes message bytes before the Keccak permutation provides diffusion. `keccak.padder_.out` holds or forwards the assembled 576-bit rate block before `f_ack` allows the buffer to be reused. The confidential `keccak_in` block, including its valid-byte boundary, can be recovered directly from the padded representation. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_.v1 -> keccak.padder_.out`."
+  },
+  {
+    "candidate": "keccak.padder_.p0.out",
+    "attack_mechanism": "The padder accepts an input word when `~state && in_ready && ~buffer_full`; on the final word, `is_last` and `byte_num` determine where the SHA-3 suffix and terminal bit are inserted. Reading or probing `keccak.padder_.p0.out` while `padder_out_ready` is asserted exposes message bytes before the Keccak permutation provides diffusion. `keccak.padder_.p0.out` holds or forwards the assembled 576-bit rate block before `f_ack` allows the buffer to be reused. The confidential `keccak_in` block, including its valid-byte boundary, can be recovered directly from the padded representation. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_.p0.in -> keccak.padder_.p0.out`."
+  },
+  {
+    "candidate": "keccak.padder_.v1",
+    "attack_mechanism": "The padder accepts an input word when `~state && in_ready && ~buffer_full`; on the final word, `is_last` and `byte_num` determine where the SHA-3 suffix and terminal bit are inserted. Reading or probing `keccak.padder_.v1` while `padder_out_ready` is asserted exposes message bytes before the Keccak permutation provides diffusion. `keccak.padder_.v1` holds or forwards the assembled 576-bit rate block before `f_ack` allows the buffer to be reused. The confidential `keccak_in` block, including its valid-byte boundary, can be recovered directly from the padded representation. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_.v1`."
+  }
+]

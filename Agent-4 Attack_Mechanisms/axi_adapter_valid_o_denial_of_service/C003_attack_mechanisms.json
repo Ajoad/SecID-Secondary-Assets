@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "axi_adapter_valid_o_cone.cnt_d",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `axi_adapter_valid_o_cone.cnt_d -> axi_adapter_valid_o_cone.cnt_q -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.cnt_d` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; no separate named control guard is recorded on the direct assignment. Forcing `axi_adapter_valid_o_cone.cnt_d` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.cnt_q",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `axi_adapter_valid_o_cone.cnt_q -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.cnt_q` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; no separate named control guard is recorded on the direct assignment. Forcing `axi_adapter_valid_o_cone.cnt_q` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.state_d",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `axi_adapter_valid_o_cone.state_d -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. `axi_adapter_valid_o_cone.state_d` controls request acceptance, response recognition, or the state transition into that write-completion arm; no separate named control guard is recorded on the direct assignment. Holding `axi_adapter_valid_o_cone.state_d` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. The requester waits indefinitely for a completion pulse and legitimate write service is denied."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.state_d",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `axi_adapter_valid_o_cone.state_d -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. For an AMO that returns data, accepting `b_valid` is insufficient: the adapter waits for `r_valid` either in `WAIT_B_VALID` or `WAIT_AMO_R_VALID` before asserting `valid_o`. `axi_adapter_valid_o_cone.state_d` determines the AMO classification, preserved AMO state, or one of these two response handshakes; no separate named control guard is recorded on the direct assignment. Corrupting `axi_adapter_valid_o_cone.state_d` can falsely classify a request as data-returning or prevent the required read response from being recognized. The atomic transaction remains pending and blocks subsequent traffic from receiving service."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.state_d",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `axi_adapter_valid_o_cone.state_d -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.state_d` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; no separate named control guard is recorded on the direct assignment. Forcing `axi_adapter_valid_o_cone.state_d` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  }
+]

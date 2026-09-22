@@ -1,0 +1,1445 @@
+{
+  "threat feature": "fault_injection",
+  "design": {
+    "name": "CV32E40P",
+    "top": "cv32e40p_top",
+    "rtl_language": "SystemVerilog"
+  },
+  "primary": {
+    "signal": "core_i.cs_registers_i.csr_we_int",
+    "security_objective": "integrity"
+  },
+  "threat": "fault_injection",
+  "feature": "fault_injection_feasibility_and_fault_masking",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "core_i.cs_registers_i.csr_we_int"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk_i",
+    "reset": {
+      "signal": "rst_ni",
+      "active_level": "low"
+    },
+    "semantic_frontier": {
+      "placeholder": "$semantic_cutset",
+      "definition": "independent non-primary RTL frontier selected from the candidate-to-primary path"
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor",
+      "$derived_finite_duration_sweep": "bounded campaign parameter inferred from the feature definition and RTL, then frozen before simulation"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Separate transient fault activation and escape from propagation to the primary asset.",
+    "execution_model": "paired golden and single-candidate-bit faulted executions from the same legal pre-fault state",
+    "calculation": {
+      "fault_injection_feasibility": "scenario-balanced fraction of activated faults reaching an independent semantic frontier",
+      "fault_masking": "1 - N_P/N_A, where N_A is valid activated faults and N_P is the subset producing primary divergence"
+    },
+    "required_observation_roles": [
+      "fault application and activation",
+      "independent semantic-frontier divergence",
+      "primary divergence after activation"
+    ],
+    "validity_policy": [
+      "legal golden execution and anchor are reached",
+      "runs agree before injection",
+      "the requested candidate fault activates",
+      "required observations are known"
+    ],
+    "classification": {
+      "no_escape": "activated fault does not reach the semantic frontier",
+      "escape_masked": "fault escapes but primary remains equivalent",
+      "escape_propagated": "fault escapes and corrupts the primary",
+      "not_applicable": "candidate lacks the scenario's semantic-use path",
+      "invalid": "setup, pairing, injection, activation, anchor, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "measure the candidate response",
+        "target": "$candidate"
+      },
+      {
+        "purpose": "validate the scenario condition represented by $semantic_cutset",
+        "target": "$semantic_cutset"
+      },
+      {
+        "purpose": "measure the primary-asset consequence",
+        "target": "$primary"
+      },
+      {
+        "purpose": "validate the scenario condition represented by scenario semantic-activation condition",
+        "target": "scenario semantic-activation condition"
+      }
+    ],
+    "validity": [
+      "candidate mechanism is reachable and applicable under the elaborated configuration",
+      "golden baseline completes with sufficient execution progress",
+      "scenario semantic-activation condition is observed in the golden trace",
+      "golden and faulted executions match before injection",
+      "requested candidate bit is physically activated by the fault injection",
+      "required baseline primary and semantic observations contain no X/Z"
+    ],
+    "oracle": {
+      "baseline": [
+        "record golden $candidate, $semantic_cutset, and $primary traces",
+        "confirm the scenario semantic-activation condition",
+        "derive legal deterministic injection windows around $anchor"
+      ],
+      "fault": [
+        "compare faulted $semantic_cutset against the baseline after verified candidate activation",
+        "count an FIF semantic escape when the candidate-specific semantic cutset is corrupted or terminal $primary corruption is observed",
+        "compare faulted $primary against the baseline only after semantic escape to determine conditional FM masking",
+        "if no semantic escape occurs, FM is not identifiable rather than being assigned 1",
+        "flag a cutset-model escape if $primary corruption bypasses the declared independent semantic cutset"
+      ],
+      "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+    },
+    "fault": {
+      "activation_required": true,
+      "duration": "$derived_finite_duration_sweep",
+      "model": "single_candidate_bit_transient_inversion",
+      "release": true,
+      "semantic_frontier": "$semantic_cutset excluding $primary",
+      "target": "$candidate",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 42,
+  "scenarios": [
+    {
+      "id": "CV32_FI_01_CSR_REG_OPS",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "CSR instructions enabled"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "initialize nontrivial source data"
+        },
+        {
+          "action": "execute register-form CSRRW on mscratch"
+        },
+        {
+          "action": "execute CSRRS read/set and CSRRC clear operations on mscratch"
+        },
+        {
+          "action": "perform additional ALU activity followed by another CSR write/read"
+        }
+      ],
+      "anchor": {
+        "event": "register-form CSR access is active",
+        "condition": "(dut_g.core_i.csr_access_ex===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_02_CSR_IMM_OPS",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "CSR immediate forms enabled"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute CSRRWI on mscratch"
+        },
+        {
+          "action": "execute CSRRSI and CSRRCI on mscratch"
+        },
+        {
+          "action": "include a zero-zimm CSRRSI read case"
+        },
+        {
+          "action": "follow with register-form CSR write/read activity"
+        }
+      ],
+      "anchor": {
+        "event": "immediate-form CSR access is active",
+        "condition": "(dut_g.core_i.csr_access_ex===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_03_CSR_ILLEGAL_RO",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "read-only cycle CSR is implemented"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "attempt a write to the read-only cycle CSR"
+        },
+        {
+          "action": "allow the illegal-instruction trap path to execute"
+        },
+        {
+          "action": "resume with ordinary CSR operations"
+        }
+      ],
+      "anchor": {
+        "event": "illegal/read-only CSR write is decoded",
+        "condition": "(dut_g.core_i.id_stage_i.illegal_insn_dec===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_04_CSR_DENSE_OPS",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "CSR instructions enabled"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "initialize CSR source data"
+        },
+        {
+          "action": "execute a dense sequence of CSRRW, CSRRS-read, CSRRS-set, and CSRRC operations"
+        },
+        {
+          "action": "repeat the CSR operation sequence back-to-back without long gaps"
+        }
+      ],
+      "anchor": {
+        "event": "dense CSR access is active",
+        "condition": "(dut_g.core_i.csr_access_ex===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_05_CSR_STATUS_SERIALIZE",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine status, interrupt-enable, and trap-vector CSRs are writable"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "write mstatus"
+        },
+        {
+          "action": "write mie"
+        },
+        {
+          "action": "write mtvec"
+        },
+        {
+          "action": "read back mstatus"
+        },
+        {
+          "action": "perform an additional mscratch CSR write"
+        }
+      ],
+      "anchor": {
+        "event": "serialization-sensitive machine-status CSR access is active",
+        "condition": "(dut_g.core_i.csr_access_ex===1'b1 && (dut_g.core_i.csr_addr==12'h300 || dut_g.core_i.csr_addr==12'h304 || dut_g.core_i.csr_addr==12'h305 || dut_g.core_i.csr_addr==12'h341 || dut_g.core_i.csr_addr==12'h342))"
+      }
+    },
+    {
+      "id": "CV32_FI_06_LOAD_USE_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "LSU enabled"
+        ],
+        "state": [
+          "data memory available at a legal address"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "load a value from data memory"
+        },
+        {
+          "action": "immediately use the loaded register as the source of a CSR write"
+        },
+        {
+          "action": "read back the CSR"
+        },
+        {
+          "action": "repeat with another load-dependent arithmetic/CSR sequence"
+        }
+      ],
+      "anchor": {
+        "event": "load-use RAW hazard stalls the CSR path",
+        "condition": "(dut_g.core_i.id_stage_i.load_stall===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_07_JALR_HAZARD_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "JALR enabled"
+        ],
+        "state": [
+          "target code region contains CSR operations"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "construct a JALR target address in a register"
+        },
+        {
+          "action": "execute JALR to the target region"
+        },
+        {
+          "action": "execute CSR write/read operations at the target"
+        },
+        {
+          "action": "jump back to the main loop"
+        }
+      ],
+      "anchor": {
+        "event": "JALR dependency jr_stall is active around CSR flow",
+        "condition": "(dut_g.core_i.id_stage_i.jr_stall===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_08_IFETCH_BACKPRESSURE_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "instruction interface supports delayed responses"
+        ],
+        "state": [
+          "normal CSR workload executing"
+        ],
+        "stimulus": [
+          "delay instruction responses while requests remain outstanding"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute a representative CSR operation sequence"
+        },
+        {
+          "action": "apply deterministic instruction-response latency during the sequence"
+        },
+        {
+          "action": "continue CSR activity after delayed fetch responses"
+        }
+      ],
+      "anchor": {
+        "event": "instruction-response backpressure is active",
+        "condition": "tb_ifetch_rsp_delay_active"
+      }
+    },
+    {
+      "id": "CV32_FI_09_DATA_BACKPRESSURE_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "data interface supports delayed responses"
+        ],
+        "state": [
+          "legal data memory region available"
+        ],
+        "stimulus": [
+          "delay data responses after accepted requests"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "store to data memory"
+        },
+        {
+          "action": "load the stored value while response latency is injected"
+        },
+        {
+          "action": "use the load result in a CSR write"
+        },
+        {
+          "action": "issue another load and CSR read"
+        }
+      ],
+      "anchor": {
+        "event": "data-response backpressure is active",
+        "condition": "tb_data_rsp_delay_active"
+      }
+    },
+    {
+      "id": "CV32_FI_10_LSU_MISALIGNED_REPLAY",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "misaligned LSU replay supported by the configured core"
+        ],
+        "state": [
+          "legal data memory region available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "perform a deliberately misaligned word store"
+        },
+        {
+          "action": "perform a matching misaligned word load"
+        },
+        {
+          "action": "use the loaded result in a CSR write"
+        },
+        {
+          "action": "read back the CSR"
+        }
+      ],
+      "anchor": {
+        "event": "misaligned LSU replay is active",
+        "condition": "(dut_g.core_i.data_misaligned===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_11_ALU_INT_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "integer ALU enabled"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "initialize nontrivial operands"
+        },
+        {
+          "action": "execute ADD and SUB"
+        },
+        {
+          "action": "execute XOR, OR, and AND"
+        },
+        {
+          "action": "write an ALU-derived value to a CSR and read it back"
+        }
+      ],
+      "anchor": {
+        "event": "integer ALU execution feeding CSR flow is active",
+        "condition": "(dut_g.core_i.ex_stage_i.alu_en_i===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_12_SHIFT_FAMILY_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "integer shifter enabled"
+        ],
+        "state": [
+          "normal pipeline execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "initialize a nontrivial operand"
+        },
+        {
+          "action": "execute SLL"
+        },
+        {
+          "action": "execute SRL"
+        },
+        {
+          "action": "execute SRA"
+        },
+        {
+          "action": "feed a shift-derived result into a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "shift datapath activity feeding CSR flow is active",
+        "condition": "(dut_g.core_i.ex_stage_i.alu_en_i===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_13_DIVREM_FAMILY_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "RV32M divider enabled"
+        ],
+        "state": [
+          "nonzero representative operands available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute DIV"
+        },
+        {
+          "action": "execute DIVU"
+        },
+        {
+          "action": "execute REM"
+        },
+        {
+          "action": "execute REMU"
+        },
+        {
+          "action": "feed a quotient result into a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "divider/remainder operation is active",
+        "condition": "(dut_g.core_i.ex_stage_i.alu_i.div_valid===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_14_MULH_FAMILY_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "RV32M high-multiply operations enabled"
+        ],
+        "state": [
+          "nontrivial signed/unsigned operands available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute MULH"
+        },
+        {
+          "action": "execute MULHSU"
+        },
+        {
+          "action": "execute MULHU"
+        },
+        {
+          "action": "feed a high-multiply result into a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "multicycle high-multiply datapath is active",
+        "condition": "(dut_g.core_i.mult_multicycle===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_15_RF_PORT_A_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "register-file load/writeback port enabled"
+        ],
+        "state": [
+          "legal data memory region available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "issue a load that writes a general-purpose register through writeback port A"
+        },
+        {
+          "action": "allow the load result to commit"
+        },
+        {
+          "action": "consume that result in a CSR write"
+        },
+        {
+          "action": "repeat load/writeback activity and CSR readback"
+        }
+      ],
+      "anchor": {
+        "event": "register-file port-A write enable is active",
+        "condition": "(|dut_g.core_i.id_stage_i.register_file_i.we_a_dec)"
+      }
+    },
+    {
+      "id": "CV32_FI_16_RF_PORT_B_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "register-file EX/forwarding write path enabled"
+        ],
+        "state": [
+          "normal integer execution"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute integer operations that produce EX-stage register results"
+        },
+        {
+          "action": "exercise forwarding/write path activity"
+        },
+        {
+          "action": "consume the resulting value in a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "register-file port-B write enable is active",
+        "condition": "(|dut_g.core_i.id_stage_i.register_file_i.we_b_dec)"
+      }
+    },
+    {
+      "id": "CV32_FI_17_BRANCH_TAKEN_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "conditional branches enabled"
+        ],
+        "state": [
+          "operands prepared for taken branch outcomes"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute a taken BEQ that redirects into CSR activity"
+        },
+        {
+          "action": "perform a CSR write"
+        },
+        {
+          "action": "change operands"
+        },
+        {
+          "action": "execute a taken BNE and perform a CSR read"
+        }
+      ],
+      "anchor": {
+        "event": "taken conditional branch redirection is active",
+        "condition": "(dut_g.core_i.id_stage_i.branch_taken_ex===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_18_JAL_JALR_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "JAL and JALR enabled"
+        ],
+        "state": [
+          "legal jump targets available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute JAL across a skipped instruction into CSR activity"
+        },
+        {
+          "action": "perform a CSR write"
+        },
+        {
+          "action": "construct a JALR target and execute JALR"
+        },
+        {
+          "action": "perform a CSR read after redirection"
+        }
+      ],
+      "anchor": {
+        "event": "jump redirection is active around CSR flow",
+        "condition": "(dut_g.core_i.id_stage_i.controller_i.jump_in_dec===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_19_ILLEGAL_INSN_TRAP",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine trap handling enabled"
+        ],
+        "state": [
+          "mtvec points to a valid handler"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute an illegal 32-bit instruction"
+        },
+        {
+          "action": "enter the synchronous trap handler"
+        },
+        {
+          "action": "advance mepc past the faulting instruction"
+        },
+        {
+          "action": "return with MRET and continue ordinary CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "illegal-instruction decode/trap condition is active",
+        "condition": "(dut_g.core_i.id_stage_i.illegal_insn_dec===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_20_IRQ_CLASS_MATRIX",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine software, timer, external, and fast interrupts available"
+        ],
+        "state": [
+          "local and global machine interrupt enables are set"
+        ],
+        "stimulus": [
+          "pulse MSI, MTI, MEI, and a fast IRQ individually",
+          "assert multiple IRQ classes simultaneously for priority coverage"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enable selected interrupt classes in mie"
+        },
+        {
+          "action": "enable global machine interrupts"
+        },
+        {
+          "action": "exercise normal CSR activity while the external testbench injects each IRQ class"
+        },
+        {
+          "action": "exercise a simultaneous multi-IRQ priority subcase"
+        }
+      ],
+      "anchor": {
+        "event": "machine interrupt acknowledgement occurs",
+        "condition": "(irq_ack_g===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_21_MIE_IRQ_BYPASS",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine external interrupt available"
+        ],
+        "state": [
+          "global machine interrupt enable is set"
+        ],
+        "stimulus": [
+          "assert MEI coincident with an MIE CSR access"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enable global machine interrupts"
+        },
+        {
+          "action": "write the MEI enable bit in mie"
+        },
+        {
+          "action": "assert MEI at the MIE-write boundary"
+        },
+        {
+          "action": "continue with CSR activity after interrupt handling"
+        }
+      ],
+      "anchor": {
+        "event": "MIE write and pending IRQ exercise the MIE bypass boundary",
+        "condition": "(irq_ack_g===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_22_BOOT_MTVEC_INIT",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "boot and mtvec initialization logic enabled"
+        ],
+        "state": [
+          "execution begins from reset/boot sequence"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "initialize mtvec to the directed trap-handler address"
+        },
+        {
+          "action": "read mtvec back"
+        },
+        {
+          "action": "continue with ordinary CSR operations"
+        }
+      ],
+      "anchor": {
+        "event": "core-driven mtvec initialization is active",
+        "condition": "(dut_g.core_i.csr_mtvec_init===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_23_DEBUG_EXTERNAL_ENTRY",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "debug support enabled",
+          "dm_halt_addr is valid"
+        ],
+        "state": [
+          "core executing normally"
+        ],
+        "stimulus": [
+          "pulse external debug_req, release it, and later pulse it again"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute ordinary CSR activity"
+        },
+        {
+          "action": "assert external debug request"
+        },
+        {
+          "action": "enter Debug Mode through the configured debug halt address"
+        },
+        {
+          "action": "execute the debug handler and return with DRET"
+        },
+        {
+          "action": "repeat an external debug entry during continued execution"
+        }
+      ],
+      "anchor": {
+        "event": "Debug Mode is entered from an external debug request",
+        "condition": "(dut_g.core_i.debug_mode===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_24_DEBUG_EXCEPTION",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "debug support enabled",
+          "dm_exception_addr is valid"
+        ],
+        "state": [
+          "external debug entry can be requested"
+        ],
+        "stimulus": [
+          "enter Debug Mode using external debug_req"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enter Debug Mode"
+        },
+        {
+          "action": "read/save debug CSRs in the debug handler"
+        },
+        {
+          "action": "execute ECALL while already in Debug Mode"
+        },
+        {
+          "action": "redirect through the debug exception address"
+        },
+        {
+          "action": "return with DRET and continue execution"
+        }
+      ],
+      "anchor": {
+        "event": "ECALL is decoded while already in Debug Mode",
+        "condition": "(dut_g.core_i.debug_mode===1'b1 && dut_g.core_i.id_stage_i.ecall_insn_dec===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_25_DEBUG_EBREAK_ENTRY",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "debug support enabled"
+        ],
+        "state": [
+          "DCSR can be programmed in Debug Mode"
+        ],
+        "stimulus": [
+          "perform an initial external debug entry to configure DCSR"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enter Debug Mode through external debug_req"
+        },
+        {
+          "action": "set DCSR.ebreakm and program DPC"
+        },
+        {
+          "action": "return with DRET"
+        },
+        {
+          "action": "execute EBREAK in M-mode"
+        },
+        {
+          "action": "enter Debug Mode through the EBREAK debug path"
+        }
+      ],
+      "anchor": {
+        "event": "EBREAK is decoded with DCSR.ebreakm enabled",
+        "condition": "(dut_g.core_i.id_stage_i.ebrk_insn_dec===1'b1 && dut_g.core_i.debug_ebreakm===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_26_MSTATUS_TRAP_MRET",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine trap handling and MRET enabled"
+        ],
+        "state": [
+          "mtvec points to a valid handler"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "write mstatus"
+        },
+        {
+          "action": "execute ECALL to enter the trap handler"
+        },
+        {
+          "action": "allow trap entry to save/update machine status"
+        },
+        {
+          "action": "return with MRET"
+        },
+        {
+          "action": "read mstatus and continue CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "MRET restore path is active after a machine trap",
+        "condition": "(dut_g.core_i.id_stage_i.mret_insn_dec===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_27_HPM_WRITE",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "at least HPM counter 3 is implemented"
+        ],
+        "state": [
+          "machine performance-monitor CSRs are accessible"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "program mcountinhibit and mhpmevent3"
+        },
+        {
+          "action": "write mhpmcounter3 low half"
+        },
+        {
+          "action": "write mhpmcounter3 high half"
+        },
+        {
+          "action": "read both counter halves"
+        },
+        {
+          "action": "perform a final CSR read"
+        }
+      ],
+      "anchor": {
+        "event": "HPM counter lower/upper CSR access is active",
+        "condition": "(dut_g.core_i.csr_access_ex===1'b1 && (dut_g.core_i.csr_addr==12'hB03 || dut_g.core_i.csr_addr==12'hB83))"
+      }
+    },
+    {
+      "id": "CV32_FI_28_IFETCH_GNT_STALL",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "instruction interface grant can be delayed"
+        ],
+        "state": [
+          "normal CSR workload executing"
+        ],
+        "stimulus": [
+          "periodically withhold instruction grant for deterministic cycles"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute a representative CSR sequence"
+        },
+        {
+          "action": "withhold instruction request grant according to a deterministic stall pattern"
+        },
+        {
+          "action": "resume grants and continue CSR execution"
+        }
+      ],
+      "anchor": {
+        "event": "instruction-request grant stall is active",
+        "condition": "tb_ifetch_gnt_stall_active"
+      }
+    },
+    {
+      "id": "CV32_FI_29_RVC_STRADDLE_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "RVC/compressed instructions enabled"
+        ],
+        "state": [
+          "instruction stream is arranged so a 32-bit CSR instruction starts at PC[1]=1"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute a 16-bit compressed NOP"
+        },
+        {
+          "action": "execute a 32-bit CSR write straddling a 32-bit fetch-word boundary"
+        },
+        {
+          "action": "execute a straddled CSR read"
+        },
+        {
+          "action": "loop through the mixed-width sequence"
+        }
+      ],
+      "anchor": {
+        "event": "CSR access executes from a halfword-straddled PC",
+        "condition": "(dut_g.core_i.csr_access_ex===1'b1 && dut_g.core_i.pc_id[1]===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_30_DATA_GNT_STALL",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "data interface grant can be delayed"
+        ],
+        "state": [
+          "legal data memory region available"
+        ],
+        "stimulus": [
+          "periodically withhold data request grant for deterministic cycles"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "issue store and load requests"
+        },
+        {
+          "action": "withhold data grant according to a deterministic stall pattern"
+        },
+        {
+          "action": "resume the data interface"
+        },
+        {
+          "action": "feed the loaded value into a CSR write/read sequence"
+        }
+      ],
+      "anchor": {
+        "event": "data-request grant stall is active",
+        "condition": "tb_data_gnt_stall_active"
+      }
+    },
+    {
+      "id": "CV32_FI_31_DIV_ZERO_NORM",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "RV32M divider enabled"
+        ],
+        "state": [
+          "zero and nonzero operands are available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute division/remainder with a zero dividend"
+        },
+        {
+          "action": "execute division/remainder with a zero divisor"
+        },
+        {
+          "action": "exercise the divider normalization/no-leading-one path"
+        },
+        {
+          "action": "feed the result into a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "divider normalization reports no set bit",
+        "condition": "(dut_g.core_i.ex_stage_i.alu_i.ff_no_one===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_32_IRQ_DIRECT_VECTORED",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine external interrupt available",
+          "mtvec direct and vectored modes supported"
+        ],
+        "state": [
+          "MEI and global machine interrupt enable are set"
+        ],
+        "stimulus": [
+          "assert MEI once in direct mode and once after switching to vectored mode"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "configure mtvec direct mode and service an MEI"
+        },
+        {
+          "action": "reprogram mtvec to vectored mode"
+        },
+        {
+          "action": "service another MEI through the vector table"
+        },
+        {
+          "action": "continue with CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "interrupt is acknowledged while mtvec vectored mode is selected",
+        "condition": "(irq_ack_g===1'b1 && dut_g.core_i.mtvec_mode===2'b01)"
+      }
+    },
+    {
+      "id": "CV32_FI_33_IRQ_NONMIE_CSR_COLLISION",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine external interrupt available"
+        ],
+        "state": [
+          "MEI and global machine interrupt enable are set"
+        ],
+        "stimulus": [
+          "assert MEI coincident with a non-MIE CSR access"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enable MEI and global interrupts"
+        },
+        {
+          "action": "execute an mscratch CSR write/read sequence"
+        },
+        {
+          "action": "assert MEI while the non-MIE CSR access is active"
+        },
+        {
+          "action": "allow interrupt handling and continued execution"
+        }
+      ],
+      "anchor": {
+        "event": "pending IRQ overlaps a non-MIE CSR access",
+        "condition": "((|irq_i) && dut_g.core_i.csr_access_ex===1'b1 && dut_g.core_i.csr_addr==12'h340)"
+      }
+    },
+    {
+      "id": "CV32_FI_34_MSTATUS_MIE_BOUNDARY",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine external interrupt available"
+        ],
+        "state": [
+          "MEI local enable is programmed"
+        ],
+        "stimulus": [
+          "assert MEI once while global MIE is disabled and again after it is enabled"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enable the MEI bit in mie"
+        },
+        {
+          "action": "set and clear mstatus.MIE across successive CSR operations"
+        },
+        {
+          "action": "present MEI while global interrupt enable is low"
+        },
+        {
+          "action": "re-enable mstatus.MIE and present MEI again"
+        },
+        {
+          "action": "continue with CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "IRQ is pending at the global mstatus.MIE enable boundary",
+        "condition": "((|irq_i) && dut_g.core_i.m_irq_enable===1'b0)"
+      }
+    },
+    {
+      "id": "CV32_FI_35_DEBUG_DCSR_PROGRAM",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "debug support enabled",
+          "DCSR and DSCRATCH0 accessible in Debug Mode"
+        ],
+        "state": [
+          "external debug entry can be requested"
+        ],
+        "stimulus": [
+          "pulse external debug_req"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "enter Debug Mode"
+        },
+        {
+          "action": "write selected DCSR control bits"
+        },
+        {
+          "action": "read DCSR back"
+        },
+        {
+          "action": "copy/read debug state through DSCRATCH0"
+        },
+        {
+          "action": "return using DRET"
+        }
+      ],
+      "anchor": {
+        "event": "DCSR is directly accessed while in Debug Mode",
+        "condition": "(dut_g.core_i.debug_mode===1'b1 && dut_g.core_i.csr_addr==12'h7B0)"
+      }
+    },
+    {
+      "id": "CV32_FI_36_LOAD_CSR_WAW",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "LSU and CSR writeback enabled"
+        ],
+        "state": [
+          "legal data memory region available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "load a value into a destination register"
+        },
+        {
+          "action": "immediately issue a CSR instruction whose destination register is the same register"
+        },
+        {
+          "action": "observe the load/CSR write-after-write interlock"
+        },
+        {
+          "action": "repeat the WAW pattern with another register"
+        }
+      ],
+      "anchor": {
+        "event": "load-related WAW hazard stalls/deasserts the CSR write path",
+        "condition": "(dut_g.core_i.id_stage_i.load_stall===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_37_LSU_SUBWORD",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "byte and halfword LSU operations enabled"
+        ],
+        "state": [
+          "legal data memory region available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "store a byte at a nonzero byte lane and load it with LB/LBU"
+        },
+        {
+          "action": "store a halfword and load it with LH/LHU"
+        },
+        {
+          "action": "feed a subword-derived result into a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "subword LSU byte-enable/lane behavior is active",
+        "condition": "(data_req_g===1'b1 && data_be_g!==4'b1111)"
+      }
+    },
+    {
+      "id": "CV32_FI_38_LSU_HALF_CROSSWORD",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "misaligned halfword replay supported"
+        ],
+        "state": [
+          "legal data memory region available"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "store a halfword beginning at byte offset 3 so it crosses a word boundary"
+        },
+        {
+          "action": "load the cross-word halfword with LH and LHU"
+        },
+        {
+          "action": "feed the recovered value into a CSR write and readback"
+        }
+      ],
+      "anchor": {
+        "event": "cross-word halfword misalignment/replay is active",
+        "condition": "(dut_g.core_i.data_misaligned===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_39_ECALL_TRAP",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine ECALL trap handling enabled"
+        ],
+        "state": [
+          "mtvec points to a valid handler"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute ECALL in M-mode"
+        },
+        {
+          "action": "enter the synchronous trap handler"
+        },
+        {
+          "action": "record/advance mepc as required"
+        },
+        {
+          "action": "return with MRET"
+        },
+        {
+          "action": "continue ordinary CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "M-mode ECALL trap condition is active",
+        "condition": "(dut_g.core_i.id_stage_i.ecall_insn_dec===1'b1)"
+      }
+    },
+    {
+      "id": "CV32_FI_40_EBREAK_EXCEPTION",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "breakpoint exception handling enabled"
+        ],
+        "state": [
+          "DCSR.ebreakm remains disabled so EBREAK is not converted to debug entry",
+          "mtvec points to a valid handler"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "execute EBREAK in normal M-mode"
+        },
+        {
+          "action": "take the breakpoint exception rather than debug entry"
+        },
+        {
+          "action": "return from the trap"
+        },
+        {
+          "action": "continue ordinary CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "normal EBREAK exception is decoded outside Debug Mode",
+        "condition": "(dut_g.core_i.id_stage_i.ebrk_insn_dec===1'b1 && dut_g.core_i.debug_mode===1'b0)"
+      }
+    },
+    {
+      "id": "CV32_FI_41_IRQ_STATUS_CSR_SERIALIZE",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "machine external interrupt available"
+        ],
+        "state": [
+          "MEI and global machine interrupt enable are configured"
+        ],
+        "stimulus": [
+          "assert MEI coincident with a serialization-sensitive status CSR access"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "configure mie and mstatus"
+        },
+        {
+          "action": "write a status CSR such as mstatus or mtvec"
+        },
+        {
+          "action": "assert MEI at the status-CSR boundary"
+        },
+        {
+          "action": "allow serialization/interrupt handling"
+        },
+        {
+          "action": "continue with CSR activity"
+        }
+      ],
+      "anchor": {
+        "event": "pending IRQ overlaps a status-CSR access",
+        "condition": "((|irq_i) && dut_g.core_i.csr_access_ex===1'b1 && (dut_g.core_i.csr_addr==12'h300 || dut_g.core_i.csr_addr==12'h305 || dut_g.core_i.csr_addr==12'h341 || dut_g.core_i.csr_addr==12'h342))"
+      }
+    },
+    {
+      "id": "CV32_FI_42_XRET_AFTER_STATUS_CSR",
+      "preconditions": {
+        "mode": "M",
+        "configuration": [
+          "MRET enabled",
+          "mstatus and mepc writable"
+        ],
+        "state": [
+          "a valid MRET destination is prepared"
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "write mstatus"
+        },
+        {
+          "action": "write mepc with a directed return address"
+        },
+        {
+          "action": "execute MRET immediately after the status-CSR updates"
+        },
+        {
+          "action": "continue execution at the return target and perform CSR write/read operations"
+        }
+      ],
+      "anchor": {
+        "event": "MRET executes immediately after status-CSR state updates",
+        "condition": "(dut_g.core_i.id_stage_i.mret_insn_dec===1'b1)"
+      }
+    }
+  ]
+}

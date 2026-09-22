@@ -1,0 +1,2104 @@
+{
+  "threat feature": "ucp_controllability",
+  "design": {
+    "name": "NEORV32",
+    "top": "neorv32_top",
+    "rtl_language": "VHDL"
+  },
+  "primary": {
+    "signal": "ctrl_o.lsu_priv",
+    "security_objective": "integrity"
+  },
+  "threat": "unauthorized_access",
+  "feature": "ucp_controllability",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "ctrl_o.lsu_priv"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk_i",
+    "reset": {
+      "signal": "rstn_i",
+      "active_level": "low"
+    },
+    "ucps": [
+      "xbus_dat_i",
+      "xbus_ack_i",
+      "xbus_err_i",
+      "jtag_tck_i",
+      "jtag_tms_i",
+      "jtag_tdi_i",
+      "irq_mei_i",
+      "irq_msi_i",
+      "irq_mti_i"
+    ]
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Measure whether changing only a declared untrusted controllable point in paired legal scenarios changes the candidate trace.",
+    "execution_model": "paired runs differing only in the selected UCP value or legal event timing",
+    "calculation": "equal-UCP aggregation of valid causal candidate divergences",
+    "required_observation_roles": [
+      "selected UCP difference",
+      "pre-intervention equivalence",
+      "post-anchor candidate divergence"
+    ],
+    "validity_policy": [
+      "both runs establish the same legal state",
+      "only the selected UCP differs",
+      "no candidate divergence precedes the intervention",
+      "candidate observations are known"
+    ],
+    "classification": {
+      "controllable": "known causal candidate divergence follows the UCP change",
+      "not_controllable": "no divergence over the valid scenario/value basis",
+      "not_applicable": "scenario is outside the candidate's declared scope",
+      "invalid": "setup, pair equivalence, anchor, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "confirm the selected UCP difference",
+        "target": "xbus_ack_i"
+      },
+      {
+        "purpose": "detect causal candidate divergence",
+        "target": "$candidate"
+      }
+    ],
+    "validity": [
+      "scenario-specific legal UCP activation and candidate-observation anchor are reached"
+    ],
+    "oracle": {
+      "success": "known post-anchor candidate divergence attributable only to the selected UCP"
+    },
+    "intervention": {
+      "control": 0,
+      "held_equal": [
+        "all nonselected UCPs",
+        "all non-UCP inputs",
+        "reset history",
+        "initial architectural state"
+      ],
+      "operation": "pulse",
+      "test": 1,
+      "when": "target_anchor"
+    },
+    "ucp": [
+      "xbus_ack_i"
+    ]
+  },
+  "scenario_count": 45,
+  "scenarios": [
+    {
+      "id": "xbus_dat_i__U_IFETCH_DATA",
+      "title": "U_IFETCH_DATA",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "instruction_fetch"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "instruction_fetch_response",
+        "role": "u_control_flow_probe"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_dat_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "replace",
+          "when": "response_data",
+          "control": "expected_instruction_data",
+          "test": "alternate_legal_instruction_data",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_dat_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_dat_i__U_LOAD_DATA",
+      "title": "U_LOAD_DATA",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_load",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "load_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_dat_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "replace",
+          "when": "response_data",
+          "control": "baseline_load_data",
+          "test": "alternate_load_data",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_dat_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_dat_i__M_MSTATUS_IFETCH_DATA",
+      "title": "M_MSTATUS_IFETCH_DATA",
+      "preconditions": {
+        "priv": "M",
+        "transition": "write_mstatus",
+        "intended_state": {
+          "mprv": 1,
+          "mpp": "U",
+          "effective_lsu_priv": "U"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "instruction_fetch_response",
+        "role": "mstatus_write_mprv1_mppU"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_dat_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "replace",
+          "when": "response_data",
+          "control": "mstatus_write_instruction",
+          "test": "NOP",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_dat_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_dat_i__M_MRET_IFETCH_DATA",
+      "title": "M_MRET_IFETCH_DATA",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 0,
+        "mpp": "U",
+        "mepc": "user_entry"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "instruction_fetch_response",
+        "role": "MRET_to_U"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_dat_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "replace",
+          "when": "response_data",
+          "control": "MRET",
+          "test": "self_loop_jump",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_dat_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_ack_i__U_IFETCH_WAIT",
+      "title": "U_IFETCH_WAIT",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "instruction_fetch"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "instruction_fetch_response",
+        "role": "u_control_flow_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "delay",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "finite_delayed_ack",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_ack_i__U_LOAD_WAIT",
+      "title": "U_LOAD_WAIT",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_load",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "load_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "delay",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "finite_delayed_ack",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_ack_i__U_STORE_WAIT",
+      "title": "U_STORE_WAIT",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_store",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "store_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "delay",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "finite_delayed_ack",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_ack_i__U_IFETCH_TIMEOUT",
+      "title": "U_IFETCH_TIMEOUT",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "instruction_fetch"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "instruction_fetch_response",
+        "role": "u_control_flow_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "withhold",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "withhold_until_xbus_timeout",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_ack_i__U_LOAD_TIMEOUT",
+      "title": "U_LOAD_TIMEOUT",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_load",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "load_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "withhold",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "withhold_until_xbus_timeout",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_ack_i__U_STORE_TIMEOUT",
+      "title": "U_STORE_TIMEOUT",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_store",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "store_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "withhold",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "withhold_until_xbus_timeout",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_ack_i__M_MPRV_U_LOAD_TIMEOUT",
+      "title": "M_MPRV_U_LOAD_TIMEOUT",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "transaction": "legal_load",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "load_response",
+        "role": "effective_u_load"
+      },
+      "overrides": {
+        "intervention": {
+          "operation": "withhold",
+          "when": "response_completion",
+          "control": "normal_ack",
+          "test": "withhold_until_xbus_timeout",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        }
+      }
+    },
+    {
+      "id": "xbus_err_i__U_IFETCH_ERR",
+      "title": "U_IFETCH_ERR",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "instruction_fetch"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "instruction_fetch_response",
+        "role": "u_control_flow_probe"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_err_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "pulse",
+          "when": "terminating_response",
+          "control": 0,
+          "test": 1,
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_err_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_err_i__U_LOAD_ERR",
+      "title": "U_LOAD_ERR",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_load",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "load_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_err_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "pulse",
+          "when": "terminating_response",
+          "control": 0,
+          "test": 1,
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_err_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_err_i__U_STORE_ERR",
+      "title": "U_STORE_ERR",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "transaction": "legal_store",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "store_response",
+        "role": "u_legal_data_probe"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_err_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "pulse",
+          "when": "terminating_response",
+          "control": 0,
+          "test": 1,
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_err_i"
+        ]
+      }
+    },
+    {
+      "id": "xbus_err_i__M_MPRV_U_LOAD_ERR",
+      "title": "M_MPRV_U_LOAD_ERR",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "transaction": "legal_load",
+        "pmp": "allow"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "load_response",
+        "role": "effective_u_load"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "xbus_err_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "pulse",
+          "when": "terminating_response",
+          "control": 0,
+          "test": 1,
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "xbus_err_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tck_i__DMI_HALT_U_PRE_TARGET",
+      "title": "DMI_HALT_U_PRE_TARGET",
+      "preconditions": {
+        "priv": "U",
+        "debug": "running"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_pre_target_delay",
+        "role": "debug_halt_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tck_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "pre_target",
+          "control": "no_halt",
+          "test": "DMI_halt_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tck_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tck_i__DMI_RESUME_TO_U",
+      "title": "DMI_RESUME_TO_U",
+      "preconditions": {
+        "debug": "halted",
+        "halt_origin": "U",
+        "resume_priv": "U"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "halted_from_u_pre_target",
+        "role": "debug_resume_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tck_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "halted",
+          "control": "remain_halted",
+          "test": "DMI_resume_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tck_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tck_i__DMI_HALT_M_MPRV_U",
+      "title": "DMI_HALT_M_MPRV_U",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "debug": "running"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_mprv_u_delay",
+        "role": "debug_halt_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tck_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "effective_u_m_mode",
+          "control": "no_halt",
+          "test": "DMI_halt_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tck_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tck_i__DMI_RESUME_M_MPRV_U",
+      "title": "DMI_RESUME_M_MPRV_U",
+      "preconditions": {
+        "debug": "halted",
+        "halt_origin": "M",
+        "resume_state": {
+          "priv": "M",
+          "mprv": 1,
+          "mpp": "U",
+          "effective_lsu_priv": "U"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "halted_from_m_mprv_u",
+        "role": "debug_resume_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tck_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "halted",
+          "control": "remain_halted",
+          "test": "DMI_resume_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tck_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tms_i__DMI_HALT_U_PRE_TARGET",
+      "title": "DMI_HALT_U_PRE_TARGET",
+      "preconditions": {
+        "priv": "U",
+        "debug": "running"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_pre_target_delay",
+        "role": "debug_halt_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tms_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "pre_target",
+          "control": "no_halt",
+          "test": "DMI_halt_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tms_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tms_i__DMI_RESUME_TO_U",
+      "title": "DMI_RESUME_TO_U",
+      "preconditions": {
+        "debug": "halted",
+        "halt_origin": "U",
+        "resume_priv": "U"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "halted_from_u_pre_target",
+        "role": "debug_resume_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tms_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "halted",
+          "control": "remain_halted",
+          "test": "DMI_resume_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tms_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tms_i__DMI_HALT_M_MPRV_U",
+      "title": "DMI_HALT_M_MPRV_U",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "debug": "running"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_mprv_u_delay",
+        "role": "debug_halt_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tms_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "effective_u_m_mode",
+          "control": "no_halt",
+          "test": "DMI_halt_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tms_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tms_i__DMI_RESUME_M_MPRV_U",
+      "title": "DMI_RESUME_M_MPRV_U",
+      "preconditions": {
+        "debug": "halted",
+        "halt_origin": "M",
+        "resume_state": {
+          "priv": "M",
+          "mprv": 1,
+          "mpp": "U",
+          "effective_lsu_priv": "U"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "halted_from_m_mprv_u",
+        "role": "debug_resume_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tms_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "halted",
+          "control": "remain_halted",
+          "test": "DMI_resume_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tms_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tdi_i__DMI_HALT_U_PRE_TARGET",
+      "title": "DMI_HALT_U_PRE_TARGET",
+      "preconditions": {
+        "priv": "U",
+        "debug": "running"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_pre_target_delay",
+        "role": "debug_halt_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tdi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "pre_target",
+          "control": "no_halt",
+          "test": "DMI_halt_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tdi_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tdi_i__DMI_RESUME_TO_U",
+      "title": "DMI_RESUME_TO_U",
+      "preconditions": {
+        "debug": "halted",
+        "halt_origin": "U",
+        "resume_priv": "U"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "halted_from_u_pre_target",
+        "role": "debug_resume_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tdi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "halted",
+          "control": "remain_halted",
+          "test": "DMI_resume_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tdi_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tdi_i__DMI_HALT_M_MPRV_U",
+      "title": "DMI_HALT_M_MPRV_U",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "debug": "running"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_mprv_u_delay",
+        "role": "debug_halt_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tdi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "effective_u_m_mode",
+          "control": "no_halt",
+          "test": "DMI_halt_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tdi_i"
+        ]
+      }
+    },
+    {
+      "id": "jtag_tdi_i__DMI_RESUME_M_MPRV_U",
+      "title": "DMI_RESUME_M_MPRV_U",
+      "preconditions": {
+        "debug": "halted",
+        "halt_origin": "M",
+        "resume_state": {
+          "priv": "M",
+          "mprv": 1,
+          "mpp": "U",
+          "effective_lsu_priv": "U"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "halted_from_m_mprv_u",
+        "role": "debug_resume_anchor"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "jtag_tdi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "intervention": {
+          "operation": "protocol",
+          "when": "halted",
+          "control": "remain_halted",
+          "test": "DMI_resume_request",
+          "held_equal": [
+            "all nonselected UCPs",
+            "all non-UCP inputs",
+            "reset history",
+            "initial architectural state"
+          ]
+        },
+        "ucp": [
+          "jtag_tdi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mei_i__U_PRE_TARGET_IRQ",
+      "title": "U_PRE_TARGET_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": "MEI",
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_pre_target_delay",
+        "role": "enabled_u_to_m_irq"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mei_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mei_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mei_i__U_SLEEP_WAKE_IRQ",
+      "title": "U_SLEEP_WAKE_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": "MEI",
+        "cpu_state": "WFI_sleep"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "WFI_sleep",
+        "role": "irq_wake_and_trap"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mei_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mei_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mei_i__U_SOURCE_MASKED_IRQ",
+      "title": "U_SOURCE_MASKED_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": false,
+        "masked_source": "MEI",
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_source_masked_delay",
+        "role": "source_mask_gate"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mei_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mei_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mei_i__M_GLOBAL_MASKED_IRQ",
+      "title": "M_GLOBAL_MASKED_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "local_irq_enable": "MEI",
+        "global_mie": 0,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_global_masked_delay",
+        "role": "global_mask_gate"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mei_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mei_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mei_i__M_ENABLED_IRQ",
+      "title": "M_ENABLED_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "local_irq_enable": "MEI",
+        "global_mie": 1,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_enabled_delay",
+        "role": "enabled_m_to_m_irq"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mei_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mei_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mei_i__M_MPRV_U_IRQ",
+      "title": "M_MPRV_U_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "local_irq_enable": "MEI",
+        "global_mie": 1,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_mprv_u_delay",
+        "role": "irq_effective_u_to_m_transition"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mei_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mei_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_msi_i__U_PRE_TARGET_IRQ",
+      "title": "U_PRE_TARGET_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": "MSI",
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_pre_target_delay",
+        "role": "enabled_u_to_m_irq"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_msi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_msi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_msi_i__U_SLEEP_WAKE_IRQ",
+      "title": "U_SLEEP_WAKE_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": "MSI",
+        "cpu_state": "WFI_sleep"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "WFI_sleep",
+        "role": "irq_wake_and_trap"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_msi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_msi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_msi_i__U_SOURCE_MASKED_IRQ",
+      "title": "U_SOURCE_MASKED_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": false,
+        "masked_source": "MSI",
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_source_masked_delay",
+        "role": "source_mask_gate"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_msi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_msi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_msi_i__M_GLOBAL_MASKED_IRQ",
+      "title": "M_GLOBAL_MASKED_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "local_irq_enable": "MSI",
+        "global_mie": 0,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_global_masked_delay",
+        "role": "global_mask_gate"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_msi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_msi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_msi_i__M_ENABLED_IRQ",
+      "title": "M_ENABLED_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "local_irq_enable": "MSI",
+        "global_mie": 1,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_enabled_delay",
+        "role": "enabled_m_to_m_irq"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_msi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_msi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_msi_i__M_MPRV_U_IRQ",
+      "title": "M_MPRV_U_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "local_irq_enable": "MSI",
+        "global_mie": 1,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_mprv_u_delay",
+        "role": "irq_effective_u_to_m_transition"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_msi_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_msi_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mti_i__U_PRE_TARGET_IRQ",
+      "title": "U_PRE_TARGET_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": "MTI",
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_pre_target_delay",
+        "role": "enabled_u_to_m_irq"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mti_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mti_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mti_i__U_SLEEP_WAKE_IRQ",
+      "title": "U_SLEEP_WAKE_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": "MTI",
+        "cpu_state": "WFI_sleep"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "WFI_sleep",
+        "role": "irq_wake_and_trap"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mti_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mti_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mti_i__U_SOURCE_MASKED_IRQ",
+      "title": "U_SOURCE_MASKED_IRQ",
+      "preconditions": {
+        "priv": "U",
+        "local_irq_enable": false,
+        "masked_source": "MTI",
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "u_source_masked_delay",
+        "role": "source_mask_gate"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mti_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mti_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mti_i__M_GLOBAL_MASKED_IRQ",
+      "title": "M_GLOBAL_MASKED_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "local_irq_enable": "MTI",
+        "global_mie": 0,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_global_masked_delay",
+        "role": "global_mask_gate"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mti_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mti_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mti_i__M_ENABLED_IRQ",
+      "title": "M_ENABLED_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "local_irq_enable": "MTI",
+        "global_mie": 1,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_enabled_delay",
+        "role": "enabled_m_to_m_irq"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mti_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mti_i"
+        ]
+      }
+    },
+    {
+      "id": "irq_mti_i__M_MPRV_U_IRQ",
+      "title": "M_MPRV_U_IRQ",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "local_irq_enable": "MTI",
+        "global_mie": 1,
+        "cpu_state": "executing"
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "m_mprv_u_delay",
+        "role": "irq_effective_u_to_m_transition"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "irq_mti_i",
+            "purpose": "confirm the selected UCP difference"
+          },
+          {
+            "target": "$candidate",
+            "purpose": "detect causal candidate divergence"
+          }
+        ],
+        "ucp": [
+          "irq_mti_i"
+        ]
+      }
+    }
+  ]
+}

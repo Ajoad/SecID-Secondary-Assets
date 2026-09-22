@@ -1,0 +1,2466 @@
+{
+  "threat feature": "uop_observability",
+  "design": {
+    "name": "openMSP430",
+    "top": "openMSP430",
+    "rtl_language": "Verilog"
+  },
+  "primary": {
+    "signal": "execution_unit_0.register_file_0.r4",
+    "security_objective": "confidentiality"
+  },
+  "threat": "information_leakage",
+  "feature": "uop_observability",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "execution_unit_0.register_file_0.r4"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "dco_clk",
+    "reset": {
+      "signal": "reset_n",
+      "active_level": "low"
+    },
+    "uop": {
+      "placeholder": "$uop",
+      "rtl_signal": "dbg_uart_txd",
+      "source_aliases": [
+        "$observation"
+      ]
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Determine whether a legal, payload-qualified candidate perturbation has a witness at the declared untrusted observable point.",
+    "execution_model": "paired baseline and candidate-perturbed executions with identical legal history before intervention",
+    "calculation": "observable when a known, valid UOP divergence follows the candidate intervention; a bounded no-witness result remains unresolved",
+    "required_observation_roles": [
+      "candidate intervention",
+      "UOP validity",
+      "post-intervention UOP divergence"
+    ],
+    "validity_policy": [
+      "candidate is primary-sensitive in the scenario",
+      "paired executions agree before intervention",
+      "the UOP is known and valid when compared"
+    ],
+    "classification": {
+      "observable": "valid UOP witness",
+      "unresolved": "valid bounded run without a witness",
+      "not_applicable": "required candidate-to-UOP context is absent",
+      "invalid": "setup, pairing, intervention, UOP-validity, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "intervention_control",
+        "target": "$candidate"
+      },
+      {
+        "purpose": "leakage_observation",
+        "target": "$observation"
+      },
+      {
+        "purpose": "scenario_validity",
+        "target": "R5"
+      },
+      {
+        "purpose": "scenario_validity",
+        "target": "R2_SR"
+      }
+    ],
+    "oracle": {
+      "baseline": [
+        "execute_same_valid_scenario_without_effective_candidate_perturbation",
+        "confirm_candidate_intervention_site_is_control_qualified",
+        "capture_valid_observation"
+      ],
+      "intervened": [
+        "execute_same_valid_scenario_with_candidate_intervention_at_anchor",
+        "capture_valid_observation"
+      ],
+      "scenario_success": "known valid UOP divergence after candidate intervention",
+      "success": "control_qualified_valid_observation_difference"
+    },
+    "intervention": {
+      "comparison": "unmodified baseline versus otherwise-identical perturbed run",
+      "operation": "perturb",
+      "release": "after the scenario-defined sensitized interval",
+      "target": "$candidate",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 40,
+  "scenarios": [
+    {
+      "id": "mov_r4_r3",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R3"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "primary_value_written_to_R3",
+        "phase": "destination_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R3",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "primary_value_is_initialized",
+          "register_transfer_executes",
+          "R3_writeback_completes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r1_safe",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "legal_dmem_range_available": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "temporary_register"
+          }
+        },
+        {
+          "action": "constrain_value",
+          "parameters": {
+            "target": "temporary_register",
+            "constraint": "even_address_in_0x0200_to_0x03FE"
+          }
+        },
+        {
+          "action": "write_register",
+          "parameters": {
+            "source": "temporary_register",
+            "destination": "R1_SP"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R1_SP",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R1_value_consumed",
+        "phase": "register_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R1_SP",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "derived_R1_value_is_even_and_within_legal_dmem_range",
+          "R1_write_executes",
+          "R1_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r2_safe",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "temporary_register"
+          }
+        },
+        {
+          "action": "constrain_value",
+          "parameters": {
+            "target": "temporary_register",
+            "constraint": "safe_status_bits_C_Z_N_V_only"
+          }
+        },
+        {
+          "action": "write_register",
+          "parameters": {
+            "source": "temporary_register",
+            "destination": "R2_SR"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R2_SR",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_status_value_consumed",
+        "phase": "status_write_and_register_consumption"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "status_value_uses_only_safe_C_Z_N_V_bits",
+          "R2_SR_write_executes",
+          "R2_SR_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r5",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R5",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R5_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R5_write_executes",
+          "R5_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r6",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R6"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R6",
+            "destination": "R7"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R6_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R7",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R6_write_executes",
+          "R6_to_R7_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r7",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R7"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R7",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R7_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R7",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R7_write_executes",
+          "R7_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r8",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R8"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R8",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R8_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R8",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R8_write_executes",
+          "R8_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r9",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R9"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R9",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R9_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R9",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R9_write_executes",
+          "R9_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r10",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R10"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R10",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R10_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R10",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R10_write_executes",
+          "R10_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r11",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R11"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R11",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R11_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R11",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R11_write_executes",
+          "R11_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r12",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R12"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R12",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R12_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R12",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R12_write_executes",
+          "R12_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r13",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R13"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R13",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R13_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R13",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R13_write_executes",
+          "R13_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r14",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R14"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R14",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R14_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R14",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R14_write_executes",
+          "R14_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "relay_r4_r15",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R15"
+          }
+        },
+        {
+          "action": "consume_register",
+          "parameters": {
+            "source": "R15",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R15_value_consumed",
+        "phase": "relay_source_read_and_sink_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R15",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R15_write_executes",
+          "R15_to_R6_consumption_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_add",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "destination_operand_available": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "ADD",
+            "source": "$primary",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "ADD_uses_primary_as_source_operand",
+        "phase": "alu_execute_and_writeback"
+      },
+      "overrides": {
+        "validity": [
+          "ADD_instruction_executes",
+          "R5_result_commits",
+          "status_update_is_architecturally_valid",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_and",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "destination_operand_available": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "AND",
+            "source": "$primary",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "AND_uses_primary_as_source_operand",
+        "phase": "alu_execute_and_writeback"
+      },
+      "overrides": {
+        "validity": [
+          "AND_instruction_executes",
+          "R5_result_commits",
+          "status_update_is_architecturally_valid",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_dadd",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "destination_operand_available": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "DADD",
+            "source": "$primary",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "DADD_uses_primary_as_source_operand",
+        "phase": "bcd_alu_execute_and_writeback"
+      },
+      "overrides": {
+        "validity": [
+          "DADD_instruction_executes",
+          "R5_result_commits",
+          "status_update_is_architecturally_valid",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_cmp",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "comparison_operand_available": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "CMP",
+            "source": "$primary",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "CMP_uses_primary_as_source_operand",
+        "phase": "compare_execute_and_status_update"
+      },
+      "overrides": {
+        "validity": [
+          "CMP_instruction_executes",
+          "destination_is_not_written_by_compare",
+          "status_update_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_rra",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_shift_operation",
+          "parameters": {
+            "operation": "RRA_word",
+            "target": "$primary"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "RRA_operates_on_primary",
+        "phase": "shift_execute_and_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R4_shift_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "RRA_instruction_executes",
+          "shifted_primary_result_commits",
+          "status_update_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_sxt",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "SXT",
+            "target": "$primary"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "SXT_operates_on_primary",
+        "phase": "sign_extension_execute_and_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R4_sign_extended_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "SXT_instruction_executes",
+          "sign_extended_primary_result_commits",
+          "status_update_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_bis_active",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "initialize_register",
+          "parameters": {
+            "target": "R5",
+            "value": "0x00F0"
+          }
+        },
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "BIS",
+            "source": "$primary",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "BIS_combines_primary_with_nonzero_destination",
+        "phase": "or_path_execute_and_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_BIS_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R5_is_initialized_to_nonzero_value",
+          "BIS_instruction_executes",
+          "R5_result_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_xor_v_active",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "initialize_register",
+          "parameters": {
+            "target": "R5",
+            "value": "0x8000"
+          }
+        },
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "XOR",
+            "source": "$primary",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "XOR_combines_primary_with_destination_MSB_set",
+        "phase": "xor_and_overflow_path_execute"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_XOR_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R5_bit15_is_one_before_XOR",
+          "XOR_instruction_executes",
+          "R5_result_commits",
+          "status_update_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_rra_byte",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "execute_shift_operation",
+          "parameters": {
+            "operation": "RRA_byte",
+            "target": "$primary"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "byte_RRA_operates_on_primary",
+        "phase": "byte_shift_execute_and_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R4_RRA_byte_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "RRA_byte_instruction_executes",
+          "byte_shift_result_commits",
+          "status_update_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "alu_rrc_carry1",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "set_status_flag",
+          "parameters": {
+            "flag": "carry",
+            "value": 1
+          }
+        },
+        {
+          "action": "execute_shift_operation",
+          "parameters": {
+            "operation": "RRC_word",
+            "target": "$primary"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "RRC_operates_on_primary_with_carry_set",
+        "phase": "rotate_execute_and_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R4_RRC_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "carry_is_one_before_RRC",
+          "RRC_instruction_executes",
+          "rotated_primary_result_commits",
+          "status_update_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_op_dst_active",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "execute_alu_operation",
+          "parameters": {
+            "operation": "ADD_immediate",
+            "immediate": "0x1357",
+            "destination": "R5"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_R5_used_as_destination_operand",
+        "phase": "destination_operand_execute_and_writeback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_op_dst_result",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R4_to_R5_transfer_executes",
+          "immediate_ADD_executes",
+          "R5_result_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_dmem_address",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "legal_dmem_range_available": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "derive_address",
+          "parameters": {
+            "source": "R5",
+            "destination": "R5",
+            "constraint": "even_address_in_0x0200_to_0x03FE"
+          }
+        },
+        {
+          "action": "read_memory",
+          "parameters": {
+            "space": "DMEM",
+            "address": "R5",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_DMEM_address_is_used",
+        "phase": "data_memory_address_and_read_transfer"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_derived_DMEM_address",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_DMEM_readback",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "DMEM",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "derived_address_is_even",
+          "derived_address_is_within_0x0200_to_0x03FE",
+          "DMEM_read_completes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_dmem_store",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "DMEM_0x0200_is_accessible": true
+      },
+      "stimulus": [
+        {
+          "action": "write_memory",
+          "parameters": {
+            "space": "DMEM",
+            "address": "0x0200",
+            "source": "$primary",
+            "width": "word"
+          }
+        },
+        {
+          "action": "read_memory",
+          "parameters": {
+            "space": "DMEM",
+            "address": "0x0200",
+            "destination": "R5",
+            "width": "word"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "primary_value_drives_DMEM_write_data",
+        "phase": "data_memory_write_transfer"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "DMEM_0x0200",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R5_DMEM_readback",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "DMEM_0x0200_is_legal",
+          "word_store_executes",
+          "readback_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_pmem_address",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "legal_pmem_range_available": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "derive_address",
+          "parameters": {
+            "source": "R5",
+            "destination": "R5",
+            "constraint": "even_address_in_0xF000_to_0xFFFE"
+          }
+        },
+        {
+          "action": "read_memory",
+          "parameters": {
+            "space": "PMEM",
+            "address": "R5",
+            "destination": "R6"
+          }
+        },
+        {
+          "action": "exercise_memory_write_data_path",
+          "parameters": {
+            "space": "PMEM",
+            "address": "0xF100",
+            "source": "$primary",
+            "width": "word"
+          }
+        },
+        {
+          "action": "read_memory",
+          "parameters": {
+            "space": "PMEM",
+            "address": "0xF100",
+            "destination": "R7",
+            "width": "word"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_PMEM_address_or_write_data_is_active",
+        "phase": "program_memory_address_and_data_transfer"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_derived_PMEM_address",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_PMEM_readback",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "PMEM_0xF100",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R7_PMEM_readback",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "derived_address_is_even",
+          "derived_address_is_within_legal_PMEM_range",
+          "PMEM_access_path_is_active",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_peripheral_address",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "SFR_IE1_and_CPU_NR_are_mapped": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "select_address_from_primary_bit",
+          "parameters": {
+            "source_bit": "R4[3]",
+            "choices": [
+              "0x0000_IE1",
+              "0x0008_CPU_NR"
+            ],
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "read_peripheral",
+          "parameters": {
+            "address": "R5",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_bit3_selects_legal_peripheral_address",
+        "phase": "peripheral_address_decode_and_read"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_selected_peripheral_address",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_peripheral_readback",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "IE1_or_CPU_NR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "selected_address_is_IE1_or_CPU_NR",
+          "peripheral_read_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_indirect_autoinc_safe",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "legal_dmem_range_available": true
+      },
+      "stimulus": [
+        {
+          "action": "constrain_register",
+          "parameters": {
+            "target": "$primary",
+            "constraint": "even_address_in_0x0200_to_0x03FE"
+          }
+        },
+        {
+          "action": "read_memory_autoincrement",
+          "parameters": {
+            "space": "DMEM",
+            "address_register": "$primary",
+            "destination": "R5",
+            "width": "word"
+          }
+        },
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R6",
+            "semantic": "capture_incremented_address"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_used_as_indirect_autoincrement_address",
+        "phase": "memory_read_and_register_increment"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R4_after_autoincrement",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R5_loaded_value",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_incremented_address_copy",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "R4_is_legal_even_DMEM_address_before_access",
+          "autoincrement_read_executes",
+          "R4_increment_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_odd_byte_access",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "legal_dmem_range_available": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "derive_address",
+          "parameters": {
+            "source": "R5",
+            "destination": "R5",
+            "constraint": "odd_address_in_0x0201_to_0x03FF"
+          }
+        },
+        {
+          "action": "read_memory",
+          "parameters": {
+            "space": "DMEM",
+            "address": "R5",
+            "destination": "R6",
+            "width": "byte"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_odd_DMEM_byte_address_is_used",
+        "phase": "byte_address_selection_and_read"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R5_odd_DMEM_address",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_byte_readback",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "derived_address_is_odd",
+          "derived_address_is_within_legal_DMEM_range",
+          "byte_read_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_watchdog_data",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "watchdog_control_register_is_accessible": true
+      },
+      "stimulus": [
+        {
+          "action": "derive_control_word",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5",
+            "rule": "password_0x5A00_plus_primary_low_byte"
+          }
+        },
+        {
+          "action": "write_peripheral",
+          "parameters": {
+            "target": "WDTCTL",
+            "address": "0x0120",
+            "source": "R5"
+          }
+        },
+        {
+          "action": "read_peripheral",
+          "parameters": {
+            "target": "WDTCTL",
+            "address": "0x0120",
+            "destination": "R6"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "R4_derived_watchdog_control_word_is_written",
+        "phase": "watchdog_write_and_readback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "WDTCTL",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_WDTCTL_readback",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "watchdog_password_is_valid",
+          "WDTCTL_write_executes",
+          "WDTCTL_readback_executes",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_multiplier_data",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "hardware_multiplier_is_accessible": true
+      },
+      "stimulus": [
+        {
+          "action": "write_peripheral",
+          "parameters": {
+            "target": "multiplier_operand1",
+            "address": "0x0130",
+            "source": "$primary"
+          }
+        },
+        {
+          "action": "initialize_register",
+          "parameters": {
+            "target": "R6",
+            "value": "0x0003"
+          }
+        },
+        {
+          "action": "write_peripheral",
+          "parameters": {
+            "target": "multiplier_operand2",
+            "address": "0x0138",
+            "source": "R6"
+          }
+        },
+        {
+          "action": "read_peripheral",
+          "parameters": {
+            "target": "multiplier_result_low",
+            "address": "0x013A",
+            "destination": "R7"
+          }
+        },
+        {
+          "action": "read_peripheral",
+          "parameters": {
+            "target": "multiplier_result_high",
+            "address": "0x013C",
+            "destination": "R8"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "primary_value_used_as_multiplier_operand",
+        "phase": "multiplier_operation_and_result_readback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R7_multiplier_result_low",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R8_multiplier_result_high",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "multiplier_result_registers",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "multiplier_operand1_write_executes",
+          "fixed_multiplier_operand_is_three",
+          "result_registers_are_read",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_sfr_data",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "IE1_and_IFG1_are_accessible": true
+      },
+      "stimulus": [
+        {
+          "action": "write_peripheral",
+          "parameters": {
+            "target": "IE1",
+            "address": "0x0000",
+            "source": "$primary",
+            "width": "byte",
+            "source_selection": "low_byte"
+          }
+        },
+        {
+          "action": "write_peripheral",
+          "parameters": {
+            "target": "IFG1",
+            "address": "0x0002",
+            "source": "$primary",
+            "width": "byte",
+            "source_selection": "low_byte"
+          }
+        },
+        {
+          "action": "read_peripheral",
+          "parameters": {
+            "target": "IE1",
+            "address": "0x0000",
+            "destination": "R5",
+            "width": "byte"
+          }
+        },
+        {
+          "action": "read_peripheral",
+          "parameters": {
+            "target": "IFG1",
+            "address": "0x0002",
+            "destination": "R6",
+            "width": "byte"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "primary_low_byte_drives_SFR_data_path",
+        "phase": "SFR_write_and_readback"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "IE1",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "IFG1",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R5_IE1_readback",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_IFG1_readback",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "IE1_byte_write_executes",
+          "IFG1_byte_write_executes",
+          "SFR_readbacks_execute",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_irq_gate",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "valid_stack_available": true,
+        "WDT_interrupt_vector_points_to_legal_handler": true
+      },
+      "stimulus": [
+        {
+          "action": "initialize_stack",
+          "parameters": {
+            "target": "R1_SP",
+            "value": "0x03F0"
+          }
+        },
+        {
+          "action": "configure_watchdog",
+          "parameters": {
+            "mode": "interval",
+            "control_word": "0x5A10"
+          }
+        },
+        {
+          "action": "derive_gate",
+          "parameters": {
+            "source_bit": "R4[0]",
+            "destination": "interrupt_gate"
+          }
+        },
+        {
+          "action": "apply_interrupt_gate",
+          "parameters": {
+            "gate": "interrupt_gate",
+            "targets": [
+              "IE1.WDTIE",
+              "IFG1.WDTIFG"
+            ]
+          }
+        },
+        {
+          "action": "enable_global_interrupts"
+        },
+        {
+          "action": "await_interrupt_resolution"
+        },
+        {
+          "action": "handler_commit_signature",
+          "parameters": {
+            "destination": "R6",
+            "signature": "distinct_WDT_handler_signature"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "WDT_interrupt_acceptance_depends_on_R4_bit0",
+        "phase": "interrupt_pending_acceptance_and_vector_transfer"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "PC",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_IRQ_signature",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "IE1",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "IFG1",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "stack_pointer_is_legal",
+          "watchdog_is_in_interval_mode",
+          "interrupt_vector_is_legal",
+          "interrupt_path_resolves_consistently_with_R4_bit0",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "debug_r4_read",
+      "preconditions": {
+        "debug_enabled": true,
+        "debug_uart_available": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "initiate_debug_transaction",
+          "parameters": {
+            "transport": "UART_debug",
+            "operation": "read_CPU_register",
+            "target": "$primary"
+          }
+        },
+        {
+          "action": "receive_debug_response",
+          "parameters": {
+            "transport": "UART_debug"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "debug_read_of_primary_generates_response",
+        "phase": "debug_response_generation_and_serialization"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R4_debug_read_value",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "CPU_STAT_debug_register",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "debug_read_command_is_accepted",
+          "requested_register_is_primary",
+          "debug_response_is_protocol_valid",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_nmi_gate",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "valid_stack_available": true,
+        "NMI_vector_points_to_legal_handler": true
+      },
+      "stimulus": [
+        {
+          "action": "initialize_stack",
+          "parameters": {
+            "target": "R1_SP",
+            "value": "0x03F0"
+          }
+        },
+        {
+          "action": "derive_gate",
+          "parameters": {
+            "source_bit": "R4[4]",
+            "destination": "nmi_gate"
+          }
+        },
+        {
+          "action": "apply_interrupt_gate",
+          "parameters": {
+            "gate": "nmi_gate",
+            "targets": [
+              "NMIE",
+              "NMIIFG"
+            ]
+          }
+        },
+        {
+          "action": "await_NMI_resolution"
+        },
+        {
+          "action": "handler_commit_signature",
+          "parameters": {
+            "destination": "R6",
+            "signature": "distinct_NMI_handler_signature"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "NMI_acceptance_depends_on_R4_bit4",
+        "phase": "NMI_pending_acceptance_and_vector_transfer"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "PC",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_NMI_signature",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "IE1",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "IFG1",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "stack_pointer_is_legal",
+          "NMI_vector_is_legal",
+          "NMI_path_resolves_consistently_with_R4_bit4",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_pc_jump_table",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "four_legal_PMEM_landing_pads_available": true
+      },
+      "stimulus": [
+        {
+          "action": "copy_register",
+          "parameters": {
+            "source": "$primary",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "derive_control_index",
+          "parameters": {
+            "source_bits": "R4[2:1]",
+            "destination": "R5",
+            "choices": 4
+          }
+        },
+        {
+          "action": "derive_program_counter_target",
+          "parameters": {
+            "base": "0xF020",
+            "index": "R5",
+            "destination": "R5"
+          }
+        },
+        {
+          "action": "write_program_counter",
+          "parameters": {
+            "source": "R5"
+          }
+        },
+        {
+          "action": "landing_pad_commit_signature",
+          "parameters": {
+            "destination": "R6",
+            "signature": "distinct_signature_per_landing_pad"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "program_counter_loaded_from_R4_selected_jump_target",
+        "phase": "PC_switch_and_fetch_redirect"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "PC",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R6_jump_signature",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "derived_target_is_one_of_four_legal_PMEM_landing_pads",
+          "PC_redirect_executes",
+          "selected_landing_pad_commits_signature",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_conditional_branch",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true
+      },
+      "stimulus": [
+        {
+          "action": "test_primary_bit",
+          "parameters": {
+            "source_bit": "R4[0]",
+            "operation": "BIT"
+          }
+        },
+        {
+          "action": "execute_conditional_branch",
+          "parameters": {
+            "condition": "branch_on_status_from_R4_bit0"
+          }
+        },
+        {
+          "action": "commit_path_signature",
+          "parameters": {
+            "destination": "R6",
+            "not_taken_signature": "0x1111",
+            "taken_signature": "0x2222"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "conditional_branch_decision_depends_on_R4_bit0",
+        "phase": "status_to_branch_decision_and_PC_update"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R6_branch_signature",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "PC",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "BIT_instruction_executes",
+          "branch_condition_is_derived_from_R4_bit0",
+          "exactly_one_path_signature_commits",
+          "leakage_observation_is_valid"
+        ]
+      }
+    },
+    {
+      "id": "r4_reti_restore",
+      "preconditions": {
+        "processor_enabled": true,
+        "primary_value_initialized": true,
+        "DMEM_stack_frame_region_is_accessible": true,
+        "four_legal_RETI_landing_pads_available": true
+      },
+      "stimulus": [
+        {
+          "action": "derive_status_frame",
+          "parameters": {
+            "source": "$primary",
+            "destination": "RETI_SR_frame",
+            "constraint": "safe_status_bits_C_Z_N_V_only"
+          }
+        },
+        {
+          "action": "write_memory",
+          "parameters": {
+            "space": "DMEM",
+            "address": "0x02F0",
+            "source": "RETI_SR_frame",
+            "semantic": "stacked_status_word"
+          }
+        },
+        {
+          "action": "derive_program_counter_target",
+          "parameters": {
+            "source_bits": "R4[2:1]",
+            "base": "0xF040",
+            "choices": 4,
+            "destination": "RETI_PC_frame"
+          }
+        },
+        {
+          "action": "write_memory",
+          "parameters": {
+            "space": "DMEM",
+            "address": "0x02F2",
+            "source": "RETI_PC_frame",
+            "semantic": "stacked_return_PC"
+          }
+        },
+        {
+          "action": "initialize_stack",
+          "parameters": {
+            "target": "R1_SP",
+            "value": "0x02F0"
+          }
+        },
+        {
+          "action": "execute_return_from_interrupt"
+        },
+        {
+          "action": "landing_pad_commit_signature",
+          "parameters": {
+            "destination": "R7",
+            "signature": "distinct_signature_per_RETI_target"
+          }
+        }
+      ],
+      "anchor": {
+        "event": "RETI_restores_R4_derived_status_and_program_counter",
+        "phase": "stack_restore_status_restore_and_PC_transfer"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate",
+            "purpose": "intervention_control"
+          },
+          {
+            "target": "$observation",
+            "purpose": "leakage_observation"
+          },
+          {
+            "target": "R7_RETI_signature",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "PC",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R1_SP",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "R2_SR",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "RETI_SR_frame",
+            "purpose": "scenario_validity"
+          },
+          {
+            "target": "RETI_PC_frame",
+            "purpose": "scenario_validity"
+          }
+        ],
+        "validity": [
+          "stack_frame_addresses_are_legal",
+          "restored_status_uses_only_safe_bits",
+          "return_PC_is_one_of_four_legal_landing_pads",
+          "RETI_executes",
+          "selected_landing_pad_commits_signature",
+          "leakage_observation_is_valid"
+        ]
+      }
+    }
+  ]
+}

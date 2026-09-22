@@ -1,0 +1,2894 @@
+Jasper Apps 2024.09p001 64 bits 2024.10.22 13:22:13 UTC
+
+Any disclosure about the Cadence Design Systems software or its use
+model to any third party violates the written Non-Disclosure Agreement
+between Cadence Design Systems, Inc. and the customer.
+
+THIS SOFTWARE CONTAINS CONFIDENTIAL INFORMATION AND TRADE SECRETS OF
+CADENCE DESIGN SYSTEMS, INC. USE, DISCLOSURE, OR REPRODUCTION IS
+PROHIBITED WITHOUT THE PRIOR EXPRESS WRITTEN PERMISSION OF CADENCE
+DESIGN SYSTEMS, INC.
+
+Copyright (C) 2000-2024 Cadence Design Systems, Inc. All Rights
+Reserved.  Unpublished -- rights reserved under the copyright laws of
+the United States.
+
+This product includes software developed by others and redistributed
+according to license agreement. See doc/third_party_readme.txt for
+further details.
+
+RESTRICTED RIGHTS LEGEND
+
+Use, duplication, or disclosure by the Government is subject to
+restrictions as set forth in subparagraph (c) (1) (ii) of the Rights in
+Technical Data and Computer Software clause at DFARS 252.227-7013 or
+subparagraphs (c) (1) and (2) of Commercial Computer Software -- Restricted
+Rights at 48 CFR 52.227-19, as applicable.
+
+
+                          Cadence Design Systems, Inc.
+                          2655 Seely Avenue
+                          San Jose, CA 95134
+                          Phone: 408.943.1234
+
+For technical assistance visit http://support.cadence.com.
+
+Jasper Apps Analysis Session - <SOURCE_ROOT>/jgproject/sessionLogs/session_0
+
+INFO: successfully checked out license "jasper_fao".
+INFO: reading configuration file "<USER_HOME>/.config/cadence/jasper.conf".
+% if {[info exists ::env(SECID_UA_MED_ROOT)] && $::env(SECID_UA_MED_ROOT) ne ""} {
+  set ROOT [file normalize $::env(SECID_UA_MED_ROOT)]
+} else {
+  error "SECID_UA_MED_ROOT is not set. Run through package run_*.sh scripts."
+}
+<SOURCE_ROOT>
+% if {[info exists ::env(SECID_UA_MED_RESULT_DIR)] && $::env(SECID_UA_MED_RESULT_DIR) ne ""} {
+  set RESULT_DIR [file normalize $::env(SECID_UA_MED_RESULT_DIR)]
+} else {
+  set RESULT_DIR [file join $ROOT results exclusion/mstatus_mpp_s2]
+}
+<SOURCE_ROOT>/results/exclusion/mstatus_mpp_s2
+% file mkdir $RESULT_DIR
+% analyze -sv +incdir+[file join $ROOT input] [file join $ROOT input secid_neorv32_top_source_observed.v] [file join $ROOT generated exclusion_mstatus_mpp_s2.sv]
+[-- (VERI-1482)] Analyzing Verilog file '/apps/cds/jasper/2024.09/lib/verilog/packages/std/std.sv' into library 'std'
+[-- (VERI-1482)] Analyzing Verilog file '<SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v'
+[-- (VERI-1482)] Analyzing Verilog file '<SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv'
+[INFO (VERI-1328)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(3): analyzing included file '<SOURCE_ROOT>/input/program_mem_semantic.svh'
+% elaborate -top ua_exclusion_mstatus_mpp_s2
+INFO (ISW003): Top module name is "ua_exclusion_mstatus_mpp_s2".
+[INFO (HIER-8002)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(121): Disabling old hierarchical reference handler
+[WARN (VERI-1927)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(78): port 'rstn_ocd_o' remains unconnected for this instance
+[WARN (VERI-1927)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(93): port 'rstn_ocd_o' remains unconnected for this instance
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22166): compiling module 'neorv32_sys_reset'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22097): compiling module 'neorv32_sys_clock'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(440): compiling module 'neorv32_cpu_frontend_ipb'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(13519): compiling module 'neorv32_cpu_frontend_secid_0_29e2dcfbb16f63bb0254df7585a15bb6fb5e927d'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(4900): compiling module 'neorv32_cpu_control_secid_0_8fdee6cc13df465b0eced7bb052df942a608ec46'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(3834): compiling module 'neorv32_cpu_regfile_secid_5_0'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(1): compiling module 'neorv32_cpu_alu_shifter_secid_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(3217): compiling module 'neorv32_cpu_alu_secid_1_6768033e216468247bd031a0a2d9876d79818f8f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(2323): compiling module 'neorv32_cpu_lsu_secid_0_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(799): compiling module 'neorv32_cpu_pmp_secid_2_4_0e356ba505631fbf715758bed27d503f8b260e3a'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(20715): compiling module 'neorv32_cpu_secid_0_1_0_2_4_0_64_0_27585044c0528f90935fcb0dc7da2821d4f834ca'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(20192): compiling module 'neorv32_bus_switch_2547cc736e951fa4919853c43ae890861a3b3264'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(19435): compiling module 'neorv32_bus_gateway_16384_16_8192_16_268435456_2048_2097152_16_128_c8974f61549fe43ee6f4571932edd0d63f8d6bec'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(710): compiling module 'neorv32_bus_reg_1489f923c4dca729178b3e3233458550d8dddf29'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(19159): compiling module 'neorv32_xbus_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(546): compiling module 'neorv32_bus_reg_9159cb8bcee7fcb95582f140960cdae72788d326'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(17373): compiling module 'neorv32_bus_io_switch_65536_27e753c6d972ad22050a6dc7f272a82e27bd674b'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(17111): compiling module 'neorv32_sysinfo_16_128_1_0_1_16384_8192_4_4_64_10976d00261ceae9db6c817817835e8e5c35be1b'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16472): compiling module 'neorv32_debug_dtm_46d1c9a201904415cbd5c7cc672d1649ed497f22'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(14203): compiling module 'neorv32_debug_dm_1_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[WARN (VERI-1060)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16449): 'initial' construct is ignored
+[WARN (VDB-1002)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16431): net 'n3714[15][31]' does not have a driver
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22307): compiling module 'secid_neorv32_top'
+[INFO (VERI-1018)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(2): compiling module 'ua_exclusion_mstatus_mpp_s2'
+[WARN (VERI-8028)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(64): missing/open ports on instance dut_g of module secid_neorv32_top
+[WARN (VERI-8028)] <SOURCE_ROOT>/generated/exclusion_mstatus_mpp_s2.sv(79): missing/open ports on instance dut_a of module secid_neorv32_top
+INFO (INL208): Elaboration synthesis summary:
+  Number of synthesized netlists          22 (0 packages)
+  Single run mode                         On
+  Pipeline                                On (22 pipelined netlists)
+  Late hierarchical reference connection  On
+  Number of analyzed Verilog modules      22 (22 synthesized)
+  Number of analyzed VHDL entities        0 (0 synthesized)
+INFO (INL003): Clearing all state information (assumes, stopats, and so forth).
+INFO (IMDS005): Number of multiple-driven bits in design: 29006. Use "get_design_info -list multiple_driven" for more information.
+ua_exclusion_mstatus_mpp_s2
+[<embedded>] % 
+[<embedded>] % clock clk
+[<embedded>] % reset -expression {!rstn}
+INFO (IPM031): Clearing proof results of all properties.
+INFO (IRS006): Current reset condition is "rstn".
+[<embedded>] % set T0 [::tcl::clock::milliseconds]
+1789365234481
+[<embedded>] % prove -all
+Bcustom1: Custom engine code is hT3Nm7hPr1Vp3Di1Ra2USNIGL4JypRnLKLAdF6JAyuavO2JfGCiY9OZJhcAcOUnLx5xwNdhILGrAWX9s+z2WDkKwNR7tAfClBEjRFVQeq6DU54boFgEA
+Mpcustom2: Custom engine code is hT3NZbhP9fmY2AbBQnsjfOxn6c+6e6yL+/e8fZFmaQrnlgEA
+Ncustom3: Custom engine code is hT3Ng7hPPfiYQOTDZ3qhYOwGAM51eA+J/FjkM5shLioAsqhgLR4Ft+O1BuKG6ilQ83B9tLXSl+CwjiTMAQA
+AMcustom4: Custom engine code is hT3Ng7hP/feYQOTDZ3qhYOwGAM51eA+J/FjkM5shLioAsqhgLR4Ft+O1BuKG6ilQ83B9tLXSmmqwm7g9AQA
+INFO (IPF036): Starting proof on task: "<embedded>", 11 properties to prove with 0 already proven/unreachable
+INFO (IRS029): Starting reset analysis: phase 1 of 4.
+INFO (IRS030): Running reset analysis: phase 2 of 4.
+INFO (IRS031): Running reset analysis: phase 3 of 4.
+INFO (IRS020): Starting the reset analysis simulation with a limit of 100 iterations (phase 4 of 4).
+INFO (IRS024): Reset iterations 0 to 5 analyzed.
+INFO (IRS018): Reset analysis simulation executed for 4 iterations. Assigned values for 3105 of 5491 design flops, 0 of 0 design latches, 17 of 17 internal elements.
+INFO (IRS039): Reset analysis complete.
+INFO (IPF031): Settings used for proof thread 2:
+    orchestration                      = on
+    time_limit                         = 86400s
+    per_property_time_limit            = 1s * 10 ^ scan
+    engine_mode                        = auto
+    proofgrid_per_engine_max_jobs      = 1
+    max engine jobs                    = auto
+    proofgrid_mode                     = local
+    proofgrid_restarts                 = 10
+AMcustom5: Custom engine code is hT3N1rhP11/52HrFRS21ROp2LOjVTgPvT8L8BGXHgLhaIuqtT4nARFjUqrBL+7pLmaTOzBepZW/Jm8SSrHDybSQtoNiO3y43wk+dEoWlsZizu97Fih6O6lPVG/LpWP5SsUPwlGagLNa1FKEFvwVXyX7//8prySbvSxIHXr5er+z4RAEA
+Ncustom6: Custom engine code is hT3OXrhPByJp3TrFSTLhUmMH4KVtJgmTCnNDF46yMXOKY48m4LS5nE7yBzFjA7kDuwO/GhGUpEPiky3p3wmPn3dJZHxFMsafSoObRzSC+tn7sEY0WbTdZ/FV4hL3MYH/b1CIUvXSWR4wqEoVLsmMOD4xIPT4lI1LO6ZCO7PnnWQuLwetnvKlrXx6wCW/A+x+enqslg1YPobi4wEF/EvbzOvcTYdJvl2s4H2yZg2b2ofAVN5WvhWk1HoBAA
+ADcustom7: Custom engine code is hT3Nv7hPv1752HrFRa2kROx2f/ECJeZB2AZsLdlO8VwmIuqtT4nIDFXclhg+O+o+DMmQCekbheGk0kK28laA9gaOFDXsQp29J3X615HY1IPHJWd6FUFvCHjO+p1k652b5JJvZlShNpGlGSXAiQe/mEAj6tEBAA
+Tricustom8: Custom engine code is hT3Nu7hPt1752DvFRa0kNDiyIV97VyejwM9C/jCLJjdPvusZONHY42VYUy0Q1ZotnhcVtNc56tJ5wbxv6V2+XpdsaSlHck5vfnbYjdwj1OECy9U+7oSQ0SZE3g5ayD+Phuh4odCJTjeKa2k4elM9ldQfkAEA
+Gcustom9: Custom engine code is hT3NibhPDfeYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInncipMGcUXqAadachREE9F2PwhBUZUNw5kHnd4JdXkamORRgEA
+C2custom10: Custom engine code is hT3NirhPjfWYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInncgkrYMMXCYbdK0dUjZIF9d4cJ0rHoBDjwVLBKuG86XYVV00BAA
+AGcustom11: Custom engine code is hT3NirhP/fmYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInnckcwYMMXCYbdK0dUjZIF9d4cJ0rHoBDjwVLBKuHEZnZByh0BAA
+Bcustom12: Custom engine code is hT3NjrhPDfiYQADBZnYcglOvK9PfWxFtenjIyBqfrgr7if/jL/yPOuK1BAflEcW0DxNH2eDIoezN2gxlQFg81RZtiWXh7aiTAidvAQA
+2: Using multistage preprocessing
+2: Starting reduce
+Ncustom13: Custom engine code is hT3NR7hPByFp3TrFSTLhUmMH4KWtJglTyV/c51BHEeZWamnJv767nE6PCak26bd3gf3XGN3rIRheufhDieCJQVISo+gNYUKhiUedBKGtsP/a18svAnlMJZudHxDFwK5ufsyoxsIyiAeSY2oi3tEuoDHr5gw42DFKAG3PqO3CEsl8Azzdt3pl5nGA1Ifv2H02eYsFzWb/nfp8PMb3F0krE/EgBcm8TD9Div8BAA
+Tricustom14: Custom engine code is hT3Nu7hP3fiYQADBZnYcglNHp9bfd7EOeniIqP/ji8sGLQu8yhsFO+wxJ+O+R0bU8g/IewXFomyos+viQnWc2xYNYmMqpo3i40O7DaZR7qfp4YqNx26KRvQ/qx0BAA
+2: Finished reduce in 0.071s
+2.0.PRE: Performing Proof Simplification...
+2.0.Hp: clocks: 2, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 1, bothedge: 0
+2.0.Hp: Clocks that will never have a posedge: dut_a.core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.n6535_o[0] [vTrue], 
+2.0.Hp: Proof Simplification Iteration 1	[0.00 s]
+2.0.Hp: Proof Simplification Iteration 2	[0.03 s]
+2.0.Hp: Proof Simplification Iteration 3	[0.05 s]
+2.0.Hp: Proof Simplification Iteration 4	[0.07 s]
+2.0.Hp: Proof Simplification Iteration 5	[0.08 s]
+2.0.Hp: Proof Simplification Iteration 6	[0.10 s]
+2.0.Hp: Proof Simplification Iteration 7	[0.12 s]
+2.0.Hp: Proof Simplification Iteration 8	[0.13 s]
+2.0.Hp: Proof Simplification Iteration 9	[0.15 s]
+2.0.Hp: Proof Simplification Iteration 10	[0.17 s]
+2.0.PRE: Proof Simplification completed in 0.24 s
+2.0.Hp: Identified and disabled 4 duplicated targets.
+2: About to start ProofGrid in its own thread with a limit of 10000 pending notifications and a limit of 10 traces.
+2: ============================= ProofGrid (v3) start =============================
+2: ProofGrid usable level: 7
+2: Initial ProofGrid level: 1
+2: ProofGrid is starting event handling
+2.0.Hp: Proofgrid shell started at 883755@<HOST>(local) jg_883638_<HOST>_1
+2: ProofGrid usable level: 7
+2.0.Hp: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2: ProofGrid usable level: 7
+2: ProofGrid usable level: 7
+2: ProofGrid usable level: 7
+2: ProofGrid usable level: 7
+2.0.Hp: Trace Attempt  1	[0.08 s]
+2.0.Ht: Proofgrid shell started at 883771@<HOST>(local) jg_883638_<HOST>_1
+2.0.Mpcustom2: Proofgrid shell started at 883773@<HOST>(local) jg_883638_<HOST>_1
+2.0.Bm: Proofgrid shell started at 883772@<HOST>(local) jg_883638_<HOST>_1
+2.0.Ht: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Mpcustom2: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bm: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Oh: Proofgrid shell started at 883774@<HOST>(local) jg_883638_<HOST>_1
+2.0.Oh: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bm: Trace Attempt  1	[0.03 s]
+2.0.Bm: Trace Attempt  2	[0.03 s]
+2.0.Bm: Trace Attempt  3	[0.03 s]
+2.0.Bm: Trace Attempt  4	[0.03 s]
+2.0.Bm: Trace Attempt  5	[0.03 s]
+2.0.Mpcustom2: Trace Attempt  1	[0.05 s]
+2.0.Ht: Trace Attempt  1	[0.06 s]
+2.0.Ht: Trace Attempt  2	[0.06 s]
+2.0.Ht: Trace Attempt  3	[0.06 s]
+2.0.L: Proofgrid shell started at 883780@<HOST>(local) jg_883638_<HOST>_1
+2.0.Ht: Trace Attempt  4	[0.06 s]
+2.0.Ht: Trace Attempt  5	[0.07 s]
+2.0.L: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Mpcustom2: Trace Attempt  2	[0.07 s]
+2.0.B: Proofgrid shell started at 883823@<HOST>(local) jg_883638_<HOST>_1
+2.0.L: Using trace diversification with seed 1 (0.05)
+2.0.L: Using LRU state removal heuristic
+2.0.B: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.L: Using states from traces to { (reset) }
+2.0.AM: Proofgrid shell started at 883825@<HOST>(local) jg_883638_<HOST>_1
+2.0.N: Proofgrid shell started at 883821@<HOST>(local) jg_883638_<HOST>_1
+2.0.B: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.AM: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.N: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.Bm: Trace Attempt 42	[0.08 s]
+2.0.Bm: A trace with 42 cycles was found. [0.09 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1" was covered in 42 cycles in 0.19 s.
+INFO (IPF047): 2.0.Bm: The cover property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1" was covered in 42 cycles in 0.19 s.
+INFO (IPF047): 2.0.Bm: The cover property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK" was covered in 42 cycles in 0.19 s.
+2.0.N: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.13 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.13 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.13 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.B: Trace Attempt  9	[0.02 s]
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.15 s].
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.15 s].
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.15 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.Bm: A trace with 42 cycles was found. [0.11 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_exclusion_mstatus_mpp_s2.UA_DATA_ATTACK_ONE_BIT:precondition1" was covered in 42 cycles in 0.23 s.
+2.0.Bm: Trace Attempt 43	[0.12 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.02 s]
+2.0.L: Trace Attempt  3	[0.07 s]
+2.0.Bm: A trace with 43 cycles was found. [0.13 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1" was covered in 43 cycles in 0.26 s.
+2.0.B: Trace Attempt 21	[0.03 s]
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  7	[0.03 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  3	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.02 s]
+2.0.N: Trace Attempt  3	[0.06 s]
+2.0.L: Trace Attempt  4	[0.12 s]
+2.0.N: Trace Attempt  4	[0.08 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  4	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.L: Trace Attempt  5	[0.14 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.60 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" in 0.58 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.60 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND" in 0.58 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.60 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND" in 0.58 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.60 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" in 0.58 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.60 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1" in 0.58 s.
+INFO (IPF054): 2.0.Oh: A min_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND" in 0.58 s.
+2.0.Oh: bwd trail(1): 1 0.588563s
+2.0.Oh: All properties either determined or skipped. [0.61 s]
+2.0.Oh: Exited with Success (@ 0.78 s)
+2: ProofGrid usable level: 4
+2.0.Mpcustom2: Trace Attempt  3	[0.79 s]
+2.0.Bm: Trace Attempt 54	[0.68 s]
+2.0.Bm: A trace with 54 cycles was found. [0.78 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_exclusion_mstatus_mpp_s2.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP" was covered in 54 cycles in 0.79 s.
+2.0.Bm: Trace Attempt 55	[0.81 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.84 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.90 s]
+2.0.Mpcustom2: Trace Attempt  3	[0.95 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.95 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.95 s]
+2.0.AM: Trace Attempt 102	[0.99 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.85 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.85 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.85 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.N: Trace Attempt 99	[0.75 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.85 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.85 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.85 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.N: Trace Attempt  4	[0.05 s]
+2.0.N: Trace Attempt  5	[0.05 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.N: Trace Attempt  5	[0.12 s]
+2.0.N: Trace Attempt  1	[0.15 s]
+2.0.N: Trace Attempt  2	[0.15 s]
+2.0.N: Trace Attempt  3	[0.15 s]
+2.0.N: Trace Attempt  5	[0.15 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[1.43 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[1.49 s]
+2.0.L: Trace Attempt  4	[1.50 s]
+2.0.L: Trace Attempt  5	[1.51 s]
+2.0.N: Trace Attempt  1	[0.46 s]
+2.0.N: Trace Attempt  2	[0.46 s]
+2.0.N: Trace Attempt  3	[0.46 s]
+2.0.N: Trace Attempt  5	[0.46 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP (53) }
+2.0.L: Trace Attempt  3	[1.69 s]
+2.0.L: Trace Attempt  4	[1.70 s]
+2: ProofGrid usable level: 3
+2.0.L: Trace Attempt  5	[1.71 s]
+2.0.AM: Trace Attempt 72	[0.97 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.N: Trace Attempt 73	[0.85 s]
+2.0.N: Per property time limit expired (1.00 s) [1.00 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[1.00 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[1.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.N: Trace Attempt  4	[0.06 s]
+2.0.N: Trace Attempt  5	[0.06 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.L: Overconstrained local search, searching for dead end trace with 54 - 82 cycles
+2.0.N: Trace Attempt  5	[0.13 s]
+2.0.N: Trace Attempt  1	[0.15 s]
+2.0.N: Trace Attempt  2	[0.15 s]
+2.0.N: Trace Attempt  3	[0.15 s]
+2.0.N: Trace Attempt  5	[0.15 s]
+2.0.L: Trace Attempt 81	[2.35 s]
+2.0.L: A trace with 81 cycles was found. [2.35 s]
+INFO (IPF155): 2.0.L: A dead end state was reached after 81 cycles in task "<embedded>" in 2.38 s.
+    Use check_assumptions -show -dead_end to show this property in the property table.
+2.0.L: Overconstrained local search, discarded 1 start state(s) and retrying
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[2.40 s]
+2.0.L: Trace Attempt  4	[2.42 s]
+2.0.L: Trace Attempt  5	[2.43 s]
+2.0.N: Trace Attempt  1	[0.45 s]
+2.0.N: Trace Attempt  2	[0.45 s]
+2.0.N: Trace Attempt  3	[0.45 s]
+2.0.N: Trace Attempt  5	[0.45 s]
+2.0.N: Trace Attempt 73	[0.86 s]
+2.0.N: Per property time limit expired (1.00 s) [1.00 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.00 s].
+2.0.AM: Trace Attempt 59	[0.87 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.00 s].
+2.0.L: Overconstrained local search, discarded 1 start state(s) and retrying
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[3.21 s]
+2.0.L: Trace Attempt  4	[3.23 s]
+2.0.L: Trace Attempt  5	[3.24 s]
+2.0.Ht: Trace Attempt 232	[4.07 s]
+2.0.Bm: Trace Attempt 107	[4.93 s]
+2.0.Mpcustom2: Trace Attempt 16	[5.14 s]
+2.0.L: Trace Attempt 53	[7.26 s]
+2.0.Ht: Trace Attempt 449	[8.08 s]
+2.0.Bm: Trace Attempt 153	[8.97 s]
+2.0.Mpcustom2: Trace Attempt 23	[9.23 s]
+2.0.L: Trace Attempt 93	[11.31 s]
+2.0.Ht: Trace Attempt 652	[12.14 s]
+2.0.Bm: Trace Attempt 193	[13.08 s]
+2.0.Mpcustom2: Trace Attempt 24	[13.94 s]
+2.0.L: Trace Attempt 128	[15.37 s]
+2.0.Ht: Trace Attempt 894	[16.19 s]
+INFO (IPF054): 2.0.Ht: A min_length bound of 901 was found for the property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND" in 16.26 s.
+2.0.Bm: Trace Attempt 232	[17.16 s]
+2.0.Mpcustom2: Trace Attempt 28	[17.94 s]
+2.0.L: Trace Attempt 159	[19.47 s]
+2.0.Bm: Trace Attempt 272	[21.22 s]
+2.0.Mpcustom2: Trace Attempt 30	[22.71 s]
+2.0.L: Trace Attempt 188	[23.52 s]
+2.0.Bm: Trace Attempt 302	[25.25 s]
+2.0.B: Trace Attempt 901	[0.07 s]
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[25.92 s].
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[25.92 s].
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[25.92 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt 12	[0.00 s]
+2.0.B: Trace Attempt  3	[0.00 s]
+2.0.B: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  3	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.02 s]
+2.0.Mpcustom2: Trace Attempt 36	[26.90 s]
+2.0.L: Trace Attempt 215	[27.65 s]
+2.0.Bm: Trace Attempt 331	[29.32 s]
+2.0.N: Trace Attempt 307	[4.27 s]
+2.0.AM: Trace Attempt 307	[4.37 s]
+2.0.Ht: Trace Attempt 901	[30.92 s]
+2.0.L: Trace Attempt 244	[31.73 s]
+2.0.Mpcustom2: Trace Attempt 39	[32.13 s]
+2.0.Bm: Trace Attempt 363	[33.34 s]
+2.0.N: Trace Attempt 607	[8.41 s]
+2.0.AM: Trace Attempt 607	[8.44 s]
+2.0.Ht: A trace with 901 cycles was found. [34.84 s]
+INFO (IPF047): 2.0.Ht: The cover property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" was covered in 901 cycles in 35.84 s.
+INFO (IPF047): 2.0.Ht: The cover property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" was covered in 901 cycles in 35.84 s.
+INFO (IPF047): 2.0.Ht: The cover property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1" was covered in 901 cycles in 35.84 s.
+2.0.Ht: A proof was found: No trace exists. [35.69 s]
+INFO (IPF057): 2.0.Ht: The property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND" was proven in 35.86 s.
+2.0.N: Trace Attempt 616	[9.42 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[9.66 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[9.66 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[9.66 s].
+2.0.AM: Trace Attempt 616	[9.46 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[9.66 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[9.66 s].
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[9.66 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.L: Trace Attempt 267	[35.78 s]
+2.0.N: Trace Attempt 12	[0.19 s]
+2.0.N: Trace Attempt  1	[0.26 s]
+2.0.N: Trace Attempt  2	[0.26 s]
+2.0.N: Trace Attempt  3	[0.26 s]
+2.0.N: Trace Attempt  5	[0.26 s]
+2: ProofGrid usable level: 1
+2.0.Bm: Trace Attempt 394	[37.45 s]
+2.0.Mpcustom2: Trace Attempt 40	[37.78 s]
+2.0.AM: Trace Attempt 135	[4.08 s]
+2.0.L: Trace Attempt 292	[39.86 s]
+2.0.N: Trace Attempt 364	[4.33 s]
+2.0.Bm: Trace Attempt 417	[41.52 s]
+2.0.Mpcustom2: Trace Attempt 43	[42.19 s]
+2.0.L: Trace Attempt 311	[43.91 s]
+2.0.AM: Trace Attempt 225	[8.28 s]
+2.0.N: Trace Attempt 657	[8.41 s]
+2.0.Bm: Trace Attempt 445	[45.61 s]
+2.0.AM: Trace Attempt 229	[9.98 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[9.85 s].
+2.0.N: Trace Attempt 678	[9.95 s]
+2.0.N: Per property time limit expired (10.00 s) [10.03 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[9.86 s].
+2.0.Mpcustom2: Trace Attempt 46	[47.48 s]
+2.0.L: Trace Attempt 334	[47.97 s]
+2.0.B: Trace Attempt 901	[0.06 s]
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[22.47 s].
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[22.47 s].
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND:precondition1"	[22.47 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.N: Trace Attempt 12	[0.21 s]
+2.0.N: Trace Attempt  1	[0.30 s]
+2.0.N: Trace Attempt  2	[0.30 s]
+2.0.N: Trace Attempt  3	[0.31 s]
+2.0.N: Trace Attempt  5	[0.31 s]
+2.0.Bm: Trace Attempt 472	[49.68 s]
+2.0.Mpcustom2: Trace Attempt 49	[51.52 s]
+2.0.L: Trace Attempt 352	[52.05 s]
+2.0.B: Trace Attempt 101	[4.04 s]
+2.0.AM: Trace Attempt 135	[4.08 s]
+2.0.N: Trace Attempt 345	[4.35 s]
+2.0.Bm: Trace Attempt 491	[53.81 s]
+2.0.L: Trace Attempt 374	[56.23 s]
+2.0.B: Trace Attempt 148	[8.12 s]
+2.0.Mpcustom2: Trace Attempt 51	[56.87 s]
+2.0.AM: Trace Attempt 225	[8.33 s]
+2.0.N: Trace Attempt 652	[8.38 s]
+2.0.Bm: Trace Attempt 514	[57.87 s]
+2.0.L: Trace Attempt 395	[60.38 s]
+2.0.B: Trace Attempt 191	[12.12 s]
+2.0.N: Trace Attempt 700	[12.44 s]
+2.0.AM: Trace Attempt 245	[12.76 s]
+2.0.Bm: Trace Attempt 537	[61.92 s]
+2.0.Mpcustom2: Trace Attempt 51	[62.51 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[62.88 s]
+2.0.L: Trace Attempt  4	[62.94 s]
+2.0.L: Trace Attempt  5	[62.97 s]
+2.0.B: Trace Attempt 229	[16.56 s]
+2.0.N: Trace Attempt 730	[16.69 s]
+2.0.AM: Trace Attempt 323	[16.87 s]
+2.0.Bm: Trace Attempt 560	[66.05 s]
+2.0.L: Trace Attempt 74	[67.03 s]
+2.0.Mpcustom2: Trace Attempt 55	[67.31 s]
+2.0.B: Trace Attempt 267	[20.59 s]
+2.0.AM: Trace Attempt 386	[20.88 s]
+2.0.N: Trace Attempt 749	[21.05 s]
+2.0.Bm: Trace Attempt 583	[70.21 s]
+2.0.L: Trace Attempt 111	[71.10 s]
+2.0.Mpcustom2: Trace Attempt 57	[72.74 s]
+2.0.B: Trace Attempt 298	[24.66 s]
+2.0.AM: Trace Attempt 526	[25.05 s]
+2.0.Bm: Trace Attempt 598	[74.31 s]
+2.0.L: Trace Attempt 145	[75.17 s]
+2.0.Mpcustom2: Trace Attempt 58	[76.89 s]
+2.0.AM: Trace Attempt 680	[29.05 s]
+2.0.B: Trace Attempt 330	[29.23 s]
+2.0.Bm: Trace Attempt 620	[78.48 s]
+2.0.L: Trace Attempt 175	[79.20 s]
+2.0.B: Trace Attempt 361	[33.25 s]
+2.0.AM: Trace Attempt 711	[33.38 s]
+2.0.Bm: Trace Attempt 641	[82.61 s]
+2.0.L: Trace Attempt 205	[83.26 s]
+2.0.Mpcustom2: Trace Attempt 59	[84.60 s]
+2.0.B: Trace Attempt 391	[37.37 s]
+2.0.AM: Trace Attempt 721	[37.44 s]
+2.0.Bm: Trace Attempt 661	[86.72 s]
+2.0.L: Trace Attempt 232	[87.32 s]
+2.0.N: Trace Attempt 768	[40.36 s]
+2.0.B: Trace Attempt 413	[41.40 s]
+2.0.AM: Trace Attempt 734	[42.01 s]
+2.0.Bm: Trace Attempt 680	[90.74 s]
+2.0.L: Trace Attempt 257	[91.43 s]
+2.0.Mpcustom2: Trace Attempt 64	[92.33 s]
+2.0.B: Trace Attempt 440	[45.47 s]
+2.0.Bm: Trace Attempt 699	[94.78 s]
+2.0.N: Trace Attempt 769	[46.13 s]
+2.0.N: Trace Attempt  1	[46.14 s]
+2.0.N: Trace Attempt  2	[46.14 s]
+2.0.N: Trace Attempt  3	[46.14 s]
+2.0.N: Trace Attempt  5	[46.14 s]
+2.0.L: Trace Attempt 280	[95.46 s]
+2.0.AM: Trace Attempt 744	[47.19 s]
+2.0.Mpcustom2: Trace Attempt 64	[97.08 s]
+2.0.B: Trace Attempt 466	[49.55 s]
+2.0.N: Trace Attempt 364	[50.14 s]
+2.0.Bm: Trace Attempt 718	[98.85 s]
+2.0.L: Trace Attempt 306	[99.53 s]
+2.0.AM: Trace Attempt 755	[53.22 s]
+2.0.B: Trace Attempt 485	[53.69 s]
+2.0.Mpcustom2: Trace Attempt 64	[102.83 s]
+2.0.N: Trace Attempt 657	[54.18 s]
+2.0.Bm: Trace Attempt 729	[102.97 s]
+2.0.L: Trace Attempt 326	[103.62 s]
+2.0.AM: Trace Attempt 763	[57.67 s]
+2.0.B: Trace Attempt 509	[57.75 s]
+2.0.N: Trace Attempt 703	[58.21 s]
+2.0.Bm: Trace Attempt 747	[107.07 s]
+2.0.L: Trace Attempt 349	[107.63 s]
+2.0.Mpcustom2: Trace Attempt 64	[109.60 s]
+2.0.B: Trace Attempt 532	[61.75 s]
+2.0.AM: Trace Attempt 767	[62.22 s]
+2.0.N: Trace Attempt 729	[62.27 s]
+2.0.Bm: Trace Attempt 765	[111.26 s]
+2.0.L: Trace Attempt 367	[111.70 s]
+2.0.Mpcustom2: Trace Attempt 64	[114.50 s]
+2.0.B: Trace Attempt 555	[65.93 s]
+2.0.AM: Trace Attempt 690	[66.22 s]
+2.0.Bm: Trace Attempt 782	[115.30 s]
+2.0.N: Trace Attempt 749	[66.80 s]
+2.0.L: Trace Attempt 388	[115.76 s]
+2.0.Mpcustom2: Trace Attempt 64	[118.52 s]
+2.0.B: Trace Attempt 577	[70.01 s]
+2.0.Bm: Trace Attempt 799	[119.40 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[119.97 s]
+2.0.L: Trace Attempt  4	[119.98 s]
+2.0.L: Trace Attempt  5	[120.00 s]
+2.0.B: Trace Attempt 592	[74.25 s]
+2.0.Bm: Trace Attempt 816	[123.54 s]
+2.0.L: Trace Attempt 50	[124.00 s]
+2.0.Mpcustom2: Trace Attempt 64	[125.08 s]
+2.0.B: Trace Attempt 612	[78.39 s]
+2.0.Bm: Trace Attempt 832	[127.55 s]
+2.0.L: Trace Attempt 90	[128.06 s]
+2.0.B: Trace Attempt 631	[82.42 s]
+2.0.Bm: Trace Attempt 848	[131.62 s]
+2.0.L: Trace Attempt 126	[132.14 s]
+2.0.Mpcustom2: Trace Attempt 64	[133.05 s]
+2.0.N: Trace Attempt 769	[84.85 s]
+2.0.B: Trace Attempt 650	[86.52 s]
+2.0.Bm: Trace Attempt 864	[135.72 s]
+2.0.L: Trace Attempt 156	[136.19 s]
+2.0.Mpcustom2: Trace Attempt 64	[137.11 s]
+2.0.N: Trace Attempt 770	[90.66 s]
+2.0.N: Trace Attempt  1	[90.67 s]
+2.0.N: Trace Attempt  2	[90.67 s]
+2.0.N: Trace Attempt  3	[90.67 s]
+2.0.N: Trace Attempt  5	[90.67 s]
+2.0.B: Trace Attempt 669	[90.71 s]
+2.0.Bm: Trace Attempt 880	[139.89 s]
+2.0.L: Trace Attempt 186	[140.29 s]
+2.0.Mpcustom2: Trace Attempt 64	[141.34 s]
+2.0.N: Trace Attempt 345	[94.67 s]
+2.0.B: Trace Attempt 687	[94.80 s]
+2.0.Bm: Trace Attempt 895	[143.92 s]
+2.0.L: Trace Attempt 212	[144.39 s]
+2.0.Mpcustom2: Trace Attempt 64	[146.29 s]
+2.0.N: Trace Attempt 648	[98.73 s]
+2.0.B: Trace Attempt 705	[98.92 s]
+2.0.L: Trace Attempt 241	[148.50 s]
+2.0.N: Trace Attempt 671	[99.91 s]
+2.0.N: Per property time limit expired (100.00 s) [100.03 s]
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[100.03 s].
+2.0.AM: Trace Attempt 901	[69.61 s]
+2.0.AM: Per property time limit expired (100.00 s) [100.53 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[100.54 s].
+2.0.B: Trace Attempt 709	[99.83 s]
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[102.02 s].
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.Mpcustom2: Trace Attempt 64	[152.03 s]
+2.0.L: Trace Attempt 264	[152.60 s]
+2.0.B: Trace Attempt 97	[4.07 s]
+2.0.AM: Trace Attempt 113	[4.09 s]
+2.0.L: Trace Attempt 289	[156.60 s]
+2.0.Mpcustom2: Trace Attempt 64	[157.71 s]
+2.0.B: Trace Attempt 141	[8.24 s]
+2.0.AM: Trace Attempt 223	[8.28 s]
+2.0.L: Trace Attempt 309	[160.71 s]
+2.0.B: Trace Attempt 182	[12.28 s]
+2.0.AM: Trace Attempt 244	[12.62 s]
+2.0.Mpcustom2: Trace Attempt 64	[164.06 s]
+2.0.L: Trace Attempt 332	[164.74 s]
+2.0.N: Trace Attempt 769	[14.66 s]
+2.0.B: Trace Attempt 218	[16.29 s]
+2.0.AM: Trace Attempt 317	[16.91 s]
+2.0.L: Trace Attempt 349	[168.76 s]
+2.0.B: Trace Attempt 251	[20.40 s]
+2.0.N: Trace Attempt 770	[20.45 s]
+2.0.N: Trace Attempt  1	[20.45 s]
+2.0.N: Trace Attempt  2	[20.45 s]
+2.0.N: Trace Attempt  3	[20.45 s]
+2.0.N: Trace Attempt  5	[20.45 s]
+2.0.Mpcustom2: Trace Attempt 64	[171.56 s]
+2.0.AM: Trace Attempt 372	[20.94 s]
+2.0.L: Trace Attempt 371	[172.89 s]
+2.0.B: Trace Attempt 281	[24.47 s]
+2.0.N: Trace Attempt 364	[24.49 s]
+2.0.AM: Trace Attempt 514	[24.97 s]
+2.0.L: Trace Attempt 392	[177.01 s]
+2.0.N: Trace Attempt 656	[28.49 s]
+2.0.B: Trace Attempt 313	[28.50 s]
+2.0.AM: Trace Attempt 594	[28.97 s]
+2.0.Mpcustom2: Trace Attempt 64	[180.09 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[180.41 s]
+2: ProofGrid usable level: 1
+2: ProofGrid usable level: 1
+2.0.N: Trace Attempt 672	[29.71 s]
+2: ProofGrid usable level: 1
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[29.81 s].
+2.0.AM: Trace Attempt 682	[29.76 s]
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[29.84 s].
+2.0.Hp: Interrupted (multi)
+2.0.B: Trace Attempt 322	[29.69 s]
+2.0.B: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[30.60 s].
+2.0.Hp: All properties determined. [0.00 s]
+2.0.Hp: Exited with Success (@ 0.00 s)
+2.0.N: All properties determined. [0.00 s]
+2.0.N: Exited with Success (@ 0.00 s)
+2.0.B: All properties determined. [0.00 s]
+2.0.B: Exited with Success (@ 0.00 s)
+2.0.J: Morphing to J
+2.0.Ncustom3: Morphing to Ncustom3
+2.0.L: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom3: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.I: Morphing to I
+2.0.I: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom3: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.L: Using trace diversification with seed 1 (0.05)
+2.0.L: Using LRU state removal heuristic
+2.0.L: Using states from traces to { (reset) }
+2.0.I: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.L: Trace Attempt  3	[0.07 s]
+2.0.U2: Proofgrid shell started at 885550@<HOST>(local) jg_883638_<HOST>_1
+2.0.Hp: Proofgrid shell started at 885551@<HOST>(local) jg_883638_<HOST>_1
+2.0.L: Trace Attempt  4	[0.12 s]
+2.0.Hp: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.U2: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.L: Trace Attempt  5	[0.15 s]
+2.0.U2: Seed 1
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  2	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  3	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  4	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  1	[0.19 s]
+2.0.J: Trace Attempt  1	[0.20 s]
+2.0.J: Trace Attempt  1	[0.20 s]
+2.0.J: Trace Attempt  1	[0.20 s]
+2.0.J: Trace Attempt  1	[0.21 s]
+2.0.J: Trace Attempt  1	[0.22 s]
+2.0.J: Trace Attempt  1	[0.23 s]
+2.0.J: Trace Attempt  1	[0.25 s]
+2.0.J: Trace Attempt  1	[0.28 s]
+2.0.J: Trace Attempt  1	[0.33 s]
+2.0.J: Trace Attempt  1	[0.41 s]
+2.0.U2: Trace Attempt  1	[0.37 s]
+2.0.J: Trace Attempt  1	[0.51 s]
+2.0.J: Trace Attempt  1	[0.66 s]
+2.0.U2: Trace Attempt  3	[0.62 s]
+2.0.J: Trace Attempt  1	[0.89 s]
+2.0.J: Trace Attempt  1	[1.25 s]
+2.0.Ncustom3: Per property time limit expired (1.00 s) [1.23 s]
+2.0.Ncustom3: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.23 s].
+2: ProofGrid usable level: 1
+2.0.I: Per property time limit expired (1.00 s) [1.25 s]
+2.0.I: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.25 s].
+2.0.Ncustom3: All properties determined. [0.00 s]
+2.0.Ncustom3: Exited with Success (@ 0.00 s)
+2.0.I: All properties determined. [0.00 s]
+2.0.I: Exited with Success (@ 0.00 s)
+2.0.Ncustom6: Morphing to Ncustom6
+2.0.AMcustom4: Morphing to AMcustom4
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AMcustom4: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Trace Attempt  1	[0.00 s]
+2.0.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.AMcustom4: Trace Attempt  3	[0.01 s]
+2.0.AMcustom4: Trace Attempt  4	[0.01 s]
+2.0.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.AMcustom4: Trace Attempt  1	[0.01 s]
+2.0.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.AMcustom4: Trace Attempt  3	[0.01 s]
+2.0.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.AMcustom4: Trace Attempt  1	[0.03 s]
+2.0.AMcustom4: Trace Attempt  2	[0.03 s]
+2.0.AMcustom4: Trace Attempt  3	[0.03 s]
+2.0.AMcustom4: Trace Attempt  5	[0.03 s]
+2.0.AMcustom4: Trace Attempt  1	[0.07 s]
+2.0.AMcustom4: Trace Attempt  2	[0.07 s]
+2.0.AMcustom4: Trace Attempt  3	[0.07 s]
+2.0.AMcustom4: Trace Attempt  5	[0.07 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[1.44 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[1.49 s]
+2.0.L: Trace Attempt  4	[1.50 s]
+2.0.L: Trace Attempt  5	[1.51 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP (53) }
+2.0.L: Trace Attempt  3	[1.69 s]
+2.0.L: Trace Attempt  4	[1.70 s]
+2.0.L: Trace Attempt  5	[1.71 s]
+2.0.J: Trace Attempt  1	[1.78 s]
+2.0.L: Overconstrained local search, discarded 1 start state(s) and retrying
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[2.20 s]
+2.0.L: Trace Attempt  4	[2.22 s]
+2.0.L: Trace Attempt  5	[2.23 s]
+2.0.AMcustom4: Trace Attempt 59	[0.90 s]
+2.0.AMcustom4: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AMcustom4: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.00 s].
+2: ProofGrid usable level: 1
+2.0.Ncustom6: Per property time limit expired (1.00 s) [1.24 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.24 s].
+2.0.Ncustom6: All properties determined. [0.00 s]
+2.0.Ncustom6: Exited with Success (@ 0.00 s)
+2.0.AMcustom4: All properties determined. [0.00 s]
+2.0.AMcustom4: Exited with Success (@ 0.00 s)
+2.0.AM: All properties determined. [0.00 s]
+2.0.AM: Exited with Success (@ 0.00 s)
+2.0.Tri: Morphing to Tri
+2.0.AD: Morphing to AD
+2.0.AMcustom5: Morphing to AMcustom5
+2.0.AMcustom5: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AD: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Tri: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.J: Trace Attempt  1	[2.60 s]
+2.0.Ncustom6: Proofgrid shell started at 885591@<HOST>(local) jg_883638_<HOST>_1
+2.0.AD: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  2	[0.00 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  4	[0.01 s]
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  4	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  2	[0.02 s]
+2.0.AMcustom5: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.02 s]
+2.0.Ncustom6: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  5	[0.04 s]
+2.0.AD: Trace Attempt  4	[0.04 s]
+2.0.Tri: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Tri: Trace Attempt  1	[0.00 s]
+2.0.AD: Trace Attempt  1	[0.10 s]
+2.0.AD: Trace Attempt  2	[0.10 s]
+2.0.AD: Trace Attempt  3	[0.10 s]
+2.0.AD: Trace Attempt  5	[0.10 s]
+2.0.Tri:    0.01" ---- Launching main thread ----
+2.0.L: Overconstrained local search, discarded 1 start state(s) and retrying
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[3.02 s]
+2.0.L: Trace Attempt  4	[3.03 s]
+2.0.L: Trace Attempt  5	[3.05 s]
+2.0.Tri:    0.37" ---- Launching abstraction thread ----
+2.0.Tri:    0.43" ---- Launching multi-phase simplification thread ----
+2.0.Tri: Trace Attempt  2	[0.67 s]
+2.0.Tri: Trace Attempt  3	[0.68 s]
+2.0.Tri: Trace Attempt  4	[0.69 s]
+2.0.Tri: Trace Attempt  5	[0.69 s]
+2.0.J: Trace Attempt  1	[3.81 s]
+2.0.U2: Restart 1
+2.0.U2: Trace Attempt  1	[3.84 s]
+2.0.U2: Trace Attempt  3	[4.07 s]
+2.0.AD: Trace Attempt 117	[0.57 s]
+2.0.AD: Per property time limit expired (2.00 s) [2.01 s]
+2.0.AD: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[2.01 s].
+2.0.AMcustom5: Trace Attempt 151	[1.96 s]
+2.0.AMcustom5: Per property time limit expired (2.00 s) [2.01 s]
+2: ProofGrid usable level: 1
+2.0.AMcustom5: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[2.01 s].
+2.0.Tri: Trace Attempt 70	[1.77 s]
+2.0.Tri: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.97 s].
+2.0.Ncustom6: Per property time limit expired (2.00 s) [2.37 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[2.37 s].
+2.0.AD: All properties determined. [0.00 s]
+2.0.AD: Exited with Success (@ 0.00 s)
+2.0.Ncustom6: All properties determined. [0.00 s]
+2.0.Ncustom6: Exited with Success (@ 0.00 s)
+2.0.AMcustom5: All properties determined. [0.00 s]
+2.0.AMcustom5: Exited with Success (@ 0.00 s)
+2.0.K: Morphing to K
+2.0.Ncustom3: Morphing to Ncustom3
+2.0.AMcustom4: Morphing to AMcustom4
+2.0.Tri: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Tri: Trace Attempt  1	[0.00 s]
+2.0.K: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom3: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AMcustom4: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Tri:    2.28" ---- Launching main thread ----
+2.0.Ncustom3: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Trace Attempt  1	[0.00 s]
+2.0.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.AMcustom4: Trace Attempt  3	[0.01 s]
+2.0.AMcustom4: Trace Attempt  4	[0.01 s]
+2.0.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.AMcustom4: Trace Attempt  1	[0.01 s]
+2.0.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.AMcustom4: Trace Attempt  3	[0.01 s]
+2.0.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.AMcustom4: Trace Attempt  1	[0.03 s]
+2.0.AMcustom4: Trace Attempt  2	[0.03 s]
+2.0.AMcustom4: Trace Attempt  3	[0.03 s]
+2.0.AMcustom4: Trace Attempt  5	[0.04 s]
+2.0.AMcustom4: Trace Attempt  1	[0.07 s]
+2.0.AMcustom4: Trace Attempt  2	[0.07 s]
+2.0.AMcustom4: Trace Attempt  3	[0.07 s]
+2.0.AMcustom4: Trace Attempt  5	[0.07 s]
+2.0.Tri:    2.65" ---- Launching abstraction thread ----
+2.0.Tri:    2.71" ---- Launching multi-phase simplification thread ----
+2.0.J: Trace Attempt  1	[5.63 s]
+2.0.Mpcustom2: Trace Attempt 64	[187.10 s]
+2.0.L: Trace Attempt 54	[7.13 s]
+2.0.U2: Restart 2
+2.0.U2: Trace Attempt  1	[7.41 s]
+2.0.U2: Trace Attempt  3	[7.64 s]
+2.0.J: Trace Attempt  1	[8.37 s]
+2.0.AMcustom4: Trace Attempt 106	[3.70 s]
+2.0.AMcustom4: Per property time limit expired (4.00 s) [4.01 s]
+2.0.AMcustom4: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[4.01 s].
+2: ProofGrid usable level: 1
+2.0.Tri: Trace Attempt 901	[3.69 s]
+2.0.Tri: Per property time limit expired (4.00 s) [4.09 s]
+2.0.Tri: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[4.10 s].
+2.0.Ncustom3: Per property time limit expired (4.00 s) [4.87 s]
+2.0.Ncustom3: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[4.87 s].
+2.0.K: Per property time limit expired (4.00 s) [4.92 s]
+2.0.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[4.93 s].
+2.0.Tri: All properties determined. [0.00 s]
+2.0.Tri: Exited with Success (@ 0.00 s)
+2.0.AMcustom4: All properties determined. [0.00 s]
+2.0.AMcustom4: Exited with Success (@ 0.00 s)
+2.0.Ncustom6: Morphing to Ncustom6
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.D: Morphing to D
+2.0.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.D: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.D: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.D: Trace Attempt  1	[0.02 s]
+2.0.D: Trace Attempt  2	[0.04 s]
+2.0.D: Trace Attempt  3	[0.16 s]
+2.0.D: Trace Attempt  5	[0.45 s]
+2.0.L: Trace Attempt 94	[11.16 s]
+2.0.U2: Trace Attempt 416	[11.75 s]
+2.0.U2: Restart 3
+2.0.U2: Trace Attempt  1	[12.31 s]
+2.0.J: Trace Attempt 40960	[12.48 s]
+2.0.J: Trace Attempt  1	[12.48 s]
+2.0.U2: Trace Attempt  3	[12.51 s]
+2.0.Mpcustom2: Trace Attempt 64	[194.92 s]
+2.0.Ncustom3: Requesting engine job to terminate
+2.0.Ncustom3: Interrupted. [9.97 s]
+2.0.Ncustom3: Exited with Success (@ 196.53 s)
+2.0.L: Trace Attempt 129	[15.28 s]
+2.0.J: Trace Attempt 40960	[16.57 s]
+2.0.U2: Trace Attempt 507	[16.57 s]
+2.0.D: Trace Attempt 11	[1.71 s]
+2.0.D: Per property time limit expired (8.00 s) [8.15 s]
+2.0.D: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[8.15 s].
+2.0.U2: Restart 4
+2.0.U2: Trace Attempt  1	[18.26 s]
+2.0.U2: Trace Attempt  3	[18.47 s]
+2.0.J: Trace Attempt  1	[18.61 s]
+2.0.L: Trace Attempt 158	[19.31 s]
+2.0.K: Per property time limit expired (8.00 s) [9.82 s]
+2.0.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[9.82 s].
+2.0.Ncustom6: Per property time limit expired (8.00 s) [9.85 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[9.85 s].
+2.0.Ncustom6: All properties determined. [0.00 s]
+2.0.Ncustom6: Exited with Success (@ 0.00 s)
+2.0.D: All properties determined. [0.00 s]
+2.0.D: Exited with Success (@ 0.00 s)
+2.0.AMcustom4: Morphing to AMcustom4
+2.1.Ncustom3: Morphing to Ncustom3
+2.0.AMcustom4: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.Ncustom3: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom6: Proofgrid shell started at 885825@<HOST>(local) jg_883638_<HOST>_1
+2.0.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.1.Ncustom3: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Trace Attempt  1	[0.00 s]
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.AMcustom4: Trace Attempt  3	[0.01 s]
+2.0.AMcustom4: Trace Attempt  4	[0.01 s]
+2.0.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.AMcustom4: Trace Attempt  1	[0.01 s]
+2.0.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.AMcustom4: Trace Attempt  3	[0.01 s]
+2.0.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.Ncustom6: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom4: Trace Attempt  1	[0.03 s]
+2.0.AMcustom4: Trace Attempt  2	[0.03 s]
+2.0.AMcustom4: Trace Attempt  3	[0.03 s]
+2.0.AMcustom4: Trace Attempt  5	[0.03 s]
+2.0.AMcustom4: Trace Attempt  1	[0.07 s]
+2.0.AMcustom4: Trace Attempt  2	[0.07 s]
+2.0.AMcustom4: Trace Attempt  3	[0.07 s]
+2.0.AMcustom4: Trace Attempt  5	[0.07 s]
+2.0.Mpcustom2: Trace Attempt 64	[202.33 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 1350 clause(s).
+2.0.U2: Trace Attempt 396	[22.48 s]
+2.0.J: Trace Attempt 40960	[22.70 s]
+2.0.L: Trace Attempt 187	[23.37 s]
+2.0.AMcustom4: Trace Attempt 123	[4.10 s]
+2.0.U2: Trace Attempt 804	[26.49 s]
+2.0.J: Trace Attempt 81920	[26.80 s]
+2.0.L: Trace Attempt 213	[27.49 s]
+2.0.J: Trace Attempt  1	[27.83 s]
+2.0.AMcustom4: Trace Attempt 223	[8.19 s]
+2.0.U2: Restart 5
+2.0.U2: Trace Attempt  1	[28.77 s]
+2.0.U2: Trace Attempt  3	[28.99 s]
+2.0.Mpcustom2: Trace Attempt 64	[210.88 s]
+2.0.U2: Trace Attempt  1	[30.15 s]
+2.0.L: Trace Attempt 241	[31.57 s]
+2.0.J: Trace Attempt 40960	[31.93 s]
+2.0.AMcustom4: Trace Attempt 244	[12.51 s]
+2.0.U2: Trace Attempt 441	[34.22 s]
+2.0.L: Trace Attempt 263	[35.61 s]
+2.0.J: Trace Attempt 81920	[36.01 s]
+2.0.AMcustom4: Trace Attempt 297	[15.75 s]
+2.0.AMcustom4: Per property time limit expired (16.00 s) [16.02 s]
+2.0.AMcustom4: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[16.03 s].
+2.0.Mpcustom2: Trace Attempt 71	[218.84 s]
+2.0.U2: Trace Attempt 850	[38.23 s]
+2.0.Ncustom6: Per property time limit expired (16.00 s) [19.55 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[19.55 s].
+2.1.Ncustom3: Per property time limit expired (16.00 s) [19.66 s]
+2.1.Ncustom3: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[19.66 s].
+2.0.L: Trace Attempt 288	[39.65 s]
+2.0.K: Per property time limit expired (16.00 s) [19.70 s]
+2.0.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[19.70 s].
+2.1.Ncustom3: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.J: Trace Attempt 122880	[40.09 s]
+2.0.J: Trace Attempt  1	[41.62 s]
+2.0.U2: Trace Attempt 1262	[42.23 s]
+2.0.L: Trace Attempt 307	[43.67 s]
+2.0.AMcustom4: Requesting engine job to terminate
+2.0.AMcustom4: Interrupted. [24.71 s]
+2.0.U2: Restart 6
+2.0.AMcustom4: Exited with Success (@ 226.35 s)
+2.0.U2: Trace Attempt  1	[44.87 s]
+2.0.U2: Trace Attempt  3	[45.07 s]
+2.0.J: Trace Attempt 40960	[45.72 s]
+2.0.L: Trace Attempt 330	[47.83 s]
+2.0.Mpcustom2: Trace Attempt 75	[230.24 s]
+2.0.U2: Trace Attempt 473	[49.10 s]
+2.0.J: Trace Attempt 81920	[49.84 s]
+2.0.L: Trace Attempt 348	[52.15 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 1384 clause(s).
+2.0.U2: Trace Attempt 927	[53.16 s]
+2.0.J: Trace Attempt 122880	[53.97 s]
+2.0.Mpcustom2: Trace Attempt 78	[235.51 s]
+2.0.L: Trace Attempt 369	[56.22 s]
+2.0.U2: Trace Attempt 1334	[57.26 s]
+2.1.Ncustom3: Trace Attempt 769	[17.72 s]
+2.0.K: Trace Attempt 769	[17.77 s]
+2.0.Ncustom6: Trace Attempt 769	[17.88 s]
+2.0.J: Trace Attempt 163840	[58.09 s]
+2.0.L: Trace Attempt 389	[60.37 s]
+2.0.U2: Trace Attempt 1815	[61.29 s]
+2.0.J: Trace Attempt 204800	[62.18 s]
+2.0.J: Trace Attempt  1	[62.44 s]
+2.1.Ncustom3: Trace Attempt 770	[23.96 s]
+2.1.Ncustom3: Trace Attempt  1	[23.96 s]
+2.1.Ncustom3: Trace Attempt  2	[23.96 s]
+2.1.Ncustom3: Trace Attempt  3	[23.96 s]
+2.1.Ncustom3: Trace Attempt  5	[23.96 s]
+2.0.K: Trace Attempt  1	[23.98 s]
+2.0.K: Trace Attempt  2	[23.98 s]
+2.0.K: Trace Attempt  3	[23.98 s]
+2.0.K: Trace Attempt  4	[23.98 s]
+2.0.K: Trace Attempt  5	[23.98 s]
+2.0.Ncustom6: Trace Attempt 770	[24.21 s]
+2.0.Ncustom6: Trace Attempt  1	[24.21 s]
+2.0.Ncustom6: Trace Attempt  2	[24.21 s]
+2.0.Ncustom6: Trace Attempt  3	[24.21 s]
+2.0.Ncustom6: Trace Attempt  5	[24.21 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[64.19 s]
+2.0.L: Trace Attempt  4	[64.24 s]
+2.0.L: Trace Attempt  5	[64.26 s]
+2.0.U2: Trace Attempt 2238	[65.38 s]
+2.0.Mpcustom2: Trace Attempt 78	[247.54 s]
+2.0.U2: Restart 7
+2.0.Ht: Interrupted (multi)
+2.0.U2: Trace Attempt  1	[66.31 s]
+2.0.J: Trace Attempt 43008	[66.64 s]
+2.0.U2: Trace Attempt  3	[66.53 s]
+2.0.L: Trace Attempt 74	[68.27 s]
+2.0.J: Trace Attempt 83968	[70.72 s]
+2.0.U2: Trace Attempt 463	[70.61 s]
+2.0.Ht: Trace Attempt  1	[4.59 s]
+2.0.Ht: Trace Attempt  2	[4.59 s]
+2.0.Ht: Trace Attempt  3	[4.59 s]
+2.0.Ht: Trace Attempt  4	[4.59 s]
+2.0.Ht: Trace Attempt  5	[4.59 s]
+2.0.L: Trace Attempt 111	[72.29 s]
+2.0.Mpcustom2: Trace Attempt 88	[254.28 s]
+2.0.K: Trace Attempt 901	[24.36 s]
+2.0.K: Per property time limit expired (32.00 s) [33.68 s]
+2.0.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[33.68 s].
+2.1.Ncustom3: Trace Attempt 73	[24.35 s]
+2.1.Ncustom3: Per property time limit expired (32.00 s) [33.73 s]
+2.1.Ncustom3: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[33.73 s].
+2.0.Ncustom6: Trace Attempt 55	[24.36 s]
+2.0.Ncustom6: Per property time limit expired (32.00 s) [33.74 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[33.74 s].
+2.0.Ncustom6: All properties determined. [0.00 s]
+2.0.Ncustom6: Exited with Success (@ 0.00 s)
+2.1.Ncustom3: All properties determined. [0.00 s]
+2.1.Ncustom3: Exited with Success (@ 0.00 s)
+2.0.Tri: Morphing to Tri
+2.1.AMcustom4: Morphing to AMcustom4
+2.0.Tri: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.AMcustom4: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom6: Proofgrid shell started at 886459@<HOST>(local) jg_883638_<HOST>_1
+2.1.AMcustom4: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.1.AMcustom4: Trace Attempt  1	[0.00 s]
+2.1.AMcustom4: Trace Attempt  2	[0.01 s]
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.AMcustom4: Trace Attempt  3	[0.01 s]
+2.1.AMcustom4: Trace Attempt  4	[0.01 s]
+2.1.AMcustom4: Trace Attempt  5	[0.01 s]
+2.1.AMcustom4: Trace Attempt  1	[0.01 s]
+2.1.AMcustom4: Trace Attempt  2	[0.01 s]
+2.1.AMcustom4: Trace Attempt  3	[0.01 s]
+2.1.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.Ncustom6: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.1.AMcustom4: Trace Attempt  1	[0.03 s]
+2.1.AMcustom4: Trace Attempt  2	[0.04 s]
+2.1.AMcustom4: Trace Attempt  3	[0.04 s]
+2.1.AMcustom4: Trace Attempt  5	[0.04 s]
+2.1.AMcustom4: Trace Attempt  1	[0.07 s]
+2.1.AMcustom4: Trace Attempt  2	[0.07 s]
+2.1.AMcustom4: Trace Attempt  3	[0.07 s]
+2.1.AMcustom4: Trace Attempt  5	[0.08 s]
+2.0.Tri: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Tri: Trace Attempt  1	[0.00 s]
+2.0.Tri:    0.01" ---- Launching main thread ----
+2.0.Tri:    0.38" ---- Launching abstraction thread ----
+2.0.Tri:    0.44" ---- Launching multi-phase simplification thread ----
+2.0.Tri: Trace Attempt  2	[0.69 s]
+2.0.Tri: Trace Attempt  3	[0.70 s]
+2.0.Tri: Trace Attempt  4	[0.70 s]
+2.0.Tri: Trace Attempt  5	[0.71 s]
+2.0.U2: Trace Attempt 917	[74.68 s]
+2.0.J: Trace Attempt 124928	[74.81 s]
+2.0.Ht: Trace Attempt 217	[8.61 s]
+2.0.L: Trace Attempt 145	[76.29 s]
+2.1.AMcustom4: Trace Attempt 113	[4.10 s]
+2.0.U2: Trace Attempt 1347	[78.73 s]
+2.0.J: Trace Attempt 165888	[78.92 s]
+2.0.Ht: Trace Attempt 413	[12.62 s]
+2.0.L: Trace Attempt 175	[80.30 s]
+2.1.AMcustom4: Trace Attempt 223	[8.23 s]
+2.0.U2: Trace Attempt 1757	[82.73 s]
+2.0.Ht: Trace Attempt 649	[16.62 s]
+2.0.J: Trace Attempt 206848	[83.04 s]
+2.0.Mpcustom2: Trace Attempt 88	[265.50 s]
+2.0.L: Trace Attempt 204	[84.33 s]
+2.1.AMcustom4: Trace Attempt 244	[12.65 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 1451 clause(s).
+2.0.U2: Trace Attempt 2140	[86.75 s]
+2.0.Ht: Trace Attempt 810	[20.64 s]
+2.0.J: Trace Attempt 247808	[87.22 s]
+2.0.L: Trace Attempt 230	[88.38 s]
+2.1.AMcustom4: Trace Attempt 316	[16.70 s]
+2.0.U2: Trace Attempt 2556	[90.77 s]
+2.0.Tri:   17.48" Simplification phase 1 complete
+2.0.J: Trace Attempt 288768	[91.37 s]
+2.0.L: Trace Attempt 255	[92.51 s]
+2.0.J: Trace Attempt  1	[93.61 s]
+2.0.Mpcustom2: Trace Attempt 89	[275.28 s]
+2.1.AMcustom4: Trace Attempt 372	[21.05 s]
+2.0.U2: Trace Attempt 2952	[94.78 s]
+2.0.L: Trace Attempt 278	[96.64 s]
+2.0.J: Trace Attempt 40960	[97.74 s]
+2.1.AMcustom4: Trace Attempt 510	[25.12 s]
+2.0.U2: Trace Attempt 3325	[98.83 s]
+2.0.K: Trace Attempt 901	[25.46 s]
+2.0.Ncustom6: Trace Attempt 901	[25.45 s]
+2.0.Mpcustom2: Trace Attempt 103	[280.62 s]
+2.0.U2: Restart 8
+2.0.U2: Trace Attempt  1	[100.65 s]
+2.0.L: Trace Attempt 303	[100.78 s]
+2.0.U2: Trace Attempt  3	[100.86 s]
+2.0.Tri:   27.71" Simplification phase 2 complete
+2.0.J: Trace Attempt 81920	[101.87 s]
+2.0.Ht: Trace Attempt 901	[35.51 s]
+2.1.AMcustom4: Trace Attempt 594	[29.35 s]
+2.0.Mpcustom2: Trace Attempt 108	[285.01 s]
+2.0.L: Trace Attempt 323	[104.86 s]
+2.0.U2: Trace Attempt 370	[104.97 s]
+2.0.J: Trace Attempt 122880	[105.98 s]
+2.1.AMcustom4: Trace Attempt 707	[33.61 s]
+2.0.Mpcustom2: Trace Attempt 119	[289.25 s]
+2.0.L: Trace Attempt 346	[109.01 s]
+2.0.U2: Trace Attempt 865	[109.00 s]
+2.0.J: Trace Attempt 163840	[110.07 s]
+2.1.AMcustom4: Trace Attempt 720	[37.77 s]
+2.0.L: Trace Attempt 363	[113.05 s]
+2.0.U2: Trace Attempt 1349	[113.05 s]
+2.0.J: Trace Attempt 204800	[114.19 s]
+2.1.AMcustom4: Trace Attempt 732	[41.82 s]
+2.0.L: Trace Attempt 384	[117.09 s]
+2.0.U2: Trace Attempt 1860	[117.11 s]
+2.0.J: Trace Attempt 245760	[118.35 s]
+2.1.AMcustom4: Trace Attempt 742	[46.04 s]
+2.0.U2: Trace Attempt 2300	[121.21 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 1534 clause(s).
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[122.13 s]
+2.0.L: Trace Attempt  4	[122.15 s]
+2.0.L: Trace Attempt  5	[122.16 s]
+2.0.J: Trace Attempt 286720	[122.45 s]
+2.1.AMcustom4: Trace Attempt 750	[50.29 s]
+2.0.Mpcustom2: Trace Attempt 123	[305.39 s]
+2.0.U2: Trace Attempt 2709	[125.24 s]
+2.0.L: Trace Attempt 53	[126.17 s]
+2.0.J: Trace Attempt 327680	[126.56 s]
+2.1.AMcustom4: Trace Attempt 755	[54.47 s]
+2.0.U2: Trace Attempt 3205	[129.34 s]
+2.0.L: Trace Attempt 93	[130.23 s]
+2.0.J: Trace Attempt 368640	[130.66 s]
+2.1.AMcustom4: Trace Attempt 763	[58.76 s]
+2.0.U2: Trace Attempt 3694	[133.39 s]
+2.0.L: Trace Attempt 127	[134.30 s]
+2.0.J: Trace Attempt 409600	[134.76 s]
+2.1.AMcustom4: Trace Attempt 767	[63.35 s]
+2.0.Mpcustom2: Trace Attempt 123	[318.70 s]
+2.1.AMcustom4: Trace Attempt 73	[64.00 s]
+2.1.AMcustom4: Per property time limit expired (64.00 s) [64.01 s]
+2.1.AMcustom4: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[64.01 s].
+2.0.Tri: Trace Attempt 901	[2.92 s]
+2.0.Tri: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[63.93 s].
+2.0.U2: Trace Attempt 4097	[137.98 s]
+2.0.L: Trace Attempt 156	[138.34 s]
+2.0.J: Trace Attempt 450560	[138.85 s]
+2.0.J: Trace Attempt  1	[140.45 s]
+2.0.U2: Trace Attempt 4600	[142.06 s]
+2.0.L: Trace Attempt 185	[142.41 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[69.42 s].
+2.0.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[70.02 s].
+2.0.Ncustom6: All properties determined. [0.00 s]
+2.0.Ncustom6: Exited with Success (@ 0.00 s)
+2.0.Tri: All properties determined. [0.00 s]
+2.0.Tri: Exited with Success (@ 0.00 s)
+2.0.AM: Morphing to AM
+2.0.Ncustom6: Morphing to Ncustom6
+2.1.AMcustom4: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.AMcustom4: Trace Attempt  1	[0.01 s]
+2.1.AMcustom4: Trace Attempt  2	[0.01 s]
+2.1.AMcustom4: Trace Attempt  3	[0.01 s]
+2.1.AMcustom4: Trace Attempt  4	[0.01 s]
+2.1.AMcustom4: Trace Attempt  5	[0.01 s]
+2.0.AM: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.1.AMcustom4: Trace Attempt  1	[0.01 s]
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.1.AMcustom4: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.1.AMcustom4: Trace Attempt  3	[0.02 s]
+2.1.AMcustom4: Trace Attempt  5	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.1.AMcustom4: Trace Attempt  1	[0.04 s]
+2.1.AMcustom4: Trace Attempt  2	[0.04 s]
+2.1.AMcustom4: Trace Attempt  3	[0.04 s]
+2.1.AMcustom4: Trace Attempt  5	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.04 s]
+2.0.AM: Trace Attempt  5	[0.04 s]
+2.1.AMcustom4: Trace Attempt  1	[0.08 s]
+2.1.AMcustom4: Trace Attempt  2	[0.08 s]
+2.1.AMcustom4: Trace Attempt  3	[0.08 s]
+2.1.AMcustom4: Trace Attempt  5	[0.08 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.J: Trace Attempt 40960	[144.57 s]
+2.0.L: Trace Attempt 212	[146.66 s]
+2.0.U2: Restart 9
+2.0.U2: Trace Attempt  1	[147.54 s]
+2.0.AM: Trace Attempt 108	[4.11 s]
+2.1.AMcustom4: Trace Attempt 108	[4.17 s]
+2.0.U2: Trace Attempt  3	[147.79 s]
+2.0.J: Trace Attempt 79872	[148.59 s]
+2.0.Mpcustom2: Trace Attempt 123	[332.01 s]
+2.0.L: Trace Attempt 240	[150.80 s]
+2.0.AM: Trace Attempt 222	[8.17 s]
+2.1.AMcustom4: Trace Attempt 222	[8.24 s]
+2.0.U2: Trace Attempt 354	[151.85 s]
+2.0.J: Trace Attempt 120832	[152.77 s]
+2.0.L: Trace Attempt 262	[154.84 s]
+2.0.U2: Trace Attempt 705	[155.96 s]
+2.0.AM: Trace Attempt 244	[12.65 s]
+2.1.AMcustom4: Trace Attempt 244	[12.81 s]
+2.0.J: Trace Attempt 161792	[156.85 s]
+2.0.L: Trace Attempt 287	[158.86 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 1666 clause(s).
+2.0.U2: Trace Attempt 1044	[160.00 s]
+2.0.AM: Trace Attempt 317	[16.86 s]
+2.1.AMcustom4: Trace Attempt 317	[17.07 s]
+2.0.J: Trace Attempt 202752	[161.03 s]
+2.0.L: Trace Attempt 307	[163.03 s]
+2.0.U2: Trace Attempt 1414	[164.08 s]
+2.0.Mpcustom2: Trace Attempt 123	[345.98 s]
+2.0.AM: Trace Attempt 373	[21.13 s]
+2.1.AMcustom4: Trace Attempt 373	[21.32 s]
+2.0.J: Trace Attempt 243712	[165.12 s]
+2.0.L: Trace Attempt 330	[167.13 s]
+2.0.U2: Trace Attempt 1792	[168.13 s]
+2.0.AM: Trace Attempt 523	[25.14 s]
+2.1.AMcustom4: Trace Attempt 523	[25.35 s]
+2.0.J: Trace Attempt 284672	[169.19 s]
+2.0.Mpcustom2: Trace Attempt 127	[352.43 s]
+2.0.L: Trace Attempt 348	[171.43 s]
+2.0.U2: Trace Attempt 2100	[172.14 s]
+2.0.AM: Trace Attempt 673	[29.15 s]
+2.1.AMcustom4: Trace Attempt 673	[29.38 s]
+2.0.J: Trace Attempt 325632	[173.27 s]
+2.0.L: Trace Attempt 369	[175.43 s]
+2.0.U2: Trace Attempt 2481	[176.15 s]
+2.0.AM: Trace Attempt 709	[33.22 s]
+2.1.AMcustom4: Trace Attempt 709	[33.44 s]
+2.0.J: Trace Attempt 366592	[177.38 s]
+2.0.L: Trace Attempt 389	[179.46 s]
+2.0.U2: Trace Attempt 2845	[180.23 s]
+2.0.AM: Trace Attempt 721	[37.65 s]
+2.1.AMcustom4: Trace Attempt 721	[37.86 s]
+2.0.J: Trace Attempt 407552	[181.48 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[183.48 s]
+2.0.L: Trace Attempt  4	[183.53 s]
+2.0.L: Trace Attempt  5	[183.55 s]
+2.0.J: Interrupted (multi)
+2.0.U2: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.U2: Seed 1
+2.0.U2: Trace Attempt  1	[0.24 s]
+2.0.U2: Trace Attempt  3	[0.47 s]
+2.0.AM: Trace Attempt 734	[42.18 s]
+2.1.AMcustom4: Trace Attempt 734	[42.38 s]
+2.0.U2: Restart 1
+2.0.U2: Trace Attempt  1	[3.16 s]
+2.0.L: Trace Attempt 74	[187.62 s]
+2.0.U2: Trace Attempt  3	[3.38 s]
+2.0.J: Requesting engine job to terminate
+2.0.J: Trace Attempt 434676	[184.19 s]
+2.0.J: Interrupted. [5.13 s]
+2.0.J: Exited with Success (@ 370.80 s)
+2.0.U2: Restart 2
+2.0.U2: Trace Attempt  1	[6.44 s]
+2.0.AM: Trace Attempt 744	[47.30 s]
+2.0.Mpcustom2: Trace Attempt 128	[372.27 s]
+2.0.U2: Trace Attempt  3	[6.67 s]
+2.1.AMcustom4: Trace Attempt 744	[47.65 s]
+2.0.L: Trace Attempt 109	[191.66 s]
+2.0.U2: Trace Attempt 406	[10.71 s]
+2.0.U2: Restart 3
+2.0.U2: Trace Attempt  1	[11.37 s]
+2.0.L: Trace Attempt 142	[195.74 s]
+2.0.U2: Trace Attempt  3	[11.57 s]
+2.0.Mpcustom2: Trace Attempt 130	[378.09 s]
+2.0.AM: Trace Attempt 755	[53.28 s]
+2.1.AMcustom4: Trace Attempt 755	[53.60 s]
+2.0.L: Trace Attempt 171	[199.85 s]
+2.0.U2: Trace Attempt 479	[15.67 s]
+2.0.AM: Trace Attempt 763	[57.58 s]
+2.1.AMcustom4: Trace Attempt 763	[57.80 s]
+2.0.U2: Restart 4
+2.0.U2: Trace Attempt  1	[17.53 s]
+2.0.U2: Trace Attempt  3	[17.73 s]
+2.0.Mpcustom2: Trace Attempt 131	[383.41 s]
+2.0.L: Trace Attempt 200	[203.98 s]
+2.0.AM: Trace Attempt 767	[62.08 s]
+2.1.AMcustom4: Trace Attempt 767	[62.32 s]
+2.0.U2: Trace Attempt 410	[21.81 s]
+2.0.Mpcustom2: Trace Attempt 132	[389.02 s]
+2.0.L: Trace Attempt 225	[208.06 s]
+2.0.AM: Trace Attempt 659	[66.09 s]
+2.1.AMcustom4: Trace Attempt 661	[66.32 s]
+2.0.U2: Trace Attempt 841	[25.90 s]
+2.0.U2: Restart 5
+2.0.U2: Trace Attempt  1	[27.25 s]
+2.0.U2: Trace Attempt  3	[27.43 s]
+2.0.L: Trace Attempt 249	[212.17 s]
+2.0.U2: Trace Attempt  1	[28.25 s]
+2.0.Mpcustom2: Trace Attempt 133	[394.21 s]
+2.0.L: Trace Attempt 271	[216.21 s]
+2.0.U2: Trace Attempt 639	[32.30 s]
+2.0.Mpcustom2: Trace Attempt 135	[401.09 s]
+2.0.L: Trace Attempt 295	[220.29 s]
+2.0.U2: Trace Attempt 1074	[36.40 s]
+2.0.L: Trace Attempt 315	[224.47 s]
+2.0.U2: Restart 6
+2.0.U2: Trace Attempt  1	[40.75 s]
+2.0.U2: Trace Attempt  3	[40.97 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 1892 clause(s).
+2.0.Mpcustom2: Trace Attempt 137	[408.71 s]
+2.0.L: Trace Attempt 337	[228.50 s]
+2.0.U2: Trace Attempt 449	[44.98 s]
+2.0.Mpcustom2: Trace Attempt 138	[413.17 s]
+2.0.L: Trace Attempt 354	[232.57 s]
+2.0.U2: Trace Attempt 897	[49.07 s]
+2.0.L: Trace Attempt 375	[236.67 s]
+2.0.U2: Trace Attempt 1287	[53.12 s]
+2.0.Mpcustom2: Trace Attempt 140	[420.52 s]
+2.0.L: Trace Attempt 395	[240.70 s]
+2.0.U2: Trace Attempt 1792	[57.13 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[243.63 s]
+2.0.L: Trace Attempt  4	[243.65 s]
+2.0.L: Trace Attempt  5	[243.66 s]
+2.0.Mpcustom2: Trace Attempt 142	[425.47 s]
+2.0.U2: Trace Attempt 2198	[61.23 s]
+2.0.U2: Restart 7
+2.0.U2: Trace Attempt  1	[62.49 s]
+2.0.U2: Trace Attempt  3	[62.70 s]
+2.0.L: Trace Attempt 51	[247.75 s]
+2.0.Mpcustom2: Trace Attempt 144	[429.57 s]
+2.0.U2: Trace Attempt 421	[66.73 s]
+2.0.L: Trace Attempt 90	[251.82 s]
+2.0.Mpcustom2: Trace Attempt 146	[434.62 s]
+2.0.U2: Trace Attempt 844	[70.74 s]
+2.0.L: Trace Attempt 122	[255.83 s]
+2.0.U2: Trace Attempt 1250	[74.76 s]
+2.0.Mpcustom2: Trace Attempt 148	[440.68 s]
+2.0.L: Trace Attempt 153	[260.22 s]
+2.0.U2: Trace Attempt 1698	[79.19 s]
+2.0.L: Trace Attempt 181	[264.29 s]
+2.0.Mpcustom2: Trace Attempt 150	[445.85 s]
+2.0.U2: Trace Attempt 2083	[83.20 s]
+2.0.L: Trace Attempt 210	[268.36 s]
+2.0.Mpcustom2: Trace Attempt 152	[450.81 s]
+2.0.U2: Trace Attempt 2493	[87.24 s]
+2.0.L: Trace Attempt 233	[272.39 s]
+2.0.Mpcustom2: Trace Attempt 154	[455.59 s]
+2.1.AMcustom4: Trace Attempt 901	[70.02 s]
+2.1.AMcustom4: Per property time limit expired (128.00 s) [131.59 s]
+2.1.AMcustom4: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[131.59 s].
+2.0.AM: Trace Attempt 901	[69.84 s]
+2.0.AM: Per property time limit expired (128.00 s) [131.65 s]
+2: ProofGrid usable level: 1
+2.0.AM: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[131.65 s].
+2.0.U2: Trace Attempt 2909	[91.26 s]
+2.0.L: Trace Attempt 255	[276.42 s]
+2.0.Ncustom6: Trace Attempt 901	[27.75 s]
+2.0.Ncustom6: Per property time limit expired (128.00 s) [134.25 s]
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[134.25 s].
+2.0.U2: Restart 8
+2.0.U2: Trace Attempt  1	[95.11 s]
+2.0.U2: Trace Attempt  3	[95.26 s]
+2.0.L: Trace Attempt 282	[280.55 s]
+2.0.K: Trace Attempt 901	[25.20 s]
+2.0.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[137.29 s].
+2.0.Ncustom6: All properties determined. [0.00 s]
+2.0.Ncustom6: Exited with Success (@ 0.00 s)
+2.0.AM: All properties determined. [0.00 s]
+2.0.AM: Exited with Success (@ 0.00 s)
+2.0.M: Morphing to M
+2.0.ADcustom7: Morphing to ADcustom7
+2.0.M: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.ADcustom7: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.ADcustom7: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.M: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.ADcustom7: Trace Attempt  1	[0.00 s]
+2.0.ADcustom7: Trace Attempt  2	[0.00 s]
+2.0.ADcustom7: Trace Attempt  3	[0.00 s]
+2.0.ADcustom7: Trace Attempt  4	[0.00 s]
+2.0.ADcustom7: Trace Attempt  5	[0.01 s]
+2.0.M: Trace Attempt  1	[0.00 s]
+2.0.ADcustom7: Trace Attempt  1	[0.01 s]
+2.0.ADcustom7: Trace Attempt  2	[0.01 s]
+2.0.ADcustom7: Trace Attempt  3	[0.01 s]
+2.0.ADcustom7: Trace Attempt  1	[0.02 s]
+2.0.ADcustom7: Trace Attempt  2	[0.02 s]
+2.0.ADcustom7: Trace Attempt  3	[0.02 s]
+2.0.ADcustom7: Trace Attempt  4	[0.02 s]
+2.0.ADcustom7: Trace Attempt  1	[0.05 s]
+2.0.ADcustom7: Trace Attempt  2	[0.05 s]
+2.0.ADcustom7: Trace Attempt  3	[0.05 s]
+2.0.ADcustom7: Trace Attempt  5	[0.05 s]
+2.0.M: Trace Attempt  2	[0.16 s]
+2.0.M: Trace Attempt  3	[0.17 s]
+2.0.M: Trace Attempt  5	[0.22 s]
+2.0.Mpcustom2: Trace Attempt 155	[463.21 s]
+2.0.ADcustom7: Trace Attempt 117	[0.32 s]
+2.0.ADcustom7: Per property time limit expired (1.00 s) [1.02 s]
+2.0.ADcustom7: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.02 s].
+2.0.M: Trace Attempt 14	[0.68 s]
+2.0.M: Per property time limit expired (1.00 s) [1.09 s]
+2.0.M: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[1.09 s].
+2.0.M: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.M: Trace Attempt  1	[0.00 s]
+2.0.M: Trace Attempt  2	[0.14 s]
+2.0.M: Trace Attempt  3	[0.15 s]
+2.0.M: Trace Attempt  5	[0.19 s]
+2.0.U2: Trace Attempt 699	[99.27 s]
+2.0.M: Trace Attempt 15	[1.04 s]
+2.0.M: Per property time limit expired (2.00 s) [2.03 s]
+2.0.M: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[2.03 s].
+2.0.ADcustom7: All properties determined. [0.00 s]
+2.0.ADcustom7: Exited with Success (@ 0.00 s)
+2: ProofGrid usable level: 1
+2.0.Bcustom1: Morphing to Bcustom1
+2.0.Bcustom1: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bcustom1: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Bcustom1: Trace Attempt  1	[0.01 s]
+2.0.Bcustom1: Trace Attempt  2	[0.01 s]
+2.0.Bcustom1: Trace Attempt  3	[0.01 s]
+2.0.Bcustom1: Trace Attempt  4	[0.01 s]
+2.0.Bcustom1: Trace Attempt  5	[0.01 s]
+2.0.L: Trace Attempt 305	[284.57 s]
+2.0.K: Requesting engine job to terminate
+2.1.AMcustom4: Requesting engine job to terminate
+2.0.K: Interrupted. [143.44 s]
+2.1.AMcustom4: Interrupted. [143.44 s]
+2.0.Bcustom1: Trace Attempt 189	[2.00 s]
+2.0.Bcustom1: Per property time limit expired (2.00 s) [2.60 s]
+2.0.Bcustom1: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[2.60 s].
+2.1.AMcustom4: Exited with Success (@ 468.77 s)
+2.0.K: Exited with Success (@ 468.86 s)
+2.0.U2: Trace Attempt 1440	[103.33 s]
+2.0.Bcustom1: All properties determined. [0.00 s]
+2.0.Bcustom1: Exited with Success (@ 0.00 s)
+2.0.I: Morphing to I
+2.0.I: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.ADcustom7: Proofgrid shell started at 888893@<HOST>(local) jg_883638_<HOST>_1
+2.0.AD: Proofgrid shell started at 888891@<HOST>(local) jg_883638_<HOST>_1
+2.0.AMcustom5: Proofgrid shell started at 888892@<HOST>(local) jg_883638_<HOST>_1
+2.0.ADcustom7: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.I: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.M: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.M: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.ADcustom7: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.ADcustom7: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.ADcustom7: Trace Attempt  1	[0.00 s]
+2.0.ADcustom7: Trace Attempt  2	[0.01 s]
+2.0.ADcustom7: Trace Attempt  3	[0.01 s]
+2.0.ADcustom7: Trace Attempt  4	[0.01 s]
+2.0.ADcustom7: Trace Attempt  5	[0.01 s]
+2.0.ADcustom7: Trace Attempt  1	[0.01 s]
+2.0.AD: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.AD: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.ADcustom7: Trace Attempt  2	[0.01 s]
+2.0.ADcustom7: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.AMcustom5: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  4	[0.01 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  4	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.ADcustom7: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.ADcustom7: Trace Attempt  2	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.ADcustom7: Trace Attempt  3	[0.03 s]
+2.0.ADcustom7: Trace Attempt  4	[0.03 s]
+2.0.AD: Trace Attempt  1	[0.02 s]
+2.0.AD: Trace Attempt  2	[0.02 s]
+2.0.AD: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  2	[0.02 s]
+2.0.AMcustom5: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.02 s]
+2.0.AD: Trace Attempt  1	[0.04 s]
+2.0.ADcustom7: Trace Attempt  1	[0.05 s]
+2.0.AD: Trace Attempt  2	[0.04 s]
+2.0.ADcustom7: Trace Attempt  2	[0.06 s]
+2.0.ADcustom7: Trace Attempt  3	[0.06 s]
+2.0.AD: Trace Attempt  3	[0.05 s]
+2.0.ADcustom7: Trace Attempt  5	[0.06 s]
+2.0.AMcustom5: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  4	[0.05 s]
+2.0.AMcustom5: Trace Attempt  2	[0.05 s]
+2.0.AMcustom5: Trace Attempt  3	[0.05 s]
+2.0.AMcustom5: Trace Attempt  5	[0.05 s]
+2.0.AD: Trace Attempt  1	[0.10 s]
+2.0.AD: Trace Attempt  2	[0.10 s]
+2.0.AD: Trace Attempt  3	[0.11 s]
+2.0.AD: Trace Attempt  5	[0.11 s]
+2.0.M: Trace Attempt  2	[0.16 s]
+2.0.M: Trace Attempt  3	[0.17 s]
+2.0.M: Trace Attempt  5	[0.21 s]
+2.0.L: Trace Attempt 332	[288.70 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 2127 clause(s).
+2.0.U2: Trace Attempt 2094	[107.34 s]
+2.0.AMcustom5: Trace Attempt 199	[4.46 s]
+2.0.L: Trace Attempt 351	[292.74 s]
+2.0.M: Trace Attempt 23	[5.79 s]
+2.0.U2: Trace Attempt 2716	[111.37 s]
+2.0.ADcustom7: Trace Attempt 517	[8.50 s]
+2.0.AMcustom5: Trace Attempt 269	[8.52 s]
+2.0.L: Trace Attempt 373	[296.87 s]
+2.0.M: Trace Attempt 30	[10.53 s]
+2.0.U2: Trace Attempt 3268	[115.41 s]
+2.0.L: Trace Attempt 394	[301.07 s]
+2.0.AMcustom5: Trace Attempt 484	[13.00 s]
+2.0.Mpcustom2: Trace Attempt 157	[482.62 s]
+2.0.AD: Trace Attempt 517	[14.25 s]
+2.0.M: Trace Attempt 37	[15.33 s]
+2.0.U2: Trace Attempt 3722	[119.47 s]
+2.0.AD: Per property time limit expired (16.00 s) [16.01 s]
+2.0.AD: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[16.01 s].
+2.0.ADcustom7: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[16.05 s].
+2.0.AMcustom5: Trace Attempt 678	[15.99 s]
+2.0.AMcustom5: Per property time limit expired (16.00 s) [16.04 s]
+2.0.AMcustom5: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[16.04 s].
+2.0.L: Using states from traces to { (reset) }
+2.0.M: Trace Attempt 39	[15.42 s]
+2.0.M: Per property time limit expired (16.00 s) [16.11 s]
+2.0.M: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[16.11 s].
+2.0.L: Trace Attempt  3	[304.32 s]
+2.0.L: Trace Attempt  4	[304.37 s]
+2.0.L: Trace Attempt  5	[304.39 s]
+2.0.I: Per property time limit expired (16.00 s) [19.72 s]
+2.0.I: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[19.72 s].
+2.0.AD: All properties determined. [0.00 s]
+2.0.AD: Exited with Success (@ 0.00 s)
+2.0.AMcustom5: All properties determined. [0.00 s]
+2.0.AMcustom5: Exited with Success (@ 0.00 s)
+2.0.ADcustom7: All properties determined. [0.00 s]
+2.0.ADcustom7: Exited with Success (@ 0.00 s)
+2.0.AMcustom5: Morphing to AMcustom5
+2.0.D: Morphing to D
+2.0.AD: Morphing to AD
+2.0.I: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.M: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.D: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AD: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.M: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.D: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  2	[0.00 s]
+2.0.AMcustom5: Trace Attempt  3	[0.00 s]
+2.0.AMcustom5: Trace Attempt  4	[0.00 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  4	[0.01 s]
+2.0.AD: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  1	[0.01 s]
+2.0.D: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  2	[0.02 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.02 s]
+2.0.AMcustom5: Trace Attempt  1	[0.04 s]
+2.0.D: Trace Attempt  2	[0.03 s]
+2.0.AMcustom5: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  5	[0.04 s]
+2.0.AD: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  2	[0.04 s]
+2.0.AD: Trace Attempt  3	[0.04 s]
+2.0.AD: Trace Attempt  4	[0.04 s]
+2.0.AD: Trace Attempt  1	[0.10 s]
+2.0.AD: Trace Attempt  2	[0.10 s]
+2.0.AD: Trace Attempt  3	[0.10 s]
+2.0.AD: Trace Attempt  5	[0.10 s]
+2.0.D: Trace Attempt  3	[0.15 s]
+2.0.M: Trace Attempt  2	[0.17 s]
+2.0.M: Trace Attempt  3	[0.19 s]
+2.0.M: Trace Attempt  5	[0.24 s]
+2.0.U2: Trace Attempt 4097	[123.93 s]
+2.0.D: Trace Attempt  5	[0.42 s]
+2.0.L: Trace Attempt 73	[308.42 s]
+2.0.Mpcustom2: Trace Attempt 159	[489.94 s]
+2.0.AMcustom5: Trace Attempt 199	[4.11 s]
+2.0.U2: Trace Attempt 4721	[128.02 s]
+2.0.L: Trace Attempt 110	[312.45 s]
+2.0.M: Trace Attempt 23	[6.20 s]
+2.0.U2: Restart 9
+2.0.U2: Trace Attempt  1	[131.39 s]
+2.0.U2: Trace Attempt  3	[131.58 s]
+2.0.AMcustom5: Trace Attempt 271	[8.13 s]
+2.0.L: Trace Attempt 147	[316.67 s]
+2.0.M: Trace Attempt 32	[11.99 s]
+2.0.U2: Trace Attempt 551	[135.66 s]
+2.0.AMcustom5: Trace Attempt 489	[12.13 s]
+2.0.L: Trace Attempt 183	[320.73 s]
+2.0.AD: Trace Attempt 517	[13.13 s]
+2.0.I: Trace Attempt 770	[14.52 s]
+2.0.Mpcustom2: Trace Attempt 159	[505.33 s]
+2.0.U2: Trace Attempt 1099	[139.72 s]
+2.0.AMcustom5: Trace Attempt 699	[16.16 s]
+2.0.M: Trace Attempt 39	[16.55 s]
+2.0.L: Trace Attempt 211	[324.79 s]
+2.0.D: Trace Attempt 69	[18.56 s]
+2.0.U2: Trace Attempt 1699	[143.77 s]
+2.0.I: Trace Attempt 771	[20.21 s]
+2.0.I: Trace Attempt  1	[20.21 s]
+2.0.I: Trace Attempt  2	[20.21 s]
+2.0.I: Trace Attempt  3	[20.21 s]
+2.0.I: Trace Attempt  5	[20.22 s]
+2.0.AMcustom5: Trace Attempt 722	[20.62 s]
+2.0.L: Trace Attempt 236	[328.85 s]
+2.0.M: Trace Attempt 53	[22.73 s]
+2.0.U2: Trace Attempt 2203	[147.81 s]
+2.0.AMcustom5: Trace Attempt 741	[24.73 s]
+2.0.L: Trace Attempt 263	[332.94 s]
+2.0.I: Trace Attempt 517	[25.90 s]
+2.0.U2: Trace Attempt 2792	[151.89 s]
+2.0.AMcustom5: Trace Attempt 753	[28.80 s]
+2.0.M: Trace Attempt 55	[28.97 s]
+2.0.L: Trace Attempt 286	[337.02 s]
+2.0.Mpcustom2: Trace Attempt 159	[520.45 s]
+2.0.AMcustom5: Trace Attempt 758	[31.99 s]
+2.0.AMcustom5: Per property time limit expired (32.00 s) [32.06 s]
+2.0.AMcustom5: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[32.06 s].
+2.0.I: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[32.07 s].
+2.0.AD: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[32.15 s].
+2.0.M: Per property time limit expired (32.00 s) [32.16 s]
+2.0.M: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[32.16 s].
+2.0.U2: Trace Attempt 3380	[155.96 s]
+2.0.D: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[32.90 s].
+2.0.AMcustom5: All properties determined. [0.00 s]
+2.0.AMcustom5: Exited with Success (@ 0.00 s)
+2.0.D: All properties determined. [0.00 s]
+2.0.D: Exited with Success (@ 0.00 s)
+2.0.M: All properties determined. [0.00 s]
+2.0.M: Exited with Success (@ 0.00 s)
+2.0.AMcustom5: Morphing to AMcustom5
+2.0.ADcustom7: Morphing to ADcustom7
+2.0.Bcustom1: Morphing to Bcustom1
+2.0.I: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.ADcustom7: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bcustom1: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AD: Trace Attempt  1	[0.00 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  4	[0.01 s]
+2.0.AD: Trace Attempt  5	[0.01 s]
+2.0.Bcustom1: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  1	[0.01 s]
+2.0.ADcustom7: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  2	[0.00 s]
+2.0.ADcustom7: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  3	[0.00 s]
+2.0.Bcustom1: Trace Attempt  1	[0.01 s]
+2.0.AMcustom5: Trace Attempt  4	[0.00 s]
+2.0.ADcustom7: Trace Attempt  2	[0.00 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.ADcustom7: Trace Attempt  3	[0.01 s]
+2.0.ADcustom7: Trace Attempt  4	[0.01 s]
+2.0.Bcustom1: Trace Attempt  2	[0.01 s]
+2.0.ADcustom7: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.Bcustom1: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.Bcustom1: Trace Attempt  4	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.Bcustom1: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  2	[0.02 s]
+2.0.AMcustom5: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.02 s]
+2.0.AD: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  2	[0.04 s]
+2.0.AD: Trace Attempt  3	[0.04 s]
+2.0.AD: Trace Attempt  4	[0.04 s]
+2.0.AMcustom5: Trace Attempt  1	[0.04 s]
+2.0.AMcustom5: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  5	[0.04 s]
+2.0.ADcustom7: Trace Attempt  1	[0.06 s]
+2.0.ADcustom7: Trace Attempt  2	[0.06 s]
+2.0.ADcustom7: Trace Attempt  3	[0.06 s]
+2.0.ADcustom7: Trace Attempt  1	[0.07 s]
+2.0.ADcustom7: Trace Attempt  2	[0.07 s]
+2.0.ADcustom7: Trace Attempt  3	[0.07 s]
+2.0.ADcustom7: Trace Attempt  4	[0.08 s]
+2.0.AD: Trace Attempt  1	[0.10 s]
+2.0.AD: Trace Attempt  2	[0.10 s]
+2.0.AD: Trace Attempt  3	[0.10 s]
+2.0.AD: Trace Attempt  5	[0.10 s]
+2.0.ADcustom7: Trace Attempt  1	[0.10 s]
+2.0.ADcustom7: Trace Attempt  2	[0.10 s]
+2.0.ADcustom7: Trace Attempt  3	[0.11 s]
+2.0.ADcustom7: Trace Attempt  5	[0.11 s]
+2.0.L: Trace Attempt 307	[341.11 s]
+2.0.U2: Trace Attempt 3816	[160.07 s]
+2.0.Bcustom1: Trace Attempt 259	[4.01 s]
+2.0.AMcustom5: Trace Attempt 199	[4.20 s]
+2.0.L: Trace Attempt 332	[345.26 s]
+2.0.U2: Trace Attempt 4241	[164.10 s]
+2.0.Bcustom1: Trace Attempt 465	[8.03 s]
+2.0.AMcustom5: Trace Attempt 271	[8.27 s]
+2.0.L: Trace Attempt 352	[349.38 s]
+2.0.ADcustom7: Trace Attempt 517	[8.68 s]
+2.0.U2: Trace Attempt 4843	[168.13 s]
+2.0.Bcustom1: Trace Attempt 677	[12.03 s]
+2.0.AMcustom5: Trace Attempt 493	[12.28 s]
+2.0.L: Trace Attempt 376	[353.51 s]
+2.0.AD: Trace Attempt 517	[13.19 s]
+2.0.Mpcustom2: Trace Attempt 159	[536.99 s]
+2.0.U2: Trace Attempt 5338	[172.22 s]
+2.0.Bcustom1: Trace Attempt 867	[16.04 s]
+2.0.AMcustom5: Trace Attempt 700	[16.32 s]
+2.0.L: Trace Attempt 398	[357.62 s]
+2.0.U2: Trace Attempt 5699	[176.30 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[361.20 s]
+2.0.L: Trace Attempt  4	[361.21 s]
+2.0.L: Trace Attempt  5	[361.23 s]
+2.0.AMcustom5: Trace Attempt 722	[20.44 s]
+2.0.I: Trace Attempt  1	[22.68 s]
+2.0.I: Trace Attempt  2	[22.68 s]
+2.0.I: Trace Attempt  3	[22.68 s]
+2.0.I: Trace Attempt  5	[22.68 s]
+2.0.U2: Trace Attempt 5946	[180.66 s]
+2.0.L: Trace Attempt 53	[365.30 s]
+2.0.AMcustom5: Trace Attempt 741	[24.72 s]
+2.0.Mpcustom2: Trace Attempt 159	[548.14 s]
+2.0.U2: Trace Attempt 6311	[184.68 s]
+2.0.L: Trace Attempt 92	[369.31 s]
+2.0.I: Trace Attempt 517	[28.72 s]
+2.0.AMcustom5: Trace Attempt 754	[29.16 s]
+2.0.U2: Trace Attempt 6669	[188.69 s]
+2.0.L: Trace Attempt 126	[373.36 s]
+2.0.AMcustom5: Trace Attempt 768	[33.25 s]
+2.0.U2: Trace Attempt 7018	[192.76 s]
+2.0.L: Trace Attempt 155	[377.45 s]
+2.0.AMcustom5: Trace Attempt 710	[37.25 s]
+2.0.L: Trace Attempt 186	[381.52 s]
+2.0.U2: Trace Attempt 7352	[198.51 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 3022 clause(s).
+2.0.Mpcustom2: Trace Attempt 160	[565.90 s]
+2.0.L: Trace Attempt 214	[385.54 s]
+2.0.U2: Restart 10
+2.0.U2: Trace Attempt  1	[203.98 s]
+2.0.U2: Trace Attempt  3	[204.22 s]
+2.0.ADcustom7: Trace Attempt 901	[47.74 s]
+2.0.L: Trace Attempt 244	[389.64 s]
+2.0.ADcustom7: Trace Attempt 882	[51.74 s]
+2.0.U2: Trace Attempt 377	[208.31 s]
+2.0.L: Trace Attempt 267	[393.74 s]
+2.0.I: Trace Attempt 901	[55.53 s]
+2.0.U2: Trace Attempt 781	[212.32 s]
+2.0.L: Trace Attempt 292	[397.89 s]
+2.0.U2: Trace Attempt 1211	[216.39 s]
+2.0.L: Trace Attempt 311	[402.04 s]
+2.0.Mpcustom2: Trace Attempt 160	[584.70 s]
+2.0.U2: Trace Attempt 1641	[220.42 s]
+2.0.AMcustom5: Trace Attempt 901	[38.84 s]
+2.0.AMcustom5: Per property time limit expired (64.00 s) [64.04 s]
+2.0.AMcustom5: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[64.04 s].
+2.0.AD: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[64.08 s].
+2.0.L: Trace Attempt 333	[406.10 s]
+2.0.I: Per property time limit expired (64.00 s) [66.04 s]
+2.0.I: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[66.04 s].
+2.0.ADcustom7: Trace Attempt 901	[52.00 s]
+2.0.ADcustom7: Per property time limit expired (64.00 s) [66.13 s]
+2.0.ADcustom7: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[66.13 s].
+2.0.U2: Trace Attempt 2049	[224.91 s]
+2.0.L: Trace Attempt 350	[410.21 s]
+2.0.U2: Trace Attempt 2478	[228.92 s]
+2.0.L: Trace Attempt 371	[414.24 s]
+2.0.U2: Trace Attempt 2894	[232.95 s]
+2.0.L: Trace Attempt 394	[418.33 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[421.19 s]
+2.0.L: Trace Attempt  4	[421.23 s]
+2.0.L: Trace Attempt  5	[421.25 s]
+2.0.U2: Trace Attempt 3313	[236.98 s]
+2.0.Mpcustom2: Trace Attempt 161	[606.47 s]
+2.0.L: Trace Attempt 76	[425.26 s]
+2.0.U2: Trace Attempt 3750	[241.90 s]
+2.0.L: Trace Attempt 114	[429.27 s]
+2.0.U2: Trace Attempt 4199	[245.91 s]
+2.0.Bcustom1: Trace Attempt 901	[16.72 s]
+2.0.Bcustom1: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[90.38 s].
+2.0.ADcustom7: All properties determined. [0.00 s]
+2.0.ADcustom7: Exited with Success (@ 0.00 s)
+2.0.AMcustom5: All properties determined. [0.00 s]
+2.0.AMcustom5: Exited with Success (@ 0.00 s)
+2.0.Bcustom1: All properties determined. [0.00 s]
+2.0.Bcustom1: Exited with Success (@ 0.00 s)
+2.0.D: Morphing to D
+2.0.AMcustom5: Morphing to AMcustom5
+2.0.Tri: Morphing to Tri
+2.0.I: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.D: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AMcustom5: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Tri: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AD: Trace Attempt  1	[0.00 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  4	[0.01 s]
+2.0.AD: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.D: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  2	[0.00 s]
+2.0.AMcustom5: Trace Attempt  3	[0.00 s]
+2.0.AMcustom5: Trace Attempt  4	[0.00 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.D: Trace Attempt  1	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  2	[0.02 s]
+2.0.AMcustom5: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.02 s]
+2.0.AD: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  2	[0.04 s]
+2.0.AD: Trace Attempt  3	[0.04 s]
+2.0.AD: Trace Attempt  4	[0.04 s]
+2.0.D: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  1	[0.04 s]
+2.0.AMcustom5: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  5	[0.04 s]
+2.0.AD: Trace Attempt  1	[0.09 s]
+2.0.AD: Trace Attempt  2	[0.10 s]
+2.0.AD: Trace Attempt  3	[0.10 s]
+2.0.AD: Trace Attempt  5	[0.10 s]
+2.0.Tri: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Tri: Trace Attempt  1	[0.00 s]
+2.0.Tri:    0.01" ---- Launching main thread ----
+2.0.D: Trace Attempt  3	[0.15 s]
+2.0.D: Trace Attempt  5	[0.42 s]
+2.0.Tri:    0.36" ---- Launching abstraction thread ----
+2.0.Tri:    0.42" ---- Launching multi-phase simplification thread ----
+2.0.Tri: Trace Attempt  2	[0.67 s]
+2.0.Tri: Trace Attempt  3	[0.67 s]
+2.0.Tri: Trace Attempt  4	[0.68 s]
+2.0.Tri: Trace Attempt  5	[0.69 s]
+2.0.L: Trace Attempt 150	[433.38 s]
+2.0.U2: Trace Attempt 4784	[249.97 s]
+2.0.AMcustom5: Trace Attempt 199	[4.17 s]
+2.0.L: Trace Attempt 184	[437.75 s]
+2.0.U2: Trace Attempt 5209	[254.01 s]
+2.0.Mpcustom2: Trace Attempt 161	[620.50 s]
+2.0.AMcustom5: Trace Attempt 270	[8.20 s]
+2.0.L: Trace Attempt 212	[441.84 s]
+2.0.U2: Trace Attempt 5668	[258.07 s]
+2.0.AMcustom5: Trace Attempt 484	[12.38 s]
+2.0.AD: Trace Attempt 517	[13.72 s]
+2.0.L: Trace Attempt 239	[445.93 s]
+2.0.U2: Trace Attempt 6088	[262.08 s]
+2.0.AMcustom5: Trace Attempt 691	[16.57 s]
+2.0.Tri:   16.70" Simplification phase 1 complete
+2.0.L: Trace Attempt 267	[449.95 s]
+2.0.U2: Trace Attempt 6629	[266.13 s]
+2.0.D: Trace Attempt 69	[19.44 s]
+2.0.Mpcustom2: Trace Attempt 161	[632.26 s]
+2.0.AMcustom5: Trace Attempt 721	[20.79 s]
+2.0.L: Trace Attempt 289	[453.97 s]
+2.0.I: Trace Attempt  1	[23.27 s]
+2.0.I: Trace Attempt  2	[23.27 s]
+2.0.I: Trace Attempt  3	[23.27 s]
+2.0.I: Trace Attempt  5	[23.27 s]
+2.0.U2: Trace Attempt 6914	[270.69 s]
+2.0.AMcustom5: Trace Attempt 740	[24.89 s]
+2.0.Tri:   26.10" Simplification phase 2 complete
+2.0.L: Trace Attempt 310	[458.04 s]
+2.0.U2: Trace Attempt 7338	[274.71 s]
+2.0.I: Trace Attempt 517	[29.18 s]
+2.0.AMcustom5: Trace Attempt 753	[29.73 s]
+2.0.L: Trace Attempt 334	[462.17 s]
+2.0.U2: Trace Attempt 7715	[278.79 s]
+2.0.Mpcustom2: Trace Attempt 161	[644.69 s]
+2.0.AMcustom5: Trace Attempt 766	[34.06 s]
+2.0.L: Trace Attempt 353	[466.27 s]
+2.0.U2: Trace Attempt 8102	[282.82 s]
+2.0.AMcustom5: Trace Attempt 511	[38.06 s]
+2.0.L: Trace Attempt 376	[470.36 s]
+2.0.U2: Trace Attempt 8364	[286.91 s]
+2.0.Mpcustom2: Trace Attempt 161	[655.55 s]
+2.0.L: Trace Attempt 398	[474.47 s]
+2.0.U2: Trace Attempt 9051	[290.96 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[478.23 s]
+2.0.L: Trace Attempt  4	[478.24 s]
+2.0.L: Trace Attempt  5	[478.26 s]
+2.0.U2: Trace Attempt 9735	[295.02 s]
+2.0.L: Trace Attempt 49	[482.31 s]
+2.0.U2: Restart 11
+2.0.U2: Trace Attempt  1	[299.38 s]
+2.0.U2: Trace Attempt  3	[299.56 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 4273 clause(s).
+2.0.Mpcustom2: Trace Attempt 161	[667.49 s]
+2.0.L: Trace Attempt 88	[486.38 s]
+2.0.U2: Trace Attempt 687	[303.64 s]
+2.0.I: Trace Attempt 901	[57.91 s]
+2.0.L: Trace Attempt 123	[490.45 s]
+2.0.U2: Trace Attempt 1347	[307.69 s]
+2.0.L: Trace Attempt 153	[494.57 s]
+2.0.U2: Trace Attempt 2049	[312.16 s]
+2.0.L: Trace Attempt 182	[498.61 s]
+2.0.U2: Trace Attempt 2780	[316.17 s]
+2.0.Mpcustom2: Trace Attempt 161	[683.31 s]
+2.0.L: Trace Attempt 212	[502.94 s]
+2.0.U2: Trace Attempt 3474	[320.19 s]
+2.0.I: Trace Attempt 772	[74.45 s]
+2.0.L: Trace Attempt 240	[507.02 s]
+2.0.AD: Trace Attempt 901	[77.20 s]
+2.0.U2: Trace Attempt 4097	[325.31 s]
+2.0.L: Trace Attempt 262	[511.17 s]
+2.0.I: Trace Attempt 773	[80.53 s]
+2.0.I: Trace Attempt  1	[80.54 s]
+2.0.I: Trace Attempt  2	[80.54 s]
+2.0.I: Trace Attempt  3	[80.54 s]
+2.0.I: Trace Attempt  5	[80.54 s]
+2.0.AD: Trace Attempt 698	[81.21 s]
+2.0.U2: Trace Attempt 4599	[329.32 s]
+2.0.L: Trace Attempt 287	[515.27 s]
+2.0.I: Trace Attempt 517	[86.59 s]
+2.0.U2: Trace Attempt 5002	[333.74 s]
+2.0.Mpcustom2: Trace Attempt 161	[699.37 s]
+2.0.L: Trace Attempt 306	[519.36 s]
+2.0.U2: Trace Attempt 5521	[337.81 s]
+2.0.L: Trace Attempt 330	[523.46 s]
+2.0.U2: Trace Attempt 6214	[341.86 s]
+2.0.L: Trace Attempt 349	[527.53 s]
+2.0.U2: Trace Attempt 6926	[345.89 s]
+2.0.L: Trace Attempt 372	[531.63 s]
+2.0.Mpcustom2: Trace Attempt 161	[713.37 s]
+2.0.L: Trace Attempt 394	[535.65 s]
+2.0.U2: Trace Attempt 7451	[351.90 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[538.93 s]
+2.0.L: Trace Attempt  4	[538.97 s]
+2.0.L: Trace Attempt  5	[538.99 s]
+2.0.U2: Trace Attempt 7889	[355.92 s]
+2.0.Mpcustom2: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Mpcustom2: Trace Attempt  1	[0.04 s]
+2.0.Mpcustom2: Trace Attempt  2	[0.06 s]
+2.0.Mpcustom2: Trace Attempt  3	[0.77 s]
+2.0.Mpcustom2: Trace Attempt  3	[0.79 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.81 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.87 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.90 s]
+2.0.L: Trace Attempt 76	[543.01 s]
+2.0.I: Trace Attempt 901	[112.44 s]
+2.0.U2: Trace Attempt 8193	[361.01 s]
+2.0.Mpcustom2: Trace Attempt 19	[5.26 s]
+2.0.L: Trace Attempt 112	[547.01 s]
+2.0.U2: Trace Attempt 8606	[365.10 s]
+2.0.L: Trace Attempt 145	[551.10 s]
+2.0.Mpcustom2: Trace Attempt 21	[10.44 s]
+2.0.U2: Trace Attempt 9064	[369.12 s]
+2.0.L: Trace Attempt 173	[555.11 s]
+2.0.Mpcustom2: Trace Attempt 26	[15.12 s]
+2.0.U2: Trace Attempt 9653	[373.20 s]
+2.0.L: Trace Attempt 204	[559.15 s]
+2.0.Tri: Trace Attempt 901	[2.87 s]
+2.0.Tri: Per property time limit expired (128.00 s) [128.03 s]
+2.0.Tri: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[128.04 s].
+2.0.D: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[129.01 s].
+2.0.AMcustom5: Trace Attempt 901	[41.94 s]
+2.0.AMcustom5: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[129.04 s].
+2.0.Mpcustom2: Trace Attempt 28	[20.83 s]
+2.0.I: Per property time limit expired (128.00 s) [130.76 s]
+2.0.I: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[130.76 s].
+2.0.U2: Restart 12
+2.0.U2: Trace Attempt  1	[377.97 s]
+2.0.U2: Trace Attempt  3	[378.14 s]
+2.0.L: Trace Attempt 234	[563.17 s]
+2.0.Mpcustom2: Trace Attempt 31	[25.53 s]
+2.0.U2: Trace Attempt 525	[382.24 s]
+2.0.AD: Trace Attempt 901	[84.53 s]
+2.0.AD: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[135.82 s].
+2.0.AMcustom5: All properties determined. [0.00 s]
+2.0.AMcustom5: Exited with Success (@ 0.00 s)
+2.0.I: All properties determined. [0.00 s]
+2.0.I: Exited with Success (@ 0.00 s)
+2.0.AD: All properties determined. [0.00 s]
+2.0.AD: Exited with Success (@ 0.00 s)
+2.0.Tri: All properties determined. [0.00 s]
+2.0.Tri: Exited with Success (@ 0.00 s)
+2.0.D: All properties determined. [0.00 s]
+2.0.D: Exited with Success (@ 0.00 s)
+2.0.ADcustom7: Morphing to ADcustom7
+2.0.N: Morphing to N
+2.0.Bcustom1: Morphing to Bcustom1
+2.0.M: Morphing to M
+2.0.ADcustom7: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.N: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.Ncustom3: Morphing to Ncustom3
+2.0.Bcustom1: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.M: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.Ncustom3: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.ADcustom7: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Bcustom1: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.ADcustom7: Trace Attempt  1	[0.00 s]
+2.0.ADcustom7: Trace Attempt  2	[0.00 s]
+2.0.ADcustom7: Trace Attempt  3	[0.01 s]
+2.0.ADcustom7: Trace Attempt  4	[0.01 s]
+2.0.ADcustom7: Trace Attempt  5	[0.01 s]
+2.0.N: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Bcustom1: Trace Attempt  1	[0.01 s]
+2.0.M: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.ADcustom7: Trace Attempt  1	[0.01 s]
+2.0.ADcustom7: Trace Attempt  2	[0.01 s]
+2.1.Ncustom3: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Bcustom1: Trace Attempt  2	[0.01 s]
+2.0.ADcustom7: Trace Attempt  3	[0.01 s]
+2.0.Bcustom1: Trace Attempt  3	[0.01 s]
+2.0.Bcustom1: Trace Attempt  4	[0.01 s]
+2.0.Bcustom1: Trace Attempt  5	[0.01 s]
+2.0.M: Trace Attempt  1	[0.00 s]
+2.0.ADcustom7: Trace Attempt  1	[0.02 s]
+2.0.ADcustom7: Trace Attempt  2	[0.02 s]
+2.0.ADcustom7: Trace Attempt  3	[0.02 s]
+2.0.ADcustom7: Trace Attempt  4	[0.02 s]
+2.0.ADcustom7: Trace Attempt  1	[0.05 s]
+2.0.ADcustom7: Trace Attempt  2	[0.05 s]
+2.0.ADcustom7: Trace Attempt  3	[0.05 s]
+2.0.ADcustom7: Trace Attempt  5	[0.05 s]
+2.0.L: Trace Attempt 262	[567.27 s]
+2.0.M: Trace Attempt  2	[0.18 s]
+2.0.M: Trace Attempt  3	[0.20 s]
+2.0.M: Trace Attempt  5	[0.26 s]
+2.0.U2: Trace Attempt 981	[386.26 s]
+2.0.Bcustom1: Trace Attempt 289	[4.01 s]
+2.0.L: Trace Attempt 285	[571.38 s]
+2.0.Mpcustom2: Trace Attempt 33	[31.23 s]
+2.0.M: Trace Attempt 23	[6.44 s]
+2.0.U2: Trace Attempt 1272	[390.27 s]
+2.0.Bcustom1: Trace Attempt 508	[8.02 s]
+2.0.L: Trace Attempt 307	[575.58 s]
+2.0.ADcustom7: Trace Attempt 517	[8.78 s]
+2.0.U2: Trace Attempt 1597	[394.36 s]
+2.0.Mpcustom2: Trace Attempt 38	[38.02 s]
+2.0.Bcustom1: Trace Attempt 704	[12.02 s]
+2.0.M: Trace Attempt 30	[12.20 s]
+2.0.L: Trace Attempt 331	[579.63 s]
+2.0.U2: Trace Attempt 1889	[398.42 s]
+2.0.Mpcustom2: Trace Attempt 40	[42.26 s]
+2.0.L: Trace Attempt 352	[584.27 s]
+2.0.M: Trace Attempt 40	[17.43 s]
+2.0.U2: Trace Attempt 2154	[402.51 s]
+2.0.L: Trace Attempt 373	[588.39 s]
+2.0.Mpcustom2: Trace Attempt 44	[48.25 s]
+2.0.M: Trace Attempt 48	[22.74 s]
+2.0.U2: Trace Attempt 2469	[406.53 s]
+2.0.N: Trace Attempt 901	[25.04 s]
+2.0.L: Trace Attempt 395	[592.45 s]
+2.1.Ncustom3: Trace Attempt 901	[25.44 s]
+2.0.Mpcustom2: Trace Attempt 44	[53.51 s]
+2.0.U2: Trace Attempt 2798	[410.57 s]
+2.0.M: Trace Attempt 52	[28.19 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 4932 clause(s).
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[596.80 s]
+2.0.L: Trace Attempt  4	[596.82 s]
+2.0.L: Trace Attempt  5	[596.83 s]
+2.0.U2: Trace Attempt 3129	[414.62 s]
+2.0.Mpcustom2: Trace Attempt 47	[59.70 s]
+2.0.L: Trace Attempt 55	[600.89 s]
+2.0.M: Trace Attempt 59	[33.98 s]
+2.0.U2: Trace Attempt 3445	[418.72 s]
+2.0.L: Trace Attempt 94	[604.97 s]
+2.0.M: Trace Attempt 60	[38.40 s]
+2.0.Mpcustom2: Trace Attempt 49	[65.03 s]
+2.0.U2: Trace Attempt 3853	[422.78 s]
+2.0.L: Trace Attempt 127	[609.04 s]
+2.0.U2: Trace Attempt 4140	[426.84 s]
+2.0.Mpcustom2: Trace Attempt 51	[70.86 s]
+2.0.M: Trace Attempt 64	[44.71 s]
+2.0.L: Trace Attempt 158	[613.13 s]
+2.0.ADcustom7: Trace Attempt 901	[48.03 s]
+2.0.U2: Trace Attempt 4724	[430.90 s]
+2.0.L: Trace Attempt 189	[617.25 s]
+2.0.M: Trace Attempt 68	[50.17 s]
+2.0.Mpcustom2: Trace Attempt 53	[77.42 s]
+2.0.U2: Trace Attempt 5110	[434.91 s]
+2.0.L: Trace Attempt 217	[621.36 s]
+2.0.M: Trace Attempt 70	[55.23 s]
+2.0.U2: Trace Attempt 5697	[438.98 s]
+2.0.Mpcustom2: Trace Attempt 55	[83.53 s]
+2.0.L: Trace Attempt 246	[625.36 s]
+2.0.U2: Trace Attempt 6298	[443.02 s]
+2.0.M: Trace Attempt 71	[61.66 s]
+2.0.L: Trace Attempt 270	[629.46 s]
+2.0.U2: Trace Attempt 6877	[447.09 s]
+2.0.Mpcustom2: Trace Attempt 59	[92.64 s]
+2.0.M: Trace Attempt 75	[66.91 s]
+2.0.L: Trace Attempt 295	[634.05 s]
+2.0.U2: Trace Attempt 7336	[452.27 s]
+2.0.L: Trace Attempt 320	[638.12 s]
+2.0.Mpcustom2: Trace Attempt 62	[97.57 s]
+2.0.M: Trace Attempt 77	[71.85 s]
+2.0.U2: Trace Attempt 7940	[456.32 s]
+2.0.L: Trace Attempt 344	[642.19 s]
+2.0.Mpcustom2: Trace Attempt 65	[102.13 s]
+2.0.M: Trace Attempt 79	[76.07 s]
+2.0.U2: Trace Attempt 8193	[460.37 s]
+2.0.L: Trace Attempt 362	[646.21 s]
+2.0.U2: Trace Attempt 8774	[464.42 s]
+2.0.M: Trace Attempt 81	[82.98 s]
+2.0.L: Trace Attempt 384	[650.24 s]
+2.0.Mpcustom2: Trace Attempt 68	[111.21 s]
+2.0.U2: Trace Attempt 9370	[468.47 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[655.55 s]
+2.0.L: Trace Attempt  4	[655.59 s]
+2.0.L: Trace Attempt  5	[655.61 s]
+2.0.U2: Trace Attempt 9967	[472.51 s]
+2.0.Mpcustom2: Trace Attempt 68	[116.73 s]
+2.0.L: Trace Attempt 78	[659.67 s]
+2.0.U2: Restart 13
+2.0.U2: Trace Attempt  1	[475.66 s]
+2.0.U2: Trace Attempt  3	[475.84 s]
+2.0.Mpcustom2: Trace Attempt 68	[121.38 s]
+2.0.L: Trace Attempt 119	[663.91 s]
+2.0.U2: Trace Attempt 592	[479.92 s]
+2.0.Mpcustom2: Trace Attempt 68	[126.04 s]
+2.0.L: Trace Attempt 155	[667.96 s]
+2.0.U2: Trace Attempt 1152	[483.99 s]
+2.0.M: Trace Attempt 85	[101.55 s]
+2.0.Mpcustom2: Trace Attempt 70	[130.96 s]
+2.0.L: Trace Attempt 186	[671.98 s]
+2.0.U2: Trace Attempt 1788	[488.02 s]
+2.0.M: Trace Attempt 87	[105.55 s]
+2.0.L: Trace Attempt 216	[676.00 s]
+2.0.U2: Trace Attempt 2336	[492.11 s]
+2.0.Mpcustom2: Trace Attempt 70	[136.13 s]
+2.0.L: Trace Attempt 243	[680.00 s]
+2.0.U2: Trace Attempt 2979	[496.15 s]
+2.0.M: Trace Attempt 90	[114.34 s]
+2.0.Mpcustom2: Trace Attempt 70	[142.29 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 6107 clause(s).
+2.0.L: Trace Attempt 269	[684.13 s]
+2.0.U2: Trace Attempt 3606	[500.19 s]
+2.0.M: Trace Attempt 92	[118.44 s]
+2.0.Mpcustom2: Trace Attempt 71	[146.86 s]
+2.0.L: Trace Attempt 296	[688.15 s]
+2.0.U2: Trace Attempt 4097	[504.39 s]
+2.0.M: Trace Attempt 95	[124.45 s]
+2.0.L: Trace Attempt 318	[692.23 s]
+2.0.U2: Trace Attempt 4731	[508.45 s]
+2.0.L: Trace Attempt 343	[696.38 s]
+2.0.U2: Trace Attempt 5120	[512.50 s]
+2.0.L: Trace Attempt 362	[700.46 s]
+2.0.U2: Trace Attempt 5550	[516.53 s]
+2.0.Mpcustom2: Trace Attempt 71	[160.15 s]
+2.0.L: Trace Attempt 385	[704.59 s]
+2.0.U2: Trace Attempt 5930	[520.58 s]
+2.0.Mpcustom2: Trace Attempt 71	[166.04 s]
+2.0.U2: Trace Attempt 6325	[524.63 s]
+2.0.L: Trace Attempt 404	[709.05 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[710.88 s]
+2.0.L: Trace Attempt  4	[710.90 s]
+2.0.L: Trace Attempt  5	[710.91 s]
+2.0.U2: Trace Attempt 6624	[529.49 s]
+2.0.L: Trace Attempt 56	[714.93 s]
+2.0.Mpcustom2: Trace Attempt 71	[174.13 s]
+2.0.U2: Trace Attempt 6999	[533.53 s]
+2.0.L: Trace Attempt 96	[718.94 s]
+2.0.Mpcustom2: Trace Attempt 71	[180.43 s]
+2.0.U2: Trace Attempt 7398	[537.56 s]
+2.0.L: Trace Attempt 132	[722.99 s]
+2.0.U2: Trace Attempt 7798	[541.63 s]
+2.0.L: Trace Attempt 166	[727.03 s]
+2.0.Mpcustom2: Trace Attempt 71	[186.51 s]
+2.0.L: Trace Attempt 196	[731.09 s]
+2.0.U2: Trace Attempt 8166	[547.70 s]
+2.0.Mpcustom2: Trace Attempt 71	[192.78 s]
+2.0.L: Trace Attempt 223	[735.14 s]
+2.0.U2: Trace Attempt 8321	[551.80 s]
+2.0.L: Trace Attempt 250	[739.43 s]
+2.0.U2: Trace Attempt 8686	[555.84 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 6828 clause(s).
+2.0.Mpcustom2: Trace Attempt 72	[201.58 s]
+2.0.L: Trace Attempt 278	[743.50 s]
+2.0.U2: Trace Attempt 9066	[559.88 s]
+2.0.Mpcustom2: Trace Attempt 72	[205.78 s]
+2.0.L: Trace Attempt 299	[747.52 s]
+2.0.U2: Trace Attempt 9464	[563.96 s]
+2.0.L: Trace Attempt 324	[751.56 s]
+2.0.U2: Trace Attempt 9691	[568.91 s]
+2.0.L: Trace Attempt 348	[756.41 s]
+2.0.Mpcustom2: Trace Attempt 72	[216.97 s]
+2.0.U2: Restart 14
+2.0.U2: Trace Attempt  1	[573.78 s]
+2.0.U2: Trace Attempt  3	[573.96 s]
+2.0.L: Trace Attempt 371	[760.52 s]
+2.0.U2: Trace Attempt 660	[577.98 s]
+2.0.Mpcustom2: Trace Attempt 72	[222.92 s]
+2.0.L: Trace Attempt 393	[764.61 s]
+2.0.U2: Trace Attempt 1285	[582.02 s]
+2.0.M: Per property time limit expired (200.00 s) [200.29 s]
+2.0.M: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[200.29 s].
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[768.44 s]
+2.0.L: Trace Attempt  4	[768.48 s]
+2.0.L: Trace Attempt  5	[768.50 s]
+2.0.Mpcustom2: Trace Attempt 72	[228.45 s]
+2.0.U2: Trace Attempt 1964	[586.05 s]
+2.0.ADcustom7: Trace Attempt 901	[51.61 s]
+2.0.ADcustom7: Per property time limit expired (200.00 s) [203.79 s]
+2.0.ADcustom7: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[203.79 s].
+2.1.Ncustom3: Per property time limit expired (200.00 s) [204.69 s]
+2.1.Ncustom3: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[204.69 s].
+2.0.N: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[204.82 s].
+2.0.L: Trace Attempt 79	[772.54 s]
+2.0.U2: Trace Attempt 2539	[590.10 s]
+2.0.Mpcustom2: Trace Attempt 72	[235.31 s]
+2.0.L: Trace Attempt 119	[776.54 s]
+2.0.U2: Trace Attempt 3205	[594.13 s]
+2.0.L: Trace Attempt 156	[780.55 s]
+2.0.Mpcustom2: Trace Attempt 72	[240.53 s]
+2.0.U2: Trace Attempt 3854	[598.16 s]
+2.0.L: Trace Attempt 188	[784.56 s]
+2.0.U2: Trace Attempt 4339	[602.17 s]
+2.0.Mpcustom2: Trace Attempt 72	[246.82 s]
+2.0.L: Trace Attempt 219	[788.66 s]
+2.0.U2: Trace Attempt 5002	[607.53 s]
+2.0.L: Trace Attempt 247	[792.76 s]
+2.0.Mpcustom2: Trace Attempt 72	[253.55 s]
+2.0.U2: Trace Attempt 5677	[611.59 s]
+2.0.L: Trace Attempt 273	[796.85 s]
+2.0.U2: Trace Attempt 6332	[615.61 s]
+2.0.Mpcustom2: Trace Attempt 72	[259.87 s]
+2.0.L: Trace Attempt 301	[800.93 s]
+2.0.U2: Trace Attempt 7010	[619.64 s]
+2.0.L: Trace Attempt 324	[805.06 s]
+2.0.Mpcustom2: Trace Attempt 72	[267.28 s]
+2.0.L: Trace Attempt 349	[809.13 s]
+2.0.U2: Trace Attempt 7660	[625.70 s]
+2.0.L: Trace Attempt 369	[813.29 s]
+2.0.U2: Trace Attempt 8193	[631.15 s]
+2.0.L: Trace Attempt 392	[817.36 s]
+2.0.Mpcustom2: Trace Attempt 72	[276.75 s]
+2.0.U2: Trace Attempt 8859	[635.20 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[822.38 s]
+2.0.L: Trace Attempt  4	[822.40 s]
+2.0.L: Trace Attempt  5	[822.41 s]
+2.0.U2: Trace Attempt 9518	[639.24 s]
+2.0.L: Trace Attempt 58	[826.46 s]
+2.0.Mpcustom2: Trace Attempt 72	[286.79 s]
+2.0.U2: Restart 15
+2.0.U2: Trace Attempt  1	[644.98 s]
+2.0.U2: Trace Attempt  3	[645.15 s]
+2.0.L: Trace Attempt 99	[830.50 s]
+2.0.U2: Trace Attempt 607	[649.25 s]
+2.0.L: Trace Attempt 136	[834.59 s]
+2.0.U2: Trace Attempt 1210	[653.31 s]
+2.0.Mpcustom2: Trace Attempt 72	[297.34 s]
+2.0.L: Trace Attempt 171	[838.68 s]
+2.0.U2: Trace Attempt 1848	[657.35 s]
+2.0.L: Trace Attempt 201	[842.69 s]
+2.0.U2: Trace Attempt 2364	[661.35 s]
+2.0.L: Trace Attempt 229	[846.76 s]
+2.0.Mpcustom2: Trace Attempt 72	[306.53 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 8560 clause(s).
+2.0.U2: Trace Attempt 2993	[665.40 s]
+2.0.L: Trace Attempt 255	[850.88 s]
+2.0.U2: Trace Attempt 3603	[669.48 s]
+2.0.L: Trace Attempt 283	[854.93 s]
+2.0.U2: Trace Attempt 4097	[673.85 s]
+2.0.Mpcustom2: Trace Attempt 72	[318.05 s]
+2.0.L: Trace Attempt 305	[859.05 s]
+2.0.U2: Trace Attempt 4717	[677.90 s]
+2.0.L: Trace Attempt 331	[863.19 s]
+2.0.Mpcustom2: Trace Attempt 72	[323.66 s]
+2.0.U2: Trace Attempt 5116	[681.93 s]
+2.0.L: Trace Attempt 350	[867.21 s]
+2.0.U2: Trace Attempt 5753	[685.96 s]
+2.0.L: Trace Attempt 373	[871.28 s]
+2.0.Bcustom1: Trace Attempt 901	[15.87 s]
+2.0.Bcustom1: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[306.33 s].
+2.0.Bcustom1: All properties determined. [0.00 s]
+2.0.Bcustom1: Exited with Success (@ 0.00 s)
+2.1.Ncustom3: All properties determined. [0.00 s]
+2.1.Ncustom3: Exited with Success (@ 0.00 s)
+2.0.N: All properties determined. [0.00 s]
+2.0.N: Exited with Success (@ 0.00 s)
+2.0.M: All properties determined. [0.00 s]
+2.0.M: Exited with Success (@ 0.00 s)
+2.0.ADcustom7: All properties determined. [0.00 s]
+2.0.ADcustom7: Exited with Success (@ 0.00 s)
+2.0.Ncustom6: Morphing to Ncustom6
+2.1.K: Morphing to K
+2.0.I: Morphing to I
+2.0.AD: Morphing to AD
+2.0.AMcustom5: Morphing to AMcustom5
+2.0.Ncustom6: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.K: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AD: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.I: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AMcustom5: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.1.K: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.I: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.Ncustom6: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AMcustom5: Starting proof for property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AD: Trace Attempt  1	[0.00 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.00 s]
+2.0.AMcustom5: Trace Attempt  2	[0.00 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AD: Trace Attempt  4	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  4	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  5	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.01 s]
+2.0.AMcustom5: Trace Attempt  2	[0.01 s]
+2.0.AMcustom5: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  5	[0.01 s]
+2.0.AD: Trace Attempt  1	[0.01 s]
+2.0.AD: Trace Attempt  2	[0.01 s]
+2.0.AD: Trace Attempt  3	[0.01 s]
+2.0.AMcustom5: Trace Attempt  1	[0.02 s]
+2.0.AMcustom5: Trace Attempt  2	[0.02 s]
+2.0.AMcustom5: Trace Attempt  3	[0.02 s]
+2.0.AMcustom5: Trace Attempt  5	[0.02 s]
+2.0.AD: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  1	[0.04 s]
+2.0.AD: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  2	[0.04 s]
+2.0.AMcustom5: Trace Attempt  3	[0.04 s]
+2.0.AMcustom5: Trace Attempt  5	[0.04 s]
+2.0.AD: Trace Attempt  4	[0.04 s]
+2.0.AD: Trace Attempt  1	[0.10 s]
+2.0.AD: Trace Attempt  2	[0.10 s]
+2.0.AD: Trace Attempt  3	[0.11 s]
+2.0.AD: Trace Attempt  5	[0.11 s]
+2.0.U2: Trace Attempt 6363	[689.96 s]
+2.0.L: Trace Attempt 395	[875.36 s]
+2.0.AMcustom5: Trace Attempt 199	[4.39 s]
+2.0.Mpcustom2: Trace Attempt 72	[337.46 s]
+2.0.U2: Trace Attempt 6940	[694.02 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[879.22 s]
+2.0.L: Trace Attempt  4	[879.27 s]
+2.0.L: Trace Attempt  5	[879.29 s]
+2.0.AMcustom5: Trace Attempt 269	[8.44 s]
+2.0.L: Trace Attempt 74	[883.31 s]
+2.0.U2: Trace Attempt 7384	[699.29 s]
+2.0.AMcustom5: Trace Attempt 484	[12.75 s]
+2.0.L: Trace Attempt 110	[887.32 s]
+2.0.U2: Trace Attempt 7948	[703.31 s]
+2.0.AD: Trace Attempt 517	[14.43 s]
+2.0.Mpcustom2: Trace Attempt 72	[347.40 s]
+2.0.AMcustom5: Trace Attempt 691	[16.89 s]
+2.0.L: Trace Attempt 143	[891.35 s]
+2.0.U2: Trace Attempt 8193	[707.42 s]
+2.0.I: Trace Attempt  1	[20.69 s]
+2.0.I: Trace Attempt  2	[20.69 s]
+2.0.I: Trace Attempt  3	[20.69 s]
+2.0.I: Trace Attempt  5	[20.69 s]
+2.0.AMcustom5: Trace Attempt 721	[21.00 s]
+2.0.L: Trace Attempt 172	[895.45 s]
+2.0.U2: Trace Attempt 8745	[711.49 s]
+2.0.Mpcustom2: Trace Attempt 72	[356.21 s]
+2.1.K: Trace Attempt 901	[23.83 s]
+2.0.AMcustom5: Trace Attempt 740	[25.05 s]
+2.0.Ncustom6: Trace Attempt 901	[25.49 s]
+2.0.L: Trace Attempt 202	[899.53 s]
+2.0.I: Trace Attempt 517	[26.44 s]
+2.0.U2: Trace Attempt 9309	[715.55 s]
+2.0.AMcustom5: Trace Attempt 753	[29.83 s]
+2.0.L: Trace Attempt 230	[903.63 s]
+2.0.U2: Trace Attempt 9836	[719.63 s]
+2.0.AMcustom5: Trace Attempt 766	[33.97 s]
+2.0.L: Trace Attempt 256	[907.77 s]
+2.0.U2: Restart 16
+2.0.U2: Trace Attempt  1	[723.79 s]
+2.0.U2: Trace Attempt  3	[724.00 s]
+2.0.Mpcustom2: Trace Attempt 72	[369.49 s]
+2.0.AMcustom5: Trace Attempt 495	[37.97 s]
+2.0.L: Trace Attempt 279	[911.83 s]
+2.0.U2: Trace Attempt 470	[728.10 s]
+2.0.AMcustom5: Trace Attempt 869	[41.98 s]
+2.0.L: Trace Attempt 303	[915.90 s]
+2.0.U2: Trace Attempt 900	[732.12 s]
+2.0.L: Trace Attempt 324	[920.04 s]
+2.0.U2: Trace Attempt 1509	[736.18 s]
+2.0.Mpcustom2: Trace Attempt 72	[382.32 s]
+2.0.L: Trace Attempt 347	[924.04 s]
+2.0.Hp: Backjump considered with 0 new target(s) and 9497 clause(s).
+2.0.U2: Trace Attempt 2067	[740.18 s]
+2.0.I: Trace Attempt 901	[51.62 s]
+2.0.L: Trace Attempt 366	[928.20 s]
+2.0.U2: Trace Attempt 2720	[744.23 s]
+2.0.L: Trace Attempt 388	[932.27 s]
+2.0.U2: Trace Attempt 3378	[748.31 s]
+2.0.Mpcustom2: Trace Attempt 72	[393.68 s]
+2.0.L: Trace Attempt 404	[936.36 s]
+2.0.U2: Trace Attempt 4029	[752.34 s]
+2.0.L: Using states from traces to { ua_exclusion_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[938.73 s]
+2.0.L: Trace Attempt  4	[938.74 s]
+2.0.L: Trace Attempt  5	[938.76 s]
+2.0.I: Trace Attempt 774	[66.73 s]
+2.0.U2: Trace Attempt 4461	[756.40 s]
+2.0.L: Trace Attempt 52	[942.79 s]
+2.0.Mpcustom2: Trace Attempt 72	[402.85 s]
+2.0.U2: Trace Attempt 5002	[761.49 s]
+2.0.I: Trace Attempt 775	[72.62 s]
+2.0.I: Trace Attempt  1	[72.62 s]
+2.0.I: Trace Attempt  2	[72.62 s]
+2.0.I: Trace Attempt  3	[72.63 s]
+2.0.I: Trace Attempt  5	[72.63 s]
+2.0.L: Trace Attempt 91	[946.87 s]
+2.0.U2: Trace Attempt 5652	[765.52 s]
+2.0.L: Trace Attempt 125	[950.91 s]
+2.0.I: Trace Attempt 517	[78.78 s]
+2.0.U2: Trace Attempt 6312	[769.59 s]
+2.0.AD: Trace Attempt 901	[81.06 s]
+2.0.L: Trace Attempt 155	[954.99 s]
+2.0.Mpcustom2: Trace Attempt 72	[417.01 s]
+2.0.U2: Trace Attempt 6958	[773.64 s]
+2.0.AD: Trace Attempt 704	[85.07 s]
+2.0.L: Trace Attempt 185	[959.09 s]
+2.0.L: Trace Attempt 212	[963.22 s]
+2.0.U2: Trace Attempt 7583	[779.63 s]
+2.0.L: Trace Attempt 241	[967.33 s]
+2.0.U2: Trace Attempt 8193	[785.71 s]
+2.0.L: Trace Attempt 263	[971.34 s]
+2.0.Mpcustom2: Trace Attempt 72	[432.27 s]
+2.0.U2: Trace Attempt 8868	[789.78 s]
+2.0.L: Trace Attempt 289	[975.50 s]
+2.0.U2: Trace Attempt 9546	[793.87 s]
+2.0.L: Trace Attempt 309	[979.62 s]
+2.0.I: Trace Attempt 901	[109.29 s]
+2.0.L: Trace Attempt 332	[983.63 s]
+2.0.U2: Restart 17
+2.0.U2: Trace Attempt  1	[799.57 s]
+2.0.U2: Trace Attempt  3	[799.75 s]
+2.0.Mpcustom2: Trace Attempt 72	[446.39 s]
+2.0.L: Trace Attempt 350	[987.77 s]
+2.0.U2: Trace Attempt 576	[803.81 s]
+2.0.L: Trace Attempt 372	[991.90 s]
+2.0.U2: Trace Attempt 1156	[807.85 s]
+2.0.L: Trace Attempt 393	[995.97 s]
+2.0.U2: Trace Attempt 1777	[811.88 s]
+2.0.U2: Trace Attempt 2309	[815.88 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[1000.30 s]
+2.0.L: Trace Attempt  4	[1000.35 s]
+2.0.L: Trace Attempt  5	[1000.37 s]
+2.0.I: Trace Attempt 775	[127.23 s]
+2.0.Mpcustom2: Trace Attempt 72	[459.90 s]
+2.0.U2: Trace Attempt 2912	[819.94 s]
+2.0.L: Trace Attempt 77	[1004.45 s]
+2.0.I: Trace Attempt 776	[132.78 s]
+2.0.I: Trace Attempt  1	[132.78 s]
+2.0.I: Trace Attempt  2	[132.78 s]
+2.0.I: Trace Attempt  3	[132.79 s]
+2.0.I: Trace Attempt  5	[132.79 s]
+2.0.U2: Trace Attempt 3529	[824.02 s]
+2.0.L: Trace Attempt 113	[1008.47 s]
+2.0.Mpcustom2: Trace Attempt 72	[471.01 s]
+2.0.I: Trace Attempt 517	[138.66 s]
+2.0.U2: Trace Attempt 3931	[828.03 s]
+2.0.L: Trace Attempt 147	[1012.76 s]
+2.0.Bm: Trace Attempt 901	[147.64 s]
+2.0.Bm: A proof was found: No trace exists. [1194.94 s]
+INFO (IPF057): 2.0.Bm: The property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND" was proven in 1194.93 s.
+2.0.I: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[140.23 s].
+INFO (IPF144): 2: Initiating shutdown of proof [1195.09 s]
+2.0.I: All properties determined. [140.23 s]
+2.0.Hp: Interrupted (multi)
+2.0.Hp: All properties determined. [0.00 s]
+2: ProofGrid usable level: 0
+2.0.U2: Trace Attempt 4095	[829.28 s]
+2.0.U2: All properties determined. [0.00 s]
+2.0.Hp: Exited with Success (@ 1195.54 s)
+2: ProofGrid usable level: 0
+2.0.U2: Exited with Success (@ 1195.54 s)
+2.0.I: Exited with Success (@ 1195.59 s)
+2.0.Mpcustom2: All properties determined. [0.00 s]
+2.0.L: Trace Attempt 155	[1013.66 s]
+2.0.L: All properties determined. [1014.22 s]
+2.0.L: Exited with Success (@ 1195.69 s)
+2.0.Mpcustom2: Exited with Success (@ 1195.94 s)
+2.0.AMcustom5: Trace Attempt 901	[42.46 s]
+2.0.AMcustom5: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[142.14 s].
+2.0.AMcustom5: All properties determined. [142.14 s]
+2.0.Ht: Sending SIGKILL
+2.0.Bm: Sending SIGKILL
+2.0.AMcustom5: Sending SIGKILL
+2.1.K: Sending SIGKILL
+2.0.AD: Sending SIGKILL
+2.0.Ncustom6: Sending SIGKILL
+2.0.Bm: Terminated by signal SIGKILL (@ 1197.27 s)
+2.0.AMcustom5: Exited with Success (@ 1197.59 s)
+2.0.AD: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[142.91 s].
+2.0.AD: Trace Attempt 901	[87.97 s]
+2.0.AD: Terminated by signal SIGKILL (@ 1197.78 s)
+2.0.Ncustom6: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[142.92 s].
+2.0.Ncustom6: Terminated by signal SIGKILL (@ 1197.79 s)
+2.1.K: Stopped processing property "ua_exclusion_mstatus_mpp_s2.UA_EXCLUSION_NO_BYPASS_BY_BOUND"	[142.98 s].
+2.1.K: Terminated by signal SIGKILL (@ 1197.84 s)
+2.0.Ht: Terminated by signal SIGKILL (@ 1197.96 s)
+2: --------------------------------------------------------------
+ProofGrid Summary (utilization 99.98 %)
+--------------------------------------------------------------
+     engines started                               :    14
+     engine jobs started                           :    17
+
+    Time in state (seconds)
+    --------------------------------------------
+               Pending     Running        Dead
+    --------------------------------------------
+    min           0.00        0.00        0.00
+    mean          0.11      732.71        0.00
+    median        0.12      727.46        0.00
+    max           0.12     1194.95        0.00
+    sum           1.93    12456.03        0.00
+
+    Data read    : 19.37 MiB
+    Data written : 2.10 MiB
+
+2: ProofGrid usable level: 0
+2: All pending notifications were processed.
+INFO (IPF059): 2: Completed proof on task: "<embedded>"
+
+==============================================================
+SUMMARY
+==============================================================
+           Properties Considered              : 11
+                 assertions                   : 2
+                  - proven                    : 2 (100%)
+                  - bounded_proven (user)     : 0 (0%)
+                  - bounded_proven (auto)     : 0 (0%)
+                  - marked_proven             : 0 (0%)
+                  - cex                       : 0 (0%)
+                  - ar_cex                    : 0 (0%)
+                  - undetermined              : 0 (0%)
+                  - unknown                   : 0 (0%)
+                  - error                     : 0 (0%)
+                 covers                       : 9
+                  - unreachable               : 0 (0%)
+                  - bounded_unreachable (user): 0 (0%)
+                  - covered                   : 9 (100%)
+                  - ar_covered                : 0 (0%)
+                  - undetermined              : 0 (0%)
+                  - unknown                   : 0 (0%)
+                  - error                     : 0 (0%)
+determined
+[<embedded>] % set T1 [::tcl::clock::milliseconds]
+1789366435589
+[<embedded>] % set ELAPSED_MS [expr {$T1-$T0}]
+1201108
+[<embedded>] % set stf [open [file join $RESULT_DIR status.tsv] w]
+file45
+[<embedded>] % puts $stf "property	status"
+[<embedded>] % if {[llength [info commands get_property_list]]>0 && ![catch {set ALLP [get_property_list]}]} {
+  foreach p $ALLP {
+    if {[string match "*UA_*" $p]} {
+      set st "UNKNOWN"
+      # Jasper 2024.09 accepts two get_property_info forms depending on app/context.
+      # Try the keyword form first, then the positional property form used by
+      # the previously validated UA package.  Do not silently leave UNKNOWN
+      # just because one syntax is unsupported.
+      if {[catch {set st [get_property_info -property $p -list status]}]} {
+        catch {set st [get_property_info $p -list status]}
+      }
+      puts $stf "$p	$st"
+    }
+  }
+}
+[<embedded>] % close $stf
+[<embedded>] % set rrc [catch {report -summary -force -result -file [file join $RESULT_DIR report.rpt]} rmsg]
+0
+[<embedded>] % set mf [open [file join $RESULT_DIR metadata.txt] w]
+file45
+[<embedded>] % puts $mf {type=EXCLUSION}
+[<embedded>] % puts $mf {case_id=mstatus_mpp_s2}
+[<embedded>] % puts $mf {asset=neorv32_cpu_control.csr.mstatus_mpp}
+[<embedded>] % puts $mf {role=SECID}
+[<embedded>] % puts $mf {scenario=M_MPRV_U_UNMATCHED_DENY}
+[<embedded>] % puts $mf {tag=s2_a0}
+[<embedded>] % puts $mf {blocked_target=dut_a.core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.csr[3]}
+[<embedded>] % puts $mf {bound=900}
+[<embedded>] % puts $mf {stopat_used=0}
+[<embedded>] % puts $mf {block_semantics=relational_equality_constraint_preserving_original_logic_cone}
+[<embedded>] % puts $mf {attack_window=0xA8-0x114}
+[<embedded>] % puts $mf {primary_gate=golden_lsu_priv_U_to_attacked_lsu_priv_M_before_protected_request}
+[<embedded>] % puts $mf "elapsed_ms=$ELAPSED_MS"
+[<embedded>] % puts $mf "report_rc=$rrc"
+[<embedded>] % puts $mf $rmsg
+[<embedded>] % close $mf
+[<embedded>] % puts "SECID_UA_EXCLUSION_COMPLETE case=mstatus_mpp_s2"
+SECID_UA_EXCLUSION_COMPLETE case=mstatus_mpp_s2
+[<embedded>] % exit -force
+[<embedded>] % INFO (IPL005): Received request to exit from the console.
+INFO (IPL014): Waiting for the Tcl-thread to exit.
+INFO: Waiting for proof threads to stop...
+INFO: Proof threads stopped.
+INFO (IPL018): The peak resident set memory use for this session was 52.366 GB.
+INFO (IPL015): The Tcl-thread exited with status 0.
+INFO (IPL016): Exiting the analysis session with status 0.

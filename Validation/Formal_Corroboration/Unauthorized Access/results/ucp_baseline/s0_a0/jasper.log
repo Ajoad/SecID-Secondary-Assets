@@ -1,0 +1,987 @@
+Jasper Apps 2024.09p001 64 bits 2024.10.22 13:22:13 UTC
+
+Any disclosure about the Cadence Design Systems software or its use
+model to any third party violates the written Non-Disclosure Agreement
+between Cadence Design Systems, Inc. and the customer.
+
+THIS SOFTWARE CONTAINS CONFIDENTIAL INFORMATION AND TRADE SECRETS OF
+CADENCE DESIGN SYSTEMS, INC. USE, DISCLOSURE, OR REPRODUCTION IS
+PROHIBITED WITHOUT THE PRIOR EXPRESS WRITTEN PERMISSION OF CADENCE
+DESIGN SYSTEMS, INC.
+
+Copyright (C) 2000-2024 Cadence Design Systems, Inc. All Rights
+Reserved.  Unpublished -- rights reserved under the copyright laws of
+the United States.
+
+This product includes software developed by others and redistributed
+according to license agreement. See doc/third_party_readme.txt for
+further details.
+
+RESTRICTED RIGHTS LEGEND
+
+Use, duplication, or disclosure by the Government is subject to
+restrictions as set forth in subparagraph (c) (1) (ii) of the Rights in
+Technical Data and Computer Software clause at DFARS 252.227-7013 or
+subparagraphs (c) (1) and (2) of Commercial Computer Software -- Restricted
+Rights at 48 CFR 52.227-19, as applicable.
+
+
+                          Cadence Design Systems, Inc.
+                          2655 Seely Avenue
+                          San Jose, CA 95134
+                          Phone: 408.943.1234
+
+For technical assistance visit http://support.cadence.com.
+
+Jasper Apps Analysis Session - <SOURCE_ROOT>/jgproject/sessionLogs/session_0
+
+INFO: successfully checked out license "jasper_fao".
+INFO: reading configuration file "<USER_HOME>/.config/cadence/jasper.conf".
+% if {[info exists ::env(SECID_UA_MED_ROOT)] && $::env(SECID_UA_MED_ROOT) ne ""} {
+  set ROOT [file normalize $::env(SECID_UA_MED_ROOT)]
+} else {
+  error "SECID_UA_MED_ROOT is not set. Run through package run_*.sh scripts."
+}
+<SOURCE_ROOT>
+% if {[info exists ::env(SECID_UA_MED_RESULT_DIR)] && $::env(SECID_UA_MED_RESULT_DIR) ne ""} {
+  set RESULT_DIR [file normalize $::env(SECID_UA_MED_RESULT_DIR)]
+} else {
+  set RESULT_DIR [file join $ROOT results ucp_baseline/s0_a0]
+}
+<SOURCE_ROOT>/results/ucp_baseline/s0_a0
+% file mkdir $RESULT_DIR
+% analyze -sv +incdir+[file join $ROOT input] [file join $ROOT input secid_neorv32_top_source_observed.v] [file join $ROOT generated ucp_baseline_s0_a0.sv]
+[-- (VERI-1482)] Analyzing Verilog file '/apps/cds/jasper/2024.09/lib/verilog/packages/std/std.sv' into library 'std'
+[-- (VERI-1482)] Analyzing Verilog file '<SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v'
+[-- (VERI-1482)] Analyzing Verilog file '<SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv'
+[INFO (VERI-1328)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(3): analyzing included file '<SOURCE_ROOT>/input/program_mem_semantic.svh'
+% elaborate -top ua_ucp_baseline_s0_a0
+INFO (ISW003): Top module name is "ua_ucp_baseline_s0_a0".
+[INFO (HIER-8002)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(119): Disabling old hierarchical reference handler
+[WARN (VERI-1927)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(78): port 'rstn_ocd_o' remains unconnected for this instance
+[WARN (VERI-1927)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(93): port 'rstn_ocd_o' remains unconnected for this instance
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22166): compiling module 'neorv32_sys_reset'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22097): compiling module 'neorv32_sys_clock'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(440): compiling module 'neorv32_cpu_frontend_ipb'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(13519): compiling module 'neorv32_cpu_frontend_secid_0_29e2dcfbb16f63bb0254df7585a15bb6fb5e927d'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(4900): compiling module 'neorv32_cpu_control_secid_0_8fdee6cc13df465b0eced7bb052df942a608ec46'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(3834): compiling module 'neorv32_cpu_regfile_secid_5_0'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(1): compiling module 'neorv32_cpu_alu_shifter_secid_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(3217): compiling module 'neorv32_cpu_alu_secid_1_6768033e216468247bd031a0a2d9876d79818f8f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(2323): compiling module 'neorv32_cpu_lsu_secid_0_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(799): compiling module 'neorv32_cpu_pmp_secid_2_4_0e356ba505631fbf715758bed27d503f8b260e3a'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(20715): compiling module 'neorv32_cpu_secid_0_1_0_2_4_0_64_0_27585044c0528f90935fcb0dc7da2821d4f834ca'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(20192): compiling module 'neorv32_bus_switch_2547cc736e951fa4919853c43ae890861a3b3264'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(19435): compiling module 'neorv32_bus_gateway_16384_16_8192_16_268435456_2048_2097152_16_128_c8974f61549fe43ee6f4571932edd0d63f8d6bec'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(710): compiling module 'neorv32_bus_reg_1489f923c4dca729178b3e3233458550d8dddf29'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(19159): compiling module 'neorv32_xbus_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(546): compiling module 'neorv32_bus_reg_9159cb8bcee7fcb95582f140960cdae72788d326'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(17373): compiling module 'neorv32_bus_io_switch_65536_27e753c6d972ad22050a6dc7f272a82e27bd674b'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(17111): compiling module 'neorv32_sysinfo_16_128_1_0_1_16384_8192_4_4_64_10976d00261ceae9db6c817817835e8e5c35be1b'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16472): compiling module 'neorv32_debug_dtm_46d1c9a201904415cbd5c7cc672d1649ed497f22'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(14203): compiling module 'neorv32_debug_dm_1_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[WARN (VERI-1060)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16449): 'initial' construct is ignored
+[WARN (VDB-1002)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16431): net 'n3714[15][31]' does not have a driver
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22307): compiling module 'secid_neorv32_top'
+[INFO (VERI-1018)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(2): compiling module 'ua_ucp_baseline_s0_a0'
+[WARN (VERI-8028)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(64): missing/open ports on instance dut_g of module secid_neorv32_top
+[WARN (VERI-8028)] <SOURCE_ROOT>/generated/ucp_baseline_s0_a0.sv(79): missing/open ports on instance dut_a of module secid_neorv32_top
+INFO (INL208): Elaboration synthesis summary:
+  Number of synthesized netlists          22 (0 packages)
+  Single run mode                         On
+  Pipeline                                On (22 pipelined netlists)
+  Late hierarchical reference connection  On
+  Number of analyzed Verilog modules      22 (22 synthesized)
+  Number of analyzed VHDL entities        0 (0 synthesized)
+INFO (INL003): Clearing all state information (assumes, stopats, and so forth).
+INFO (IMDS005): Number of multiple-driven bits in design: 29006. Use "get_design_info -list multiple_driven" for more information.
+ua_ucp_baseline_s0_a0
+[<embedded>] % 
+[<embedded>] % clock clk
+[<embedded>] % reset -expression {!rstn}
+INFO (IPM031): Clearing proof results of all properties.
+INFO (IRS006): Current reset condition is "rstn".
+[<embedded>] % set T0 [::tcl::clock::milliseconds]
+1789352342556
+[<embedded>] % prove -all
+Bcustom1: Custom engine code is hT3Nm7hPr1Vp3Di1Ra2USNIGL4JypRnLKLAdF6JAyuavO2JfGCiY9OZJhcAcOUnLx5xwNdhILGrAWX9s+z2WDkKwNR7tAfClBEjRFVQeq6DU54boFgEA
+Mpcustom2: Custom engine code is hT3NZbhP9fmY2AbBQnsjfOxn6c+6e6yL+/e8fZFmaQrnlgEA
+Ncustom3: Custom engine code is hT3Ng7hPPfiYQOTDZ3qhYOwGAM51eA+J/FjkM5shLioAsqhgLR4Ft+O1BuKG6ilQ83B9tLXSl+CwjiTMAQA
+AMcustom4: Custom engine code is hT3Ng7hP/feYQOTDZ3qhYOwGAM51eA+J/FjkM5shLioAsqhgLR4Ft+O1BuKG6ilQ83B9tLXSmmqwm7g9AQA
+INFO (IPF036): Starting proof on task: "<embedded>", 11 properties to prove with 0 already proven/unreachable
+INFO (IRS029): Starting reset analysis: phase 1 of 4.
+INFO (IRS030): Running reset analysis: phase 2 of 4.
+INFO (IRS031): Running reset analysis: phase 3 of 4.
+INFO (IRS020): Starting the reset analysis simulation with a limit of 100 iterations (phase 4 of 4).
+INFO (IRS024): Reset iterations 0 to 5 analyzed.
+INFO (IRS018): Reset analysis simulation executed for 4 iterations. Assigned values for 3105 of 5491 design flops, 0 of 0 design latches, 16 of 16 internal elements.
+INFO (IRS039): Reset analysis complete.
+INFO (IPF031): Settings used for proof thread 2:
+    orchestration                      = on
+    time_limit                         = 86400s
+    per_property_time_limit            = 1s * 10 ^ scan
+    engine_mode                        = auto
+    proofgrid_per_engine_max_jobs      = 1
+    max engine jobs                    = auto
+    proofgrid_mode                     = local
+    proofgrid_restarts                 = 10
+AMcustom5: Custom engine code is hT3N1rhP11/52HrFRS21ROp2LOjVTgPvT8L8BGXHgLhaIuqtT4nARFjUqrBL+7pLmaTOzBepZW/Jm8SSrHDybSQtoNiO3y43wk+dEoWlsZizu97Fih6O6lPVG/LpWP5SsUPwlGagLNa1FKEFvwVXyX7//8prySbvSxIHXr5er+z4RAEA
+Ncustom6: Custom engine code is hT3OXrhPByJp3TrFSTLhUmMH4KVtJgmTCnNDF46yMXOKY48m4LS5nE7yBzFjA7kDuwO/GhGUpEPiky3p3wmPn3dJZHxFMsafSoObRzSC+tn7sEY0WbTdZ/FV4hL3MYH/b1CIUvXSWR4wqEoVLsmMOD4xIPT4lI1LO6ZCO7PnnWQuLwetnvKlrXx6wCW/A+x+enqslg1YPobi4wEF/EvbzOvcTYdJvl2s4H2yZg2b2ofAVN5WvhWk1HoBAA
+ADcustom7: Custom engine code is hT3Nv7hPv1752HrFRa2kROx2f/ECJeZB2AZsLdlO8VwmIuqtT4nIDFXclhg+O+o+DMmQCekbheGk0kK28laA9gaOFDXsQp29J3X615HY1IPHJWd6FUFvCHjO+p1k652b5JJvZlShNpGlGSXAiQe/mEAj6tEBAA
+Tricustom8: Custom engine code is hT3Nu7hPt1752DvFRa0kNDiyIV97VyejwM9C/jCLJjdPvusZONHY42VYUy0Q1ZotnhcVtNc56tJ5wbxv6V2+XpdsaSlHck5vfnbYjdwj1OECy9U+7oSQ0SZE3g5ayD+Phuh4odCJTjeKa2k4elM9ldQfkAEA
+Gcustom9: Custom engine code is hT3NibhPDfeYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInncipMGcUXqAadachREE9F2PwhBUZUNw5kHnd4JdXkamORRgEA
+C2custom10: Custom engine code is hT3NirhPjfWYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInncgkrYMMXCYbdK0dUjZIF9d4cJ0rHoBDjwVLBKuG86XYVV00BAA
+AGcustom11: Custom engine code is hT3NirhP/fmYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInnckcwYMMXCYbdK0dUjZIF9d4cJ0rHoBDjwVLBKuHEZnZByh0BAA
+Bcustom12: Custom engine code is hT3NjrhPDfiYQADBZnYcglOvK9PfWxFtenjIyBqfrgr7if/jL/yPOuK1BAflEcW0DxNH2eDIoezN2gxlQFg81RZtiWXh7aiTAidvAQA
+2: Using multistage preprocessing
+2: Starting reduce
+Ncustom13: Custom engine code is hT3NR7hPByFp3TrFSTLhUmMH4KWtJglTyV/c51BHEeZWamnJv767nE6PCak26bd3gf3XGN3rIRheufhDieCJQVISo+gNYUKhiUedBKGtsP/a18svAnlMJZudHxDFwK5ufsyoxsIyiAeSY2oi3tEuoDHr5gw42DFKAG3PqO3CEsl8Azzdt3pl5nGA1Ifv2H02eYsFzWb/nfp8PMb3F0krE/EgBcm8TD9Div8BAA
+Tricustom14: Custom engine code is hT3Nu7hP3fiYQADBZnYcglNHp9bfd7EOeniIqP/ji8sGLQu8yhsFO+wxJ+O+R0bU8g/IewXFomyos+viQnWc2xYNYmMqpo3i40O7DaZR7qfp4YqNx26KRvQ/qx0BAA
+2: Finished reduce in 0.071s
+2.0.PRE: Performing Proof Simplification...
+2.0.Hp: clocks: 2, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 1, bothedge: 0
+2.0.Hp: Clocks that will never have a posedge: dut_a.core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.n6535_o[0] [vTrue], 
+2.0.Hp: Proof Simplification Iteration 1	[0.00 s]
+2.0.Hp: Proof Simplification Iteration 2	[0.03 s]
+2.0.Hp: Proof Simplification Iteration 3	[0.05 s]
+2.0.Hp: Proof Simplification Iteration 4	[0.07 s]
+2.0.Hp: Proof Simplification Iteration 5	[0.09 s]
+2.0.Hp: Proof Simplification Iteration 6	[0.10 s]
+2.0.Hp: Proof Simplification Iteration 7	[0.12 s]
+2.0.Hp: Proof Simplification Iteration 8	[0.14 s]
+2.0.Hp: Proof Simplification Iteration 9	[0.15 s]
+2.0.Hp: Proof Simplification Iteration 10	[0.17 s]
+2.0.PRE: Proof Simplification completed in 0.24 s
+2.0.Hp: Identified and disabled 4 duplicated targets.
+2: About to start ProofGrid in its own thread with a limit of 10000 pending notifications and a limit of 10 traces.
+2: ============================= ProofGrid (v3) start =============================
+2: ProofGrid usable level: 7
+2: Initial ProofGrid level: 1
+2: ProofGrid is starting event handling
+2.0.Hp: Proofgrid shell started at 719083@<HOST>(local) jg_718515_<HOST>_1
+2: ProofGrid usable level: 7
+2.0.Hp: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2: ProofGrid usable level: 7
+2: ProofGrid usable level: 7
+2: ProofGrid usable level: 7
+2: ProofGrid usable level: 7
+2.0.Hp: Trace Attempt  1	[0.08 s]
+2.0.Ht: Proofgrid shell started at 719099@<HOST>(local) jg_718515_<HOST>_1
+2.0.Bm: Proofgrid shell started at 719100@<HOST>(local) jg_718515_<HOST>_1
+2.0.Ht: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Mpcustom2: Proofgrid shell started at 719101@<HOST>(local) jg_718515_<HOST>_1
+2.0.Bm: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Oh: Proofgrid shell started at 719102@<HOST>(local) jg_718515_<HOST>_1
+2.0.Mpcustom2: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Oh: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bm: Trace Attempt  1	[0.02 s]
+2.0.Bm: Trace Attempt  2	[0.03 s]
+2.0.Bm: Trace Attempt  3	[0.03 s]
+2.0.Bm: Trace Attempt  4	[0.03 s]
+2.0.Bm: Trace Attempt  5	[0.03 s]
+2.0.L: Proofgrid shell started at 719103@<HOST>(local) jg_718515_<HOST>_1
+2.0.Ht: Trace Attempt  1	[0.05 s]
+2.0.Ht: Trace Attempt  2	[0.05 s]
+2.0.Ht: Trace Attempt  3	[0.05 s]
+2.0.Ht: Trace Attempt  4	[0.06 s]
+2.0.Mpcustom2: Trace Attempt  1	[0.04 s]
+2.0.N: Proofgrid shell started at 719140@<HOST>(local) jg_718515_<HOST>_1
+2.0.AM: Proofgrid shell started at 719143@<HOST>(local) jg_718515_<HOST>_1
+2.0.L: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ht: Trace Attempt  5	[0.06 s]
+2.0.N: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AM: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.B: Proofgrid shell started at 719141@<HOST>(local) jg_718515_<HOST>_1
+2.0.L: Using trace diversification with seed 1 (0.05)
+2.0.L: Using LRU state removal heuristic
+2.0.Mpcustom2: Trace Attempt  2	[0.06 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.N: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK"	[0.00 s].
+2.0.B: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AM: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK"	[0.00 s].
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK"	[0.00 s].
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.Bm: Trace Attempt 42	[0.08 s]
+2.0.Bm: A trace with 42 cycles was found. [0.09 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1" was covered in 42 cycles in 0.18 s.
+INFO (IPF047): 2.0.Bm: The cover property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1" was covered in 42 cycles in 0.18 s.
+INFO (IPF047): 2.0.Bm: The cover property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK" was covered in 42 cycles in 0.18 s.
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1"	[0.13 s].
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.13 s].
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK"	[0.13 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  6	[0.02 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1"	[0.14 s].
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.14 s].
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK"	[0.14 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1"	[0.14 s].
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.14 s].
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_COVER_ATTACK"	[0.14 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.Bm: A trace with 42 cycles was found. [0.10 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_ucp_baseline_s0_a0.UA_DATA_ATTACK_ONE_BIT:precondition1" was covered in 42 cycles in 0.21 s.
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.Bm: Trace Attempt 43	[0.11 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.N: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.L: Trace Attempt  3	[0.06 s]
+2.0.Bm: A trace with 43 cycles was found. [0.12 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1" was covered in 43 cycles in 0.24 s.
+2.0.B: Trace Attempt 22	[0.03 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  3	[0.00 s]
+2.0.B: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  8	[0.03 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  3	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.02 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.L: Trace Attempt  4	[0.11 s]
+2.0.N: Trace Attempt  4	[0.06 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  4	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.L: Trace Attempt  5	[0.13 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.56 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" in 0.54 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.56 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND" in 0.54 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.56 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND" in 0.54 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.56 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" in 0.54 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [0.56 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1" in 0.54 s.
+INFO (IPF054): 2.0.Oh: A min_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND" in 0.54 s.
+2.0.Oh: bwd trail(1): 1 0.546823s
+2.0.Oh: All properties either determined or skipped. [0.57 s]
+2.0.Oh: Exited with Success (@ 0.72 s)
+2.0.Mpcustom2: Trace Attempt  3	[0.60 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.65 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.70 s]
+2: ProofGrid usable level: 4
+2.0.Mpcustom2: Trace Attempt  3	[0.75 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.77 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.78 s]
+2.0.Mpcustom2: Trace Attempt  3	[1.01 s]
+2.0.Mpcustom2: Trace Attempt  4	[1.05 s]
+2.0.Mpcustom2: Trace Attempt  5	[1.06 s]
+2.0.AM: Trace Attempt 102	[0.99 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.86 s].
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.86 s].
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.86 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP"	[0.00 s].
+2.0.N: Trace Attempt 99	[0.73 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.86 s].
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.86 s].
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.86 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.N: Trace Attempt  4	[0.06 s]
+2.0.N: Trace Attempt  5	[0.06 s]
+2.0.N: Trace Attempt  5	[0.15 s]
+2.0.Mpcustom2: Trace Attempt  3	[1.28 s]
+2.0.Mpcustom2: Trace Attempt  4	[1.30 s]
+2.0.L: Using states from traces to { ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.Mpcustom2: Trace Attempt  5	[1.35 s]
+2.0.L: Trace Attempt  3	[1.32 s]
+2.0.L: Using states from traces to { ua_ucp_baseline_s0_a0.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[1.37 s]
+2.0.L: Trace Attempt  4	[1.39 s]
+2.0.Bm: Trace Attempt 64	[1.30 s]
+2.0.Bm: A trace with 64 cycles was found. [1.44 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP" was covered in 64 cycles in 1.45 s.
+2.0.L: Trace Attempt  5	[1.40 s]
+2.0.Bm: Trace Attempt 65	[1.46 s]
+2.0.AM: Trace Attempt 14	[0.17 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP"	[0.34 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.N: Trace Attempt  7	[0.34 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP"	[0.34 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.06 s]
+2.0.AM: Trace Attempt  2	[0.06 s]
+2.0.AM: Trace Attempt  3	[0.06 s]
+2.0.AM: Trace Attempt  5	[0.06 s]
+2.0.N: Trace Attempt  4	[0.05 s]
+2.0.N: Trace Attempt  5	[0.05 s]
+2.0.N: Trace Attempt  5	[0.11 s]
+2.0.N: Trace Attempt  1	[0.15 s]
+2.0.N: Trace Attempt  2	[0.15 s]
+2.0.N: Trace Attempt  3	[0.15 s]
+2.0.N: Trace Attempt  5	[0.15 s]
+2: ProofGrid usable level: 3
+2.0.N: Trace Attempt  1	[0.40 s]
+2.0.N: Trace Attempt  2	[0.40 s]
+2.0.N: Trace Attempt  3	[0.40 s]
+2.0.N: Trace Attempt  5	[0.40 s]
+2.0.AM: Trace Attempt 72	[0.97 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.99 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Trace Attempt 73	[0.79 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.99 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.N: Trace Attempt  3	[0.03 s]
+2.0.N: Trace Attempt  4	[0.04 s]
+2.0.N: Trace Attempt  5	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.06 s]
+2.0.AM: Trace Attempt  2	[0.06 s]
+2.0.AM: Trace Attempt  3	[0.06 s]
+2.0.AM: Trace Attempt  5	[0.06 s]
+2.0.N: Trace Attempt  5	[0.10 s]
+2.0.N: Trace Attempt  1	[0.12 s]
+2.0.N: Trace Attempt  2	[0.12 s]
+2.0.N: Trace Attempt  3	[0.12 s]
+2.0.N: Trace Attempt  5	[0.12 s]
+2.0.N: Trace Attempt  1	[0.36 s]
+2.0.N: Trace Attempt  2	[0.36 s]
+2.0.N: Trace Attempt  3	[0.36 s]
+2.0.N: Trace Attempt  5	[0.36 s]
+2.0.N: Trace Attempt 91	[0.98 s]
+2.0.N: Per property time limit expired (1.00 s) [1.00 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[1.00 s].
+2.0.AM: Trace Attempt 70	[0.92 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[1.00 s].
+2.0.Ht: Trace Attempt 222	[4.06 s]
+2.0.L: Trace Attempt 113	[5.45 s]
+2.0.Bm: Trace Attempt 122	[5.64 s]
+2.0.Mpcustom2: Trace Attempt 22	[6.41 s]
+2.0.Ht: Trace Attempt 465	[8.07 s]
+2.0.L: Trace Attempt 167	[9.53 s]
+2.0.Bm: Trace Attempt 171	[9.71 s]
+2.0.Mpcustom2: Trace Attempt 28	[11.42 s]
+2.0.Ht: Trace Attempt 667	[12.20 s]
+2.0.L: Trace Attempt 209	[13.61 s]
+2.0.Bm: Trace Attempt 216	[13.75 s]
+INFO (IPF054): 2.0.Ht: A min_length bound of 901 was found for the property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND" in 15.40 s.
+2.0.Mpcustom2: Trace Attempt 30	[17.45 s]
+2.0.L: Trace Attempt 244	[17.72 s]
+2.0.Bm: Trace Attempt 255	[17.82 s]
+2.0.L: Trace Attempt 275	[21.81 s]
+2.0.Bm: Trace Attempt 290	[21.89 s]
+2.0.Mpcustom2: Trace Attempt 36	[22.82 s]
+2.0.B: Trace Attempt 901	[0.06 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[22.86 s].
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[22.86 s].
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[22.86 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.B: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt 12	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  3	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.02 s]
+2.0.Bm: Trace Attempt 326	[25.90 s]
+2.0.L: Trace Attempt 302	[25.87 s]
+2.0.Mpcustom2: Trace Attempt 40	[27.12 s]
+2.0.AM: Trace Attempt 307	[4.39 s]
+2.0.N: Trace Attempt 307	[4.46 s]
+2.0.Ht: Trace Attempt 901	[28.87 s]
+2.0.Bm: Trace Attempt 354	[29.92 s]
+2.0.L: Trace Attempt 328	[30.03 s]
+2.0.Mpcustom2: Trace Attempt 43	[31.46 s]
+2.0.AM: Trace Attempt 602	[8.42 s]
+2.0.N: Trace Attempt 607	[8.59 s]
+2.0.N: Trace Attempt 619	[9.92 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[10.02 s].
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[10.02 s].
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[10.02 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt 616	[9.84 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[10.02 s].
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[10.02 s].
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[10.02 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.06 s]
+2.0.AM: Trace Attempt  2	[0.06 s]
+2.0.AM: Trace Attempt  3	[0.06 s]
+2.0.AM: Trace Attempt  5	[0.06 s]
+2.0.N: Trace Attempt 12	[0.17 s]
+2.0.N: Trace Attempt  1	[0.24 s]
+2.0.N: Trace Attempt  2	[0.24 s]
+2.0.N: Trace Attempt  3	[0.24 s]
+2.0.N: Trace Attempt  5	[0.24 s]
+2.0.Bm: Trace Attempt 387	[33.99 s]
+2.0.L: Trace Attempt 352	[34.13 s]
+2.0.Mpcustom2: Trace Attempt 48	[36.93 s]
+2.0.AM: Trace Attempt 189	[4.13 s]
+2.0.N: Trace Attempt 353	[4.25 s]
+2.0.Bm: Trace Attempt 413	[38.02 s]
+2.0.L: Trace Attempt 375	[38.17 s]
+2.0.AM: Trace Attempt 290	[8.20 s]
+2.0.N: Trace Attempt 655	[8.29 s]
+2.0.Ht: A trace with 901 cycles was found. [40.84 s]
+INFO (IPF047): 2.0.Ht: The cover property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" was covered in 901 cycles in 41.89 s.
+INFO (IPF047): 2.0.Ht: The cover property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" was covered in 901 cycles in 41.89 s.
+INFO (IPF047): 2.0.Ht: The cover property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1" was covered in 901 cycles in 41.89 s.
+2.0.Ht: A proof was found: No trace exists. [41.73 s]
+INFO (IPF057): 2.0.Ht: The property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND" was proven in 41.91 s.
+2.0.AM: Trace Attempt 295	[8.48 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[8.76 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Trace Attempt 659	[8.41 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[8.76 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.06 s]
+2.0.AM: Trace Attempt  2	[0.06 s]
+2.0.AM: Trace Attempt  3	[0.06 s]
+2.0.AM: Trace Attempt  5	[0.06 s]
+2.0.N: Trace Attempt 12	[0.18 s]
+2.0.N: Trace Attempt  1	[0.24 s]
+2.0.N: Trace Attempt  2	[0.24 s]
+2.0.N: Trace Attempt  3	[0.24 s]
+2.0.N: Trace Attempt  5	[0.24 s]
+2.0.Bm: Trace Attempt 443	[42.06 s]
+2.0.L: Trace Attempt 397	[42.33 s]
+2: ProofGrid usable level: 1
+2.0.Mpcustom2: Trace Attempt 49	[42.80 s]
+2.0.L: Using states from traces to { ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[43.27 s]
+2.0.L: Trace Attempt  4	[43.28 s]
+2.0.L: Trace Attempt  5	[43.30 s]
+2.0.B: Trace Attempt 901	[0.07 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[21.55 s].
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[21.55 s].
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND:precondition1"	[21.55 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.L: Using states from traces to { ua_ucp_baseline_s0_a0.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP (63) }
+2.0.L: Trace Attempt  3	[44.86 s]
+2.0.L: Trace Attempt  4	[44.88 s]
+2.0.L: Trace Attempt  5	[44.89 s]
+2.0.N: Trace Attempt 353	[4.26 s]
+2.0.Bm: Trace Attempt 471	[46.15 s]
+2.0.Mpcustom2: Trace Attempt 53	[47.20 s]
+2.0.AM: Trace Attempt 149	[6.78 s]
+2.0.B: Trace Attempt 104	[4.01 s]
+2.0.L: Trace Attempt 111	[48.90 s]
+2.0.N: Trace Attempt 655	[8.28 s]
+2.0.Bm: Trace Attempt 491	[50.18 s]
+2.0.Mpcustom2: Trace Attempt 55	[51.52 s]
+2.0.AM: Trace Attempt 212	[9.59 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.01 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[9.85 s].
+2.0.N: Trace Attempt 678	[9.87 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[9.86 s].
+2.0.B: Trace Attempt 140	[6.95 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[7.45 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.06 s]
+2.0.AM: Trace Attempt  2	[0.06 s]
+2.0.AM: Trace Attempt  3	[0.06 s]
+2.0.AM: Trace Attempt  5	[0.06 s]
+2.0.N: Trace Attempt 12	[0.18 s]
+2.0.N: Trace Attempt  1	[0.24 s]
+2.0.N: Trace Attempt  2	[0.24 s]
+2.0.N: Trace Attempt  3	[0.24 s]
+2.0.N: Trace Attempt  5	[0.24 s]
+2.0.L: Trace Attempt 164	[52.99 s]
+2.0.Bm: Trace Attempt 516	[54.20 s]
+2.0.Mpcustom2: Trace Attempt 58	[55.53 s]
+2.0.B: Trace Attempt 102	[4.04 s]
+2.0.N: Trace Attempt 364	[4.25 s]
+2.0.L: Trace Attempt 204	[57.03 s]
+2.0.Bm: Trace Attempt 541	[58.37 s]
+2.0.AM: Trace Attempt 149	[6.96 s]
+2.0.B: Trace Attempt 147	[8.09 s]
+2.0.N: Trace Attempt 657	[8.30 s]
+2.0.Mpcustom2: Trace Attempt 62	[60.69 s]
+2.0.L: Trace Attempt 238	[61.05 s]
+2.0.Bm: Trace Attempt 565	[62.54 s]
+2.0.AM: Trace Attempt 240	[10.99 s]
+2.0.B: Trace Attempt 192	[12.10 s]
+2.0.N: Trace Attempt 708	[12.44 s]
+2.0.L: Trace Attempt 269	[65.13 s]
+2.0.Mpcustom2: Trace Attempt 65	[65.83 s]
+2.0.Bm: Trace Attempt 588	[66.64 s]
+2.0.AM: Trace Attempt 291	[15.02 s]
+2.0.B: Trace Attempt 229	[16.23 s]
+2.0.N: Trace Attempt 733	[16.71 s]
+2.0.L: Trace Attempt 296	[69.13 s]
+2.0.Bm: Trace Attempt 603	[70.66 s]
+2.0.AM: Trace Attempt 360	[19.02 s]
+2.0.Mpcustom2: Trace Attempt 65	[71.30 s]
+2.0.B: Trace Attempt 268	[20.24 s]
+2.0.N: Trace Attempt 753	[21.13 s]
+2.0.L: Trace Attempt 322	[73.27 s]
+2.0.Bm: Trace Attempt 625	[74.84 s]
+2.0.AM: Trace Attempt 443	[23.06 s]
+2.0.B: Trace Attempt 301	[24.34 s]
+2.0.L: Trace Attempt 346	[77.42 s]
+2.0.Mpcustom2: Trace Attempt 65	[78.14 s]
+2.0.Bm: Trace Attempt 646	[78.91 s]
+2.0.AM: Trace Attempt 588	[27.06 s]
+2.0.B: Trace Attempt 330	[28.37 s]
+2.0.L: Trace Attempt 368	[81.44 s]
+2.0.Bm: Trace Attempt 667	[83.07 s]
+2.0.AM: Trace Attempt 677	[31.20 s]
+2.0.B: Trace Attempt 362	[32.38 s]
+2.0.Mpcustom2: Trace Attempt 70	[85.25 s]
+2.0.L: Trace Attempt 389	[85.48 s]
+2.0.Bm: Trace Attempt 687	[87.14 s]
+2.0.AM: Trace Attempt 695	[35.73 s]
+2.0.L: Using states from traces to { ua_ucp_baseline_s0_a0.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[88.24 s]
+2.0.L: Trace Attempt  4	[88.25 s]
+2.0.L: Trace Attempt  5	[88.27 s]
+2.0.B: Trace Attempt 393	[36.50 s]
+2.0.Mpcustom2: Trace Attempt 77	[90.42 s]
+2.0.Bm: Trace Attempt 707	[91.17 s]
+2.0.N: Trace Attempt 768	[39.34 s]
+2.0.L: Trace Attempt 56	[92.33 s]
+2.0.B: Trace Attempt 417	[40.57 s]
+2.0.AM: Trace Attempt 711	[40.58 s]
+2.0.Mpcustom2: Trace Attempt 80	[94.68 s]
+2.0.Bm: Trace Attempt 725	[96.38 s]
+2.0.L: Trace Attempt 95	[96.39 s]
+2.0.N: Trace Attempt 769	[44.59 s]
+2.0.N: Trace Attempt  1	[44.59 s]
+2.0.N: Trace Attempt  2	[44.59 s]
+2.0.N: Trace Attempt  3	[44.59 s]
+2.0.N: Trace Attempt  5	[44.59 s]
+2.0.B: Trace Attempt 445	[44.61 s]
+2.0.AM: Trace Attempt 719	[45.36 s]
+2.0.Bm: Trace Attempt 744	[100.45 s]
+2.0.L: Trace Attempt 130	[100.42 s]
+2.0.N: Trace Attempt 371	[48.59 s]
+2.0.B: Trace Attempt 472	[48.67 s]
+2.0.Mpcustom2: Trace Attempt 83	[101.40 s]
+2.0.AM: Trace Attempt 725	[49.44 s]
+2.0.L: Trace Attempt 164	[104.43 s]
+2.0.Bm: Trace Attempt 763	[104.53 s]
+2.0.N: Trace Attempt 657	[52.63 s]
+2.0.B: Trace Attempt 493	[52.76 s]
+2.0.AM: Trace Attempt 736	[53.95 s]
+2.0.Mpcustom2: Trace Attempt 84	[108.12 s]
+2.0.L: Trace Attempt 195	[108.54 s]
+2.0.Bm: Trace Attempt 782	[108.64 s]
+2.0.N: Trace Attempt 706	[56.65 s]
+2.0.B: Trace Attempt 519	[56.88 s]
+2.0.AM: Trace Attempt 746	[58.11 s]
+2.0.Mpcustom2: Trace Attempt 85	[112.16 s]
+2.0.L: Trace Attempt 223	[112.59 s]
+2.0.Bm: Trace Attempt 801	[112.80 s]
+2.0.N: Trace Attempt 730	[60.76 s]
+2.0.B: Trace Attempt 543	[60.98 s]
+2.0.AM: Trace Attempt 754	[62.19 s]
+2.0.Bm: Trace Attempt 819	[116.92 s]
+2.0.L: Trace Attempt 250	[116.99 s]
+2.0.B: Trace Attempt 566	[65.00 s]
+2.0.N: Trace Attempt 749	[65.10 s]
+2.0.AM: Trace Attempt 759	[66.25 s]
+2.0.Mpcustom2: Trace Attempt 85	[120.19 s]
+2.0.L: Trace Attempt 276	[121.08 s]
+2.0.Bm: Trace Attempt 837	[121.15 s]
+2.0.B: Trace Attempt 589	[70.35 s]
+2.0.AM: Trace Attempt 18	[71.75 s]
+2.0.Mpcustom2: Trace Attempt 85	[124.39 s]
+2.0.L: Trace Attempt 299	[125.12 s]
+2.0.Bm: Trace Attempt 855	[125.23 s]
+2.0.B: Trace Attempt 613	[74.49 s]
+2.0.AM: Trace Attempt 830	[75.76 s]
+2.0.Mpcustom2: Trace Attempt 85	[128.70 s]
+2.0.L: Trace Attempt 326	[129.18 s]
+2.0.Bm: Trace Attempt 873	[129.23 s]
+2.0.B: Trace Attempt 637	[78.62 s]
+2.0.L: Trace Attempt 347	[133.29 s]
+2.0.Mpcustom2: Trace Attempt 85	[133.43 s]
+2.0.Bm: Trace Attempt 890	[134.86 s]
+2.0.B: Trace Attempt 660	[82.78 s]
+2.0.N: Trace Attempt 769	[83.09 s]
+2.0.L: Trace Attempt 371	[137.43 s]
+2.0.Mpcustom2: Trace Attempt 85	[138.77 s]
+2.0.B: Trace Attempt 680	[86.78 s]
+2.0.N: Trace Attempt 770	[88.35 s]
+2.0.N: Trace Attempt  1	[88.35 s]
+2.0.N: Trace Attempt  2	[88.35 s]
+2.0.N: Trace Attempt  3	[88.35 s]
+2.0.N: Trace Attempt  5	[88.35 s]
+2.0.L: Trace Attempt 393	[141.44 s]
+2.0.B: Trace Attempt 701	[90.96 s]
+2.0.L: Using states from traces to { (reset) }
+2.0.L: Trace Attempt  3	[144.19 s]
+2.0.L: Trace Attempt  4	[144.23 s]
+2.0.L: Trace Attempt  5	[144.25 s]
+2.0.N: Trace Attempt 369	[92.36 s]
+2.0.Mpcustom2: Trace Attempt 85	[144.55 s]
+2.0.L: Trace Attempt 79	[148.33 s]
+2.0.N: Trace Attempt 657	[96.42 s]
+2.0.B: Trace Attempt 721	[96.51 s]
+2.0.Mpcustom2: Trace Attempt 88	[149.23 s]
+2.0.N: Trace Attempt 698	[99.95 s]
+2.0.N: Per property time limit expired (100.00 s) [100.03 s]
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[100.03 s].
+2.0.L: Trace Attempt 119	[152.41 s]
+2.0.AM: Trace Attempt 901	[76.65 s]
+2.0.AM: Per property time limit expired (100.00 s) [100.64 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[100.64 s].
+2.0.B: Trace Attempt 737	[99.84 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[101.72 s].
+2.0.N: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Starting proof for property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.06 s]
+2.0.AM: Trace Attempt  2	[0.06 s]
+2.0.AM: Trace Attempt  3	[0.06 s]
+2.0.AM: Trace Attempt  5	[0.06 s]
+2.0.Mpcustom2: Trace Attempt 94	[154.55 s]
+2.0.L: Trace Attempt 156	[156.51 s]
+2.0.B: Trace Attempt 105	[4.03 s]
+2.0.Mpcustom2: Trace Attempt 94	[159.68 s]
+2.0.L: Trace Attempt 188	[160.52 s]
+2.0.AM: Trace Attempt 149	[6.83 s]
+2.0.B: Trace Attempt 155	[8.06 s]
+2.0.Mpcustom2: Trace Attempt 102	[163.99 s]
+2.0.L: Trace Attempt 220	[164.54 s]
+2.0.AM: Trace Attempt 247	[10.93 s]
+2.0.B: Trace Attempt 199	[12.10 s]
+2.0.N: Trace Attempt 769	[13.79 s]
+2.0.Bm: Trace Attempt 901	[137.65 s]
+2.0.Bm: A trace with 901 cycles was found. [167.99 s]
+INFO (IPF055): 2.0.Bm: A counterexample (cex) with 901 cycles was found for the property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND" in 168.23 s.
+2.0.AM: Trace Attempt 289	[14.12 s]
+2.0.AM: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[14.41 s].
+INFO (IPF144): 2: Initiating shutdown of proof [168.23 s]
+2.0.AM: All properties determined. [14.23 s]
+2.0.AM: Exited with Success (@ 168.28 s)
+2: ProofGrid usable level: 0
+2: ProofGrid usable level: 0
+2.0.Mpcustom2: Trace Attempt 104	[165.57 s]
+2.0.Mpcustom2: All properties determined. [0.00 s]
+2.0.B: Trace Attempt 223	[14.19 s]
+2.0.B: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[14.66 s].
+2.0.B: All properties determined. [14.66 s]
+2.0.Mpcustom2: Exited with Success (@ 168.80 s)
+2.0.L: Trace Attempt 245	[168.03 s]
+2.0.L: All properties determined. [168.79 s]
+2.0.B: Exited with Success (@ 169.28 s)
+2.0.L: Exited with Success (@ 169.28 s)
+2.0.Bm: All properties determined. [0.00 s]
+2.0.Bm: Exited with Success (@ 170.30 s)
+2.0.Ht: Sending SIGKILL
+2.0.Hp: Sending SIGKILL
+2.0.N: Sending SIGKILL
+2.0.Hp: Terminated by signal SIGKILL (@ 170.64 s)
+2.0.N: Stopped processing property "ua_ucp_baseline_s0_a0.UA_UCP_BASE_NO_BYPASS_BY_BOUND"	[16.78 s].
+2.0.N: Terminated by signal SIGKILL (@ 170.78 s)
+2.0.Ht: Terminated by signal SIGKILL (@ 170.78 s)
+2: --------------------------------------------------------------
+ProofGrid Summary (utilization 99.92 %)
+--------------------------------------------------------------
+     engines started                               :     9
+     engine jobs started                           :     9
+
+    Time in state (seconds)
+    --------------------------------------------
+               Pending     Running        Dead
+    --------------------------------------------
+    min           0.00        0.00        0.00
+    mean          0.12      149.82        0.00
+    median        0.12      168.09        0.00
+    max           0.13      170.11        0.00
+    sum           1.04     1348.41        0.00
+
+    Data read    : 16.94 MiB
+    Data written : 28.60 kiB
+
+2: ProofGrid usable level: 0
+2: All pending notifications were processed.
+INFO (IPF059): 2: Completed proof on task: "<embedded>"
+
+==============================================================
+SUMMARY
+==============================================================
+           Properties Considered              : 11
+                 assertions                   : 2
+                  - proven                    : 1 (50%)
+                  - bounded_proven (user)     : 0 (0%)
+                  - bounded_proven (auto)     : 0 (0%)
+                  - marked_proven             : 0 (0%)
+                  - cex                       : 1 (50%)
+                  - ar_cex                    : 0 (0%)
+                  - undetermined              : 0 (0%)
+                  - unknown                   : 0 (0%)
+                  - error                     : 0 (0%)
+                 covers                       : 9
+                  - unreachable               : 0 (0%)
+                  - bounded_unreachable (user): 0 (0%)
+                  - covered                   : 9 (100%)
+                  - ar_covered                : 0 (0%)
+                  - undetermined              : 0 (0%)
+                  - unknown                   : 0 (0%)
+                  - error                     : 0 (0%)
+determined
+[<embedded>] % set T1 [::tcl::clock::milliseconds]
+1789352516573
+[<embedded>] % set ELAPSED_MS [expr {$T1-$T0}]
+174017
+[<embedded>] % set stf [open [file join $RESULT_DIR status.tsv] w]
+file45
+[<embedded>] % puts $stf "property	status"
+[<embedded>] % if {[llength [info commands get_property_list]]>0 && ![catch {set ALLP [get_property_list]}]} {
+  foreach p $ALLP {
+    if {[string match "*UA_*" $p]} {
+      set st "UNKNOWN"
+      # Jasper 2024.09 accepts two get_property_info forms depending on app/context.
+      # Try the keyword form first, then the positional property form used by
+      # the previously validated UA package.  Do not silently leave UNKNOWN
+      # just because one syntax is unsupported.
+      if {[catch {set st [get_property_info -property $p -list status]}]} {
+        catch {set st [get_property_info $p -list status]}
+      }
+      puts $stf "$p	$st"
+    }
+  }
+}
+[<embedded>] % close $stf
+[<embedded>] % set rrc [catch {report -summary -force -result -file [file join $RESULT_DIR report.rpt]} rmsg]
+0
+[<embedded>] % set mf [open [file join $RESULT_DIR metadata.txt] w]
+file45
+[<embedded>] % puts $mf {type=UCP_BASELINE}
+[<embedded>] % puts $mf {scenario=U_UNMATCHED_DEFAULT_DENY}
+[<embedded>] % puts $mf {tag=s0_a0}
+[<embedded>] % puts $mf {bound=900}
+[<embedded>] % puts $mf {attack_space=XBUS_DATA_1BIT|XBUS_ACK_DROP|XBUS_ERR|IRQ_MEI|IRQ_MSI|IRQ_MTI}
+[<embedded>] % puts $mf {attack_window=0xA8-0x114}
+[<embedded>] % puts $mf {pmp_setup_corruption_excluded=1}
+[<embedded>] % puts $mf {primary_gate=golden_lsu_priv_U_to_attacked_lsu_priv_M_before_protected_request}
+[<embedded>] % puts $mf {jtag_included=0}
+[<embedded>] % puts $mf "elapsed_ms=$ELAPSED_MS"
+[<embedded>] % puts $mf "report_rc=$rrc"
+[<embedded>] % puts $mf $rmsg
+[<embedded>] % close $mf
+[<embedded>] % puts "SECID_UA_UCP_BASELINE_COMPLETE tag=s0_a0"
+SECID_UA_UCP_BASELINE_COMPLETE tag=s0_a0
+[<embedded>] % exit -force
+[<embedded>] % INFO (IPL005): Received request to exit from the console.
+INFO (IPL014): Waiting for the Tcl-thread to exit.
+INFO: Waiting for proof threads to stop...
+INFO: Proof threads stopped.
+INFO (IPL018): The peak resident set memory use for this session was 27.970 GB.
+INFO (IPL015): The Tcl-thread exited with status 0.
+INFO (IPL016): Exiting the analysis session with status 0.

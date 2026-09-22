@@ -1,0 +1,14 @@
+[
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PADDR",
+    "attack_mechanism": "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PADDR` supplies the address decode that distinguishes `REG_PADDIR` from the other GPIO registers. A transient address fault on `apb_gpio_gpio_dir_cone.PADDR` during an APB write can redirect that write into `REG_PADDIR`. The supporting RTL chain is `apb_gpio_gpio_dir_cone.PADDR -> apb_gpio_gpio_dir_cone.gpio_dir`. The presented `PWDATA` is captured into `r_gpio_dir`, changing pad directions without the intended direction-register access."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PENABLE",
+    "attack_mechanism": "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PENABLE` is one term of the three-way APB write qualification guarding the PADDIR case. A stuck-at or transient assertion of `apb_gpio_gpio_dir_cone.PENABLE` can turn a non-write or wrong-phase transfer into a PADDIR update. The supporting RTL chain is `apb_gpio_gpio_dir_cone.PENABLE -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.s_apb_addr",
+    "attack_mechanism": "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.s_apb_addr` supplies the address decode that distinguishes `REG_PADDIR` from the other GPIO registers. A transient address fault on `apb_gpio_gpio_dir_cone.s_apb_addr` during an APB write can redirect that write into `REG_PADDIR`. The supporting RTL chain is `apb_gpio_gpio_dir_cone.s_apb_addr -> apb_gpio_gpio_dir_cone.gpio_dir`. The presented `PWDATA` is captured into `r_gpio_dir`, changing pad directions without the intended direction-register access."
+  }
+]

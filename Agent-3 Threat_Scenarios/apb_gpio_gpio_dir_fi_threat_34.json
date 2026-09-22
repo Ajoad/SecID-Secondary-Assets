@@ -1,0 +1,3337 @@
+{
+  "threat feature": "fault_injection",
+  "design": {
+    "name": "APB GPIO",
+    "top": "apb_gpio",
+    "rtl_language": "SystemVerilog"
+  },
+  "primary": {
+    "signal": "gpio_dir[31:0]",
+    "security_objective": "integrity"
+  },
+  "threat": "fault_injection",
+  "feature": "fault_injection_feasibility_and_fault_masking",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "gpio_dir[31:0]"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "HCLK",
+    "reset": {
+      "signal": "HRESETn",
+      "active_level": "low"
+    },
+    "semantic_frontier": {
+      "placeholder": "$semantic_cutset",
+      "definition": "independent non-primary RTL frontier selected from the candidate-to-primary path"
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor",
+      "$derived_finite_duration_sweep": "bounded campaign parameter inferred from the feature definition and RTL, then frozen before simulation",
+      "$initial_dir": "trial parameter inferred and recorded before simulation",
+      "$write_data": "trial parameter inferred and recorded before simulation"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Separate transient fault activation and escape from propagation to the primary asset.",
+    "execution_model": "paired golden and single-candidate-bit faulted executions from the same legal pre-fault state",
+    "calculation": {
+      "fault_injection_feasibility": "scenario-balanced fraction of activated faults reaching an independent semantic frontier",
+      "fault_masking": "1 - N_P/N_A, where N_A is valid activated faults and N_P is the subset producing primary divergence"
+    },
+    "required_observation_roles": [
+      "fault application and activation",
+      "independent semantic-frontier divergence",
+      "primary divergence after activation"
+    ],
+    "validity_policy": [
+      "legal golden execution and anchor are reached",
+      "runs agree before injection",
+      "the requested candidate fault activates",
+      "required observations are known"
+    ],
+    "classification": {
+      "no_escape": "activated fault does not reach the semantic frontier",
+      "escape_masked": "fault escapes but primary remains equivalent",
+      "escape_propagated": "fault escapes and corrupts the primary",
+      "not_applicable": "candidate lacks the scenario's semantic-use path",
+      "invalid": "setup, pairing, injection, activation, anchor, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": [
+        "s_apb_addr[4:0]"
+      ],
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "validate the scenario condition represented by $candidate resolved to s_apb_addr[4:0] at its candidate-specific semantic-use point.",
+        "target": "$candidate resolved to s_apb_addr[4:0] at its candidate-specific semantic-use point."
+      },
+      {
+        "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+        "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+      },
+      {
+        "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+        "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF."
+      },
+      {
+        "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+        "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+      }
+    ],
+    "validity": [
+      "Golden and faulted executions agree before the injection begins.",
+      "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+      "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+      "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+      "No relevant signal used by the scenario or oracle is X/Z.",
+      "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+      "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+    ],
+    "oracle": {
+      "baseline": [
+        "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+        "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+      ],
+      "fault": [
+        "A 0->1 fault on PWRITE can convert the legal PADDIR read into an unintended PADDIR write.",
+        "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+        "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+      ],
+      "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+    },
+    "fault": {
+      "activation_required": true,
+      "duration": "$derived_finite_duration_sweep",
+      "model": "single_candidate_bit_transient_inversion",
+      "release": true,
+      "semantic_frontier": "$semantic_cutset excluding $primary",
+      "target": "$candidate",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 34,
+  "scenarios": [
+    {
+      "id": "APB_GPIO_FI_C00_B000_R_GPIO_DIR_IDLE",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to r_gpio_dir[31:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Keep PSEL=0 and PENABLE=0 for the target observation interval while HCLK continues to toggle.",
+          "parameters": {
+            "purpose": "Exercise the direct r_gpio_dir -> gpio_dir path without introducing an unrelated APB transaction."
+          }
+        },
+        {
+          "action": "Remain in legal APB idle for the post-observation interval.",
+          "parameters": {
+            "purpose": "Provide the post-anchor timing position used by the campaign."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "A clocked observation point during the legal idle target interval.",
+        "condition": "r_gpio_dir continuously drives gpio_dir; no APB guard is required.",
+        "window_relation": "The campaign may begin the transient fault at setup/access/post-equivalent positions around this idle observation; these timing positions are not separate semantic scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "r_gpio_dir[31:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to r_gpio_dir[31:0] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to r_gpio_dir[31:0] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target interval is legal APB idle: PSEL==0 and PENABLE==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached."
+        ],
+        "oracle": {
+          "baseline": [
+            "gpio_dir remains $initial_dir during the idle observation.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A transient bit flip on r_gpio_dir directly perturbs the value continuously driving gpio_dir.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C01_B000_PENABLE_PADDIR_WRITE_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PENABLE for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PENABLE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PENABLE at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PENABLE at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A fault on PENABLE can suppress or mis-time recognition of the PADDIR access while the other APB write guards are valid.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C01_B001_PENABLE_PADDIR_WRITE_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PENABLE for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PENABLE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PENABLE at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PENABLE at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A fault on PENABLE can suppress or mis-time recognition of the PADDIR access while the other APB write guards are valid.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C02_B000_PSEL_PADDIR_WRITE_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PSEL for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PSEL"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PSEL at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PSEL at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A fault on PSEL can suppress or mis-time recognition of the PADDIR transfer while PENABLE, PWRITE, and the PADDIR decode are otherwise valid.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C02_B001_PSEL_PADDIR_WRITE_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PSEL for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PSEL"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PSEL at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PSEL at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A fault on PSEL can suppress or mis-time recognition of the PADDIR transfer while PENABLE, PWRITE, and the PADDIR decode are otherwise valid.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C03_B000_PWRITE_PADDIR_READ_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PWRITE for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=0, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=0, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWRITE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PWRITE at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PWRITE at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR."
+        ]
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C03_B001_PWRITE_PADDIR_READ_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PWRITE for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=0, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=0, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWRITE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PWRITE at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PWRITE at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR."
+        ]
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C03_B002_PWRITE_PADDIR_WRITE_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PWRITE for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWRITE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PWRITE at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PWRITE at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A 1->0 fault on PWRITE can suppress the intended PADDIR write.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C03_B003_PWRITE_PADDIR_WRITE_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PWRITE for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWRITE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PWRITE at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PWRITE at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A 1->0 fault on PWRITE can suppress the intended PADDIR write.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C04_B000_PWDATA_L_PADDIR_WRITE_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to pwdata_l[31:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The posedge HCLK at which the REG_PADDIR access executes r_gpio_dir <= pwdata_l.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "Apply the fault at the semantic RHS-capture/use of pwdata_l. Do not implement this scenario by live hierarchical force on the temporary pwdata_l variable; use a capture-point fault hook equivalent to the v2.9.2 package."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "pwdata_l[31:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to pwdata_l[31:0] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to pwdata_l[31:0] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "For pwdata_l, observe an explicit capture-point fault view/hook equivalent to fi_pwdata_l_view rather than forcing the temporary variable itself.",
+            "purpose": "validate the scenario condition represented by For pwdata_l, observe an explicit capture-point fault view/hook equivalent to fi_pwdata_l_view rather than forcing the temporary variable itself."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A fault on pwdata_l at the PADDIR RHS-capture point can corrupt the normal unlocked write value before r_gpio_dir captures it.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C04_B001_PWDATA_L_PADDIR_WRITE_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to pwdata_l[31:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The posedge HCLK at which the REG_PADDIR access executes r_gpio_dir <= pwdata_l.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "Apply the fault at the semantic RHS-capture/use of pwdata_l. Do not implement this scenario by live hierarchical force on the temporary pwdata_l variable; use a capture-point fault hook equivalent to the v2.9.2 package."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "pwdata_l[31:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to pwdata_l[31:0] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to pwdata_l[31:0] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "For pwdata_l, observe an explicit capture-point fault view/hook equivalent to fi_pwdata_l_view rather than forcing the temporary variable itself.",
+            "purpose": "validate the scenario condition represented by For pwdata_l, observe an explicit capture-point fault view/hook equivalent to fi_pwdata_l_view rather than forcing the temporary variable itself."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A fault on pwdata_l at the PADDIR RHS-capture point can corrupt the lock-forced zero value before r_gpio_dir captures it.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B000_S_APB_ADDR_REG_PADDIR_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can misdecode the intended REG_PADDIR write into a non-target register, suppressing/misdirecting the primary update.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B001_S_APB_ADDR_REG_PADOUT_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUT: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x008, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUT transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x008, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_PADOUT write (0x008) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B002_S_APB_ADDR_REG_INTTYPE0_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_INTTYPE0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x010, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_INTTYPE0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x010, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_INTTYPE0 write (0x010) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B003_S_APB_ADDR_REG_PADCFG0_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADCFG0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x020, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADCFG0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x020, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_PADCFG0 write (0x020) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B004_S_APB_ADDR_REG_PADOUTSET_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUTSET: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x040, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUTSET transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x040, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_PADOUTSET write (0x040) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B005_S_APB_ADDR_REG_PADDIR_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can misdecode the intended REG_PADDIR write into a non-target register, suppressing/misdirecting the primary update.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B006_S_APB_ADDR_REG_PADOUT_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUT: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x008, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUT transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x008, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_PADOUT write (0x008) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B007_S_APB_ADDR_REG_INTTYPE0_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_INTTYPE0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x010, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_INTTYPE0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x010, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_INTTYPE0 write (0x010) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B008_S_APB_ADDR_REG_PADCFG0_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADCFG0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x020, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADCFG0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x020, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_PADCFG0 write (0x020) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C05_B009_S_APB_ADDR_REG_PADOUTSET_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to s_apb_addr[4:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUTSET: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x040, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUTSET transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x040, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on s_apb_addr[4:0] can redirect the legitimate REG_PADOUTSET write (0x040) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B000_PADDR_REG_PADDIR_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can misdecode the intended REG_PADDIR write into a non-target register, suppressing/misdirecting the primary update.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B001_PADDR_REG_PADOUT_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUT: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x008, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUT transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x008, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_PADOUT write (0x008) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B002_PADDR_REG_INTTYPE0_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_INTTYPE0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x010, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_INTTYPE0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x010, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_INTTYPE0 write (0x010) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B003_PADDR_REG_PADCFG0_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADCFG0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x020, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADCFG0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x020, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_PADCFG0 write (0x020) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B004_PADDR_REG_PADOUTSET_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUTSET: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x040, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUTSET transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x040, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_PADOUTSET write (0x040) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B005_PADDR_REG_PADDIR_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can misdecode the intended REG_PADDIR write into a non-target register, suppressing/misdirecting the primary update.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B006_PADDR_REG_PADOUT_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUT: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x008, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUT transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x008, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_PADOUT write (0x008) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B007_PADDR_REG_INTTYPE0_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_INTTYPE0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x010, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_INTTYPE0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x010, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_INTTYPE0 write (0x010) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B008_PADDR_REG_PADCFG0_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADCFG0: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x020, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADCFG0 transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x020, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_PADCFG0 write (0x020) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C06_B009_PADDR_REG_PADOUTSET_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PADDR[6:2] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADOUTSET: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x040, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADOUTSET transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x040, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PADDR[6:2] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1."
+        ],
+        "oracle": {
+          "baseline": [
+            "The baseline target operation does not write REG_PADDIR, so gpio_dir remains $initial_dir.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A one-bit fault on PADDR[6:2] can redirect the legitimate REG_PADOUTSET write (0x040) into REG_PADDIR because this retained decode is a one-bit neighbor of PADDIR.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C07_B000_PWDATA_PADDIR_WRITE_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to PWDATA[31:0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR && r_gpio_lock[0]==0",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWDATA[31:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to PWDATA[31:0] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to PWDATA[31:0] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR && r_gpio_lock[0]==0."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A transient data fault on PWDATA during an unlocked REG_PADDIR write can propagate through pwdata_l into r_gpio_dir and gpio_dir.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C08_B000_R_GPIO_LOCK_PADDIR_WRITE_LOCK0",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to r_gpio_lock[0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==0.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "r_gpio_lock[0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to r_gpio_lock[0] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to r_gpio_lock[0] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==0 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal REG_PADDIR write updates gpio_dir to $write_data.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A transient 0->1 fault on r_gpio_lock[0] can falsely select the locked path and replace the intended PADDIR data with zero.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    },
+    {
+      "id": "APB_GPIO_FI_C08_B001_R_GPIO_LOCK_PADDIR_WRITE_LOCK1",
+      "preconditions": {
+        "architectural": [
+          "Reset has completed and HRESETn is deasserted.",
+          "The primary state is established only by legal APB traffic: write $initial_dir to REG_PADDIR while r_gpio_lock[0]==0."
+        ],
+        "microarchitectural": [
+          "Bind $candidate to r_gpio_lock[0] for this scenario.",
+          "Use the paired golden/faulted executions from the same pre-injection state."
+        ],
+        "configuration": [
+          "Primary asset: gpio_dir[31:0].",
+          "Required target-time lock state: r_gpio_lock[0]==1.",
+          "Use campaign-supplied $initial_dir and $write_data values; these are context parameters, not separate threat scenarios."
+        ]
+      },
+      "stimulus": [
+        {
+          "action": "Apply a legal reset sequence, release HRESETn, and drive the APB interface idle.",
+          "parameters": {
+            "purpose": "Start golden and faulted DUTs from the same known state."
+          }
+        },
+        {
+          "action": "With r_gpio_lock[0]==0, perform a legal APB write to REG_PADDIR (PADDR=0x000) with PWDATA=$initial_dir.",
+          "parameters": {
+            "purpose": "Establish the previous gpio_dir value without directly forcing the primary asset."
+          }
+        },
+        {
+          "action": "Perform a legal APB write to REG_GPIOLOCK (PADDR=0x048) with PWDATA=0x00000001.",
+          "parameters": {
+            "purpose": "Establish r_gpio_lock[0]==1 after the previous gpio_dir state has been initialized."
+          }
+        },
+        {
+          "action": "Drive APB setup for REG_PADDIR: PSEL=1, PENABLE=0, PWRITE=1, PADDR=0x000, PWDATA=$write_data.",
+          "parameters": {
+            "purpose": "Create the legal setup phase of the target transaction and hold address/write/data stable into access."
+          }
+        },
+        {
+          "action": "Drive APB access for the same REG_PADDIR transaction: keep PSEL=1, set PENABLE=1, and keep PWRITE=1, PADDR=0x000, PWDATA=$write_data stable through the sampling edge.",
+          "parameters": {
+            "purpose": "Reach the candidate-specific semantic-use point."
+          }
+        },
+        {
+          "action": "Return to APB idle with PSEL=0 and PENABLE=0 after the access.",
+          "parameters": {
+            "purpose": "Complete the finite legal setup->access->post trace."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "The target APB transaction and its access sampling edge.",
+        "condition": "PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR",
+        "window_relation": "The campaign timing positions setup/access/post are interpreted relative to this target transaction; they are injection windows within this scenario, not additional threat scenarios."
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "r_gpio_lock[0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate resolved to r_gpio_lock[0] at its candidate-specific semantic-use point.",
+            "purpose": "validate the scenario condition represented by $candidate resolved to r_gpio_lock[0] at its candidate-specific semantic-use point."
+          },
+          {
+            "target": "gpio_dir[31:0] in both golden and faulted executions at/after the target operation.",
+            "purpose": "validate the scenario condition represented by gpio_dir[31:0] in both golden and faulted executions at/after the target operation."
+          },
+          {
+            "target": "Whether the candidate fault was applied and semantically consumed/activated for FIF.",
+            "purpose": "validate the scenario condition represented by Whether the candidate fault was applied and semantically consumed/activated for FIF."
+          },
+          {
+            "target": "Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM.",
+            "purpose": "validate the scenario condition represented by Whether a semantically activated candidate fault changes gpio_dir, or is masked before the primary, for FM."
+          }
+        ],
+        "validity": [
+          "Golden and faulted executions agree before the injection begins.",
+          "All requested preconditions are reached through legal reset/APB operations; gpio_dir is never directly forced.",
+          "The target transfer obeys legal APB setup->access->post ordering; PADDR, PWRITE, and PWDATA remain stable from setup through access; PREADY==1 and PSLVERR==0.",
+          "The requested lock state r_gpio_lock[0]==1 is reached before the target operation.",
+          "No relevant signal used by the scenario or oracle is X/Z.",
+          "The fault is applied to $candidate and the candidate-specific semantic-use/activation condition is reached.",
+          "At the target access, the semantic guard excluding the candidate is satisfied: PSEL==1 && PENABLE==1 && PWRITE==1 && s_apb_addr==REG_PADDIR."
+        ],
+        "oracle": {
+          "baseline": [
+            "The legal locked REG_PADDIR write updates gpio_dir to 0x00000000 because r_gpio_lock[0]==1.",
+            "Record the golden $candidate semantic-use value/event and the golden gpio_dir value for paired comparison."
+          ],
+          "fault": [
+            "A transient 1->0 fault on r_gpio_lock[0] can bypass the lock path and admit PWDATA into r_gpio_dir.",
+            "FIF: count a trial only when the injected fault is actually applied and the candidate fault is activated/consumed at the defined semantic-use point.",
+            "FM: conditioned on such activation, classify the trial as propagated when faulted gpio_dir differs from golden gpio_dir at the observation point; classify it as masked when gpio_dir is equal."
+          ],
+          "scenario_rule": "after verified activation, classify semantic escape and primary propagation"
+        }
+      }
+    }
+  ]
+}

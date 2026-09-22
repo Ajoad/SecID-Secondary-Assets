@@ -1,0 +1,19 @@
+{
+  "artifact": "fault-injection-final-seven-five-seed-reuse-analysis",
+  "release": "v1.0",
+  "source_package": "cv32e40p_csr_we_int_targeted_fi_v1_3_0_final10_5seed",
+  "jasper_version": "2024.09p001",
+  "selected_signals": 7,
+  "control_seeds": 5,
+  "control_observations": 35,
+  "unique_control_signals": 33,
+  "valid_jobs": 100,
+  "selected_signal_weighted_primary_yield": 1.0,
+  "selected_signal_weighted_semantic_yield": 0.7857142857142857,
+  "selected_job_weighted_semantic_yield": 0.7,
+  "mean_random_signal_weighted_primary_yield": 0.17857142857142855,
+  "mean_random_signal_weighted_semantic_yield": 0.17857142857142855,
+  "primary_enrichment_ratio": 5.6000000000000005,
+  "semantic_enrichment_ratio": 4.4,
+  "sanitized": true
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "candidate": "axi_adapter_valid_o_cone.state_q",
+    "attack_mechanism": "A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. Holding `axi_adapter_valid_o_cone.state_q` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. `axi_adapter_valid_o_cone.state_q` controls request acceptance, response recognition, or the state transition into that write-completion arm; the route is implemented by the corresponding combinational or registered assignment. The requester waits indefinitely for a completion pulse and legitimate write service is denied. The causal signal chain is `axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.state_q",
+    "attack_mechanism": "For an AMO that returns data, accepting `b_valid` is insufficient: the adapter waits for `r_valid` either in `WAIT_B_VALID` or `WAIT_AMO_R_VALID` before asserting `valid_o`. Corrupting `axi_adapter_valid_o_cone.state_q` can falsely classify a request as data-returning or prevent the required read response from being recognized. `axi_adapter_valid_o_cone.state_q` determines the AMO classification, preserved AMO state, or one of these two response handshakes; the route is implemented by the corresponding combinational or registered assignment. The atomic transaction remains pending and blocks subsequent traffic from receiving service. The causal signal chain is `axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.state_q",
+    "attack_mechanism": "A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.state_q` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. `axi_adapter_valid_o_cone.state_q` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the route is implemented by the corresponding combinational or registered assignment. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall. The causal signal chain is `axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.type_i",
+    "attack_mechanism": "A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.type_i` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. `axi_adapter_valid_o_cone.type_i` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the route is implemented by the corresponding combinational or registered assignment. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall. The causal signal chain is `axi_adapter_valid_o_cone.type_i -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.we_i",
+    "attack_mechanism": "A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.we_i` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. `axi_adapter_valid_o_cone.we_i` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the route is implemented by the corresponding combinational or registered assignment. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall. The causal signal chain is `axi_adapter_valid_o_cone.we_i -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.we_i",
+    "attack_mechanism": "A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. Holding `axi_adapter_valid_o_cone.we_i` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. `axi_adapter_valid_o_cone.we_i` controls request acceptance, response recognition, or the state transition into that write-completion arm; the route is implemented by the corresponding combinational or registered assignment. The requester waits indefinitely for a completion pulse and legitimate write service is denied. The causal signal chain is `axi_adapter_valid_o_cone.we_i -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+  }
+]

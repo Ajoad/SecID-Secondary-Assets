@@ -1,0 +1,15 @@
+candidate,group,rtl_width,domain,scenario,primary_yield,semantic_yield,primary_unknown_fraction,semantic_unknown_fraction,jobs,valid_jobs
+core_i.id_stage_i.deassert_we,SECID_FINAL7,1,decode_control,csr_mix,1.0,1.0,0.0,0.0,1,1
+core_i.data_misaligned,SECID_FINAL7,1,lsu,csr_lsu,1.0,1.0,0.0,0.0,1,1
+core_i.csr_op,SECID_FINAL7,2,csr,csr_mix,1.0,0.5,0.0,0.5,2,2
+core_i.id_stage_i.decoder_i.csr_op,SECID_FINAL7,2,decode_control,csr_mix,1.0,0.5,0.0,0.5,2,2
+core_i.id_stage_i.csr_op,SECID_FINAL7,2,csr,csr_mix,1.0,0.5,0.0,0.5,2,2
+core_i.id_ready,SECID_FINAL7,1,decode_control,csr_mix,1.0,1.0,0.0,0.0,1,1
+core_i.ex_ready,SECID_FINAL7,1,decode_control,csr_stall,1.0,1.0,0.0,0.0,1,1
+core_i.id_stage_i.irq_wu_ctrl,RANDOM_STRUCTURAL_FROZEN_PREFIX,1,decode_control,csr_mix,0.0,0.0,1.0,1.0,1,1
+core_i.ex_stage_i.alu_i.popcnt_i.cnt_l3,RANDOM_STRUCTURAL_FROZEN_PREFIX,16,alu,csr_alu,0.0,0.0,1.0,1.0,4,4
+core_i.ex_stage_i.alu_i.is_equal_vec,RANDOM_STRUCTURAL_FROZEN_PREFIX,4,alu,csr_alu,0.0,0.0,1.0,1.0,4,4
+core_i.id_stage_i.minstret,RANDOM_STRUCTURAL_FROZEN_PREFIX,1,decode_control,csr_mix,0.0,0.0,1.0,1.0,1,1
+core_i.id_stage_i.controller_i.branch_in_id,RANDOM_STRUCTURAL_FROZEN_PREFIX,1,ifetch,csr_branch,0.0,0.0,1.0,1.0,1,1
+core_i.load_store_unit_i.data_type_q,RANDOM_STRUCTURAL_FROZEN_PREFIX,2,lsu,csr_lsu,0.0,0.0,1.0,1.0,2,2
+core_i.ex_stage_i.alu_i.result_div,RANDOM_STRUCTURAL_FROZEN_PREFIX,32,alu,csr_alu,0.0,0.0,1.0,1.0,4,4

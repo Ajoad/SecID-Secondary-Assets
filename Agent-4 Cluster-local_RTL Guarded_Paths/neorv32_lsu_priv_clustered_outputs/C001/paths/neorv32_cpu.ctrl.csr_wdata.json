@@ -1,0 +1,300 @@
+{
+  "candidate": "neorv32_cpu.ctrl.csr_wdata",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_mprv",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mprv",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mepc",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mepc",
+          "destination": "neorv32_cpu_control.exec_nxt.pc2",
+          "control_signal": [
+            "neorv32_cpu.dbus_req.meta"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.exec_nxt.pc2",
+          "destination": "neorv32_cpu.ctrl.pc_nxt",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu.ctrl.pc_nxt",
+          "destination": "neorv32_cpu_control.exec_nxt.pc",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exec_nxt.pc",
+          "destination": "neorv32_cpu.ctrl.pc_cur",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu.ctrl.pc_cur",
+          "destination": "neorv32_cpu.alu_add",
+          "control_signal": [
+            "neorv32_cpu.ctrl.alu_opa_mux",
+            "neorv32_cpu.ctrl.alu_sub"
+          ]
+        },
+        {
+          "source": "neorv32_cpu.alu_add",
+          "destination": "neorv32_cpu_control.instr_ma",
+          "control_signal": [
+            "neorv32_cpu_control.branch_taken"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.instr_ma",
+          "destination": "neorv32_cpu_control.exc_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exc_buf",
+          "destination": "neorv32_cpu_control.ecause",
+          "control_signal": [
+            "neorv32_cpu_control.exc_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.ecause",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.dcsr_rdata",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.dcsr_rdata",
+          "destination": "neorv32_cpu_control.debug_ctrl.trig_step",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.debug_ctrl.trig_step",
+          "destination": "neorv32_cpu_control.exc_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exc_buf",
+          "destination": "neorv32_cpu_control.ecause",
+          "control_signal": [
+            "neorv32_cpu_control.exc_buf",
+            "neorv32_cpu_control.irq_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.ecause",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mie_mti",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mie_mti",
+          "destination": "neorv32_cpu_control.irq_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.irq_buf",
+          "destination": "neorv32_cpu_control.env_enter",
+          "control_signal": [
+            "neorv32_cpu_control.irq_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.env_enter",
+          "destination": "neorv32_cpu_control.trap_env",
+          "control_signal": [
+            "neorv32_cpu_control.env_enter"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.trap_env",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_tw",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_tw",
+          "destination": "neorv32_cpu_control.illegal_cmd",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.illegal_cmd",
+          "destination": "neorv32_cpu_control.instr_il",
+          "control_signal": [
+            "neorv32_cpu_control.illegal_cmd"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.instr_il",
+          "destination": "neorv32_cpu_control.exc_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exc_buf",
+          "destination": "neorv32_cpu_control.ecause",
+          "control_signal": [
+            "neorv32_cpu_control.exc_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.ecause",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.dcsr_rdata",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.dcsr_rdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_mprv",
+          "control_signal": [
+            "neorv32_cpu_control.dcsr_rdata"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mprv",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mie_firq",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mie_firq",
+          "destination": "neorv32_cpu_control.irq_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.irq_buf",
+          "destination": "neorv32_cpu_control.ecause",
+          "control_signal": [
+            "neorv32_cpu_control.irq_buf",
+            "neorv32_cpu_control.exc_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.ecause",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu.ctrl.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    }
+  ]
+}

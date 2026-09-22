@@ -1,0 +1,302 @@
+[
+  {
+    "Name": "frontend_0.i_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. `openMSP430.frontend_0.i_state` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. Injecting a transient or stuck fault into `openMSP430.frontend_0.i_state` before `pc` is enabled can add the wrong increment or prevent the expected increment. The supporting RTL chain is `openMSP430.frontend_0.i_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "For `frontend_0.i_state`, one authoritative exploitation route shows that the signal stores the instruction-fetch and decode phase. Because a state fault can select the wrong PC update or increment behavior, the documented behavior makes `frontend_0.i_state` relevant to compromise of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "RTL connectivity realizes this dependence as `openMSP430.e_state -> openMSP430.execution_unit_0.reg_pc_call -> openMSP430.execution_unit_0.register_file_0.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.e_state` participates in forming or qualifying that software-PC path; the relevant assignment conditions include `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. A transient bit flip or forced value on `openMSP430.e_state` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "The source provides one authoritative exploitation route for `frontend_0.e_state`, demonstrating how its RTL role can be abused. Since `frontend_0.e_state` tracks the current execution phase governing PC enable timing and corrupted sequencing can advance or hold the PC at the wrong cycle, this evidence supports its secondary-asset status for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw_wr",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "The RTL path supporting this case is `openMSP430.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.pc_sw_wr` participates in forming or qualifying that software-PC path; the active mux/state branches are selected by `openMSP430.pc_sw_wr`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. A transient bit flip or forced value on `openMSP430.pc_sw_wr` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "Mechanism evidence for `execution_unit_0.pc_sw_wr` consists of one authoritative exploitation route. The candidate selects the software-directed PC write path, so a false select can substitute an unintended branch or call target; this connects `execution_unit_0.pc_sw_wr` causally to adverse behavior of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_wr",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "`openMSP430.dbg_reg_wr` participates in forming or qualifying that software-PC path; the transfer is guarded in the RTL by `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. The relevant dataflow is `openMSP430.dbg_reg_wr -> openMSP430.execution_unit_0.reg_dest_wr -> openMSP430.execution_unit_0.register_file_0.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. A transient bit flip or forced value on `openMSP430.dbg_reg_wr` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "`dbg_reg_wr` is retained on the basis of one authoritative exploitation route. In the documented behavior it authorizes debugger writes into the architectural register file, and a faulty R0 write decode can overwrite the program counter, providing a direct threat-specific link to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_done",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. A fault on `openMSP430.exec_done` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. `openMSP430.exec_done` controls that execution sequencing before the frontend selects the next PC update; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase. The pertinent register-transfer chain is `openMSP430.exec_done -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+    ],
+    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `frontend_0.exec_done` in operation. As it signals the boundary at which instruction execution has completed, a premature or missing boundary changes when the PC progresses, which makes the candidate security-relevant to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.reg_pc_call",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.execution_unit_0.reg_pc_call` participates in forming or qualifying that software-PC path; the intervening RTL assignments are qualified by `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. A transient bit flip or forced value on `openMSP430.execution_unit_0.reg_pc_call` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The hardware path for this case is `openMSP430.execution_unit_0.reg_pc_call -> openMSP430.execution_unit_0.register_file_0.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "A practical role for `execution_unit_0.reg_pc_call` is established through one authoritative exploitation route. The source uses the fact that `execution_unit_0.reg_pc_call` forms the call-related value entering the PC datapath; therefore corruption can replace the intended call destination, justifying inclusion relative to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.fetch` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The implicated RTL chain is `openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. Injecting a transient or stuck fault into `openMSP430.frontend_0.fetch` before `pc` is enabled can add the wrong increment or prevent the expected increment. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "Evidence for `frontend_0.fetch` comes from one authoritative exploitation route. The documented conditions exploit the fact that it qualifies instruction fetch and contributes to the sequential PC increment; the resulting concern is that a fault can skip, repeat, or suppress an instruction address, thereby affecting `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.pc_incr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a transient or stuck fault into `openMSP430.frontend_0.pc_incr` before `pc` is enabled can add the wrong increment or prevent the expected increment. The mechanism is grounded in the path `openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.frontend_0.pc_incr` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the implementation qualifies this propagation with `openMSP430.frontend_0.pc_sw_wr`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "`frontend_0.pc_incr` is not merely adjacent to `pc`: one authoritative exploitation route shows how it can be exercised. Because the signal computes the sequential next address, an erroneous increment directly sends execution to the wrong instruction, making it a plausible point of compromise.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "The selected path is `openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.inst_so_nxt -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. `openMSP430.frontend_0.irq_detect` controls that execution sequencing before the frontend selects the next PC update; the relevant assignment conditions include `openMSP430.frontend_0.irq_detect`, `openMSP430.frontend_0.pc_sw_wr`. A fault on `openMSP430.frontend_0.irq_detect` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "The selected path is `openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.inst_so_nxt -> openMSP430.execution_unit_0.alu_0.alu_out_nxt -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. `openMSP430.frontend_0.irq_detect` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the relevant assignment conditions include `openMSP430.frontend_0.irq_detect`, `openMSP430.execution_unit_0.register_file_0.inst_bw`, `openMSP430.frontend_0.pc_sw_wr`. Injecting a transient or stuck fault into `openMSP430.frontend_0.irq_detect` before `pc` is enabled can add the wrong increment or prevent the expected increment. The next instruction is skipped, repeated, or fetched from an unintended address.",
+      "The selected path is `openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.inst_so_nxt -> openMSP430.execution_unit_0.exec_cycle -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.frontend_0.irq_detect` participates in forming or qualifying that software-PC path; the relevant assignment conditions include `openMSP430.frontend_0.irq_detect`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. A transient bit flip or forced value on `openMSP430.frontend_0.irq_detect` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "The source descriptions place `frontend_0.irq_detect` on an actionable route through 3 authoritative exploitation routes covering distinct timing windows or propagation paths. Its RTL function—where it selects interrupt entry and the associated vectoring behavior—allows spurious or missed detection can redirect the PC through the wrong vector, so the candidate merits retention for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "watchdog_0.wdtpw_error",
+    "threat": "fault_injection",
+    "Structural Path": "watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A fault on `openMSP430.watchdog_0.wdtpw_error` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. The mechanism is grounded in the path `openMSP430.watchdog_0.wdtpw_error -> openMSP430.watchdog_0.wdtifg_evt -> openMSP430.frontend_0.inst_so_nxt -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.watchdog_0.wdtpw_error` controls that execution sequencing before the frontend selects the next PC update; the implementation qualifies this propagation with `openMSP430.watchdog_0.por`, `openMSP430.watchdog_0.wdtifg_set`, `openMSP430.frontend_0.irq_detect`, `openMSP430.frontend_0.pc_sw_wr`. Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "A transient bit flip or forced value on `openMSP430.watchdog_0.wdtpw_error` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The mechanism is grounded in the path `openMSP430.watchdog_0.wdtpw_error -> openMSP430.watchdog_0.wdtifg_evt -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.watchdog_0.wdtpw_error` participates in forming or qualifying that software-PC path; the implementation qualifies this propagation with `openMSP430.watchdog_0.por`, `openMSP430.watchdog_0.wdtifg_set`, `openMSP430.frontend_0.irq_detect`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block.",
+      "Injecting a transient or stuck fault into `openMSP430.watchdog_0.wdtpw_error` before `pc` is enabled can add the wrong increment or prevent the expected increment. The mechanism is grounded in the path `openMSP430.watchdog_0.wdtpw_error -> openMSP430.watchdog_0.wdtifg_evt -> openMSP430.frontend_0.inst_so_nxt -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.watchdog_0.wdtpw_error` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the implementation qualifies this propagation with `openMSP430.watchdog_0.por`, `openMSP430.watchdog_0.wdtifg_set`, `openMSP430.frontend_0.irq_detect`, `openMSP430.execution_unit_0.register_file_0.inst_bw`, and the remaining path guards. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "A causal basis for `watchdog_0.wdtpw_error` is provided by 3 authoritative exploitation routes covering distinct timing windows or propagation paths. This evidence leverages how the signal initiates a watchdog error reset that reaches frontend PC reset logic; as a result, a false error can force an unexpected reset-vector transition, with consequences for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_type",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient bit flip or forced value on `openMSP430.inst_type` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.inst_type` participates in forming or qualifying that software-PC path; the active mux/state branches are selected by `openMSP430.frontend_0.cpu_halt_st`, `openMSP430.inst_type`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. Signal propagation follows `openMSP430.inst_type -> openMSP430.frontend_0.inst_dest -> openMSP430.execution_unit_0.register_file_0.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "The scenario source ties `frontend_0.inst_type` to the threat using one authoritative exploitation route. Given that `frontend_0.inst_type` classifies the instruction for PC and execution control, misclassification can choose an inappropriate PC-update rule; this supports treating it as secondary to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "The selected path is `openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. `openMSP430.frontend_0.e_first_state` controls that execution sequencing before the frontend selects the next PC update; the relevant assignment conditions include `openMSP430.frontend_0.pc_sw_wr`. A fault on `openMSP430.frontend_0.e_first_state` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "The selected path is `openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.execution_unit_0.reg_pc_call -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.frontend_0.e_first_state` participates in forming or qualifying that software-PC path; the relevant assignment conditions include `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. A transient bit flip or forced value on `openMSP430.frontend_0.e_first_state` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "For the protected `pc`, `frontend_0.e_first_state` becomes relevant through 2 authoritative exploitation routes covering distinct timing windows or propagation paths. The documented behavior exploits its role in which it chooses the entry phase for the decoded operation, allowing the condition that a faulty entry state can misalign PC progression with instruction completion.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient bit flip or forced value on `openMSP430.pc_sw` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The mechanism is grounded in the path `openMSP430.pc_sw -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.pc_sw` participates in forming or qualifying that software-PC path; the implementation qualifies this propagation with `openMSP430.frontend_0.pc_sw_wr`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "For `execution_unit_0.pc_sw`, one authoritative exploitation route shows that the signal carries the software-computed next-PC value. Because a data fault is captured as an unintended control-flow target, the documented behavior makes `execution_unit_0.pc_sw` relevant to compromise of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "The security-relevant dependency is `openMSP430.inst_jmp -> openMSP430.execution_unit_0.alu_0.jmp_not_taken -> openMSP430.execution_unit_0.alu_0.alu_add_inc -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. `openMSP430.inst_jmp` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the active mux/state branches are selected by `openMSP430.execution_unit_0.register_file_0.inst_bw`, `openMSP430.frontend_0.pc_sw_wr`. Injecting a transient or stuck fault into `openMSP430.inst_jmp` before `pc` is enabled can add the wrong increment or prevent the expected increment. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "The source provides one authoritative exploitation route for `frontend_0.inst_jmp`, demonstrating how its RTL role can be abused. Since `frontend_0.inst_jmp` identifies jump instructions and steers branch-result handling and a flipped jump decision can take or suppress a control transfer, this evidence supports its secondary-asset status for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. `openMSP430.frontend_0.exec_src_wr` controls that execution sequencing before the frontend selects the next PC update; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`, `openMSP430.frontend_0.pc_sw_wr`. A fault on `openMSP430.frontend_0.exec_src_wr` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. The supporting RTL chain is `openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.frontend_0.exec_src_wr` participates in forming or qualifying that software-PC path; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. A transient bit flip or forced value on `openMSP430.frontend_0.exec_src_wr` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The supporting RTL chain is `openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.e_state_nxt -> openMSP430.execution_unit_0.reg_pc_call -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "Mechanism evidence for `frontend_0.exec_src_wr` consists of 2 authoritative exploitation routes covering distinct timing windows or propagation paths. The candidate marks the source-write execution phase, so faulted phase control can release PC sequencing too early or too late; this connects `frontend_0.exec_src_wr` causally to adverse behavior of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. `openMSP430.frontend_0.exec_dst_wr` controls that execution sequencing before the frontend selects the next PC update; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.pc_sw_wr`. A fault on `openMSP430.frontend_0.exec_dst_wr` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. The supporting RTL chain is `openMSP430.frontend_0.exec_dst_wr -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.frontend_0.exec_dst_wr` participates in forming or qualifying that software-PC path; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. A transient bit flip or forced value on `openMSP430.frontend_0.exec_dst_wr` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The supporting RTL chain is `openMSP430.frontend_0.exec_dst_wr -> openMSP430.frontend_0.e_state_nxt -> openMSP430.execution_unit_0.reg_pc_call -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "`frontend_0.exec_dst_wr` is retained on the basis of 2 authoritative exploitation routes covering distinct timing windows or propagation paths. In the documented behavior it marks the destination-write terminal phase, and corruption can mis-time the transition that permits the next PC update, providing a direct threat-specific link to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.i_state_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state_nxt -> PDG fan-in layer 2 -> pc",
+    "Attack Scenarios": [
+      "With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. `openMSP430.frontend_0.i_state_nxt` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. Injecting a transient or stuck fault into `openMSP430.frontend_0.i_state_nxt` before `pc` is enabled can add the wrong increment or prevent the expected increment. The supporting RTL chain is `openMSP430.frontend_0.i_state_nxt -> openMSP430.frontend_0.i_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `frontend_0.i_state_nxt` in operation. As it computes the next fetch/decode phase, a bad transition can alter the following PC enable and fetch sequence, which makes the candidate security-relevant to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_state_nxt -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.e_state_nxt` controls that execution sequencing before the frontend selects the next PC update; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The implicated RTL chain is `openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. A fault on `openMSP430.frontend_0.e_state_nxt` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "`openMSP430.frontend_0.e_state_nxt` participates in forming or qualifying that software-PC path; the transfer is guarded in the RTL by `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. The implicated RTL chain is `openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.execution_unit_0.reg_pc_call -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. A transient bit flip or forced value on `openMSP430.frontend_0.e_state_nxt` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "A practical role for `frontend_0.e_state_nxt` is established through 2 authoritative exploitation routes covering distinct timing windows or propagation paths. The source uses the fact that `frontend_0.e_state_nxt` computes the next execution phase; therefore faulted next-state logic can shift the cycle in which PC control is released, justifying inclusion relative to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_halt_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_halt_cmd -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.cpu_halt_cmd` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.cpu_halt_cmd -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.cpu_halt_cmd` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+    ],
+    "Justification": "Evidence for `cpu_halt_cmd` comes from one authoritative exploitation route. The documented conditions exploit the fact that it requests processor halt through the frontend control path; the resulting concern is that a spurious halt can freeze PC movement at an attacker-chosen boundary, thereby affecting `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_halt_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_halt_cmd -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.dbg_halt_cmd` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.dbg_halt_cmd -> openMSP430.mem_backbone_0.cpu_halt_cmd -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.dbg_halt_cmd` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+    ],
+    "Justification": "`dbg_halt_cmd` is not merely adjacent to `pc`: one authoritative exploitation route shows how it can be exercised. Because the signal injects a debugger-originated halt request, a fault can stop or resume execution with the PC at an unintended location, making it a plausible point of compromise.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.cpu_halt_req",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.cpu_halt_req -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.cpu_halt_req` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.frontend_0.cpu_halt_req` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+    ],
+    "Justification": "The source descriptions place `frontend_0.cpu_halt_req` on an actionable route through one authoritative exploitation route. Its RTL function—where it combines frontend conditions into the effective halt request—allows corruption can suppress or assert the gate controlling PC progress, so the candidate merits retention for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpuoff",
+    "threat": "fault_injection",
+    "Structural Path": "cpuoff -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. A fault on `openMSP430.cpuoff` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. `openMSP430.cpuoff` controls that execution sequencing before the frontend selects the next PC update; the state and data choices on this path depend on `openMSP430.cpuoff`, `openMSP430.frontend_0.pc_sw_wr`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase. The causal signal chain is `openMSP430.cpuoff -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`.",
+      "During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. A transient bit flip or forced value on `openMSP430.cpuoff` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. `openMSP430.cpuoff` participates in forming or qualifying that software-PC path; the state and data choices on this path depend on `openMSP430.cpuoff`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block. The causal signal chain is `openMSP430.cpuoff -> openMSP430.frontend_0.e_first_state -> openMSP430.execution_unit_0.exec_cycle -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+    ],
+    "Justification": "A causal basis for `cpuoff` is provided by 2 authoritative exploitation routes covering distinct timing windows or propagation paths. This evidence leverages how the signal indicates the low-power state that inhibits normal instruction activity; as a result, a false value can suspend PC updates or release them unexpectedly, with consequences for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.alu_inc",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.alu_inc -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.execution_unit_0.alu_0.alu_inc` contributes data or a selector to this computed target; the state and data choices on this path depend on `openMSP430.execution_unit_0.register_file_0.inst_bw`, `openMSP430.frontend_0.pc_sw_wr`. The hardware dependence follows `openMSP430.execution_unit_0.alu_0.alu_inc -> openMSP430.execution_unit_0.alu_0.alu_add_inc -> openMSP430.execution_unit_0.alu_0.alu_out_nxt -> openMSP430.execution_unit_0.register_file_0.reg_dest_val_in -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. For computed control transfers, the ALU and register-file datapaths produce `reg_dest_val_in`, which becomes `pc_sw` when R0 is the destination or a CALL requests a PC write. Corrupting `openMSP430.execution_unit_0.alu_0.alu_inc` during target calculation changes one or more bits of the value presented to the software-PC input. At the following PC write, execution is redirected to an unintended aligned or misaligned address."
+    ],
+    "Justification": "The scenario source ties `execution_unit_0.alu_0.alu_inc` to the threat using one authoritative exploitation route. Given that `execution_unit_0.alu_0.alu_inc` contributes arithmetic increment behavior in the execution datapath, a fault can distort address or control-flow arithmetic feeding PC selection; this supports treating it as secondary to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "mem_backbone_0.fe_mab",
+    "threat": "fault_injection",
+    "Structural Path": "mem_backbone_0.fe_mab -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "Instruction words, extension words, and interrupt vectors return through the memory-backbone path before they influence decode or `pc_nxt`. `openMSP430.mem_backbone_0.fe_mab` carries an address, returned word, or memory-path qualifier on that route; the route is implemented by the corresponding combinational or registered assignment. A fault on `openMSP430.mem_backbone_0.fe_mab` during a fetch or vector read can substitute a wrong instruction/extension or address the wrong program-memory location. The hardware path for this case is `openMSP430.mem_backbone_0.fe_mab -> openMSP430.frontend_0.pc`. The resulting decode or vector value drives an incorrect PC transition and breaks control-flow integrity."
+    ],
+    "Justification": "For the protected `pc`, `mem_backbone_0.fe_mab` becomes relevant through one authoritative exploitation route. The documented behavior exploits its role in which it carries the frontend memory address at the memory-backbone boundary, allowing the condition that corruption can desynchronize fetched instructions from the PC state.",
+    "decision": "retain"
+  },
+  {
+    "Name": "fe_mab",
+    "threat": "fault_injection",
+    "Structural Path": "fe_mab -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "Instruction words, extension words, and interrupt vectors return through the memory-backbone path before they influence decode or `pc_nxt`. `openMSP430.fe_mab` carries an address, returned word, or memory-path qualifier on that route; the route is implemented by the corresponding combinational or registered assignment. A fault on `openMSP430.fe_mab` during a fetch or vector read can substitute a wrong instruction/extension or address the wrong program-memory location. The implementation carries the effect through `openMSP430.fe_mab -> openMSP430.frontend_0.pc`. The resulting decode or vector value drives an incorrect PC transition and breaks control-flow integrity."
+    ],
+    "Justification": "For `fe_mab`, one authoritative exploitation route shows that the signal exposes the frontend instruction-memory address bus. Because a mismatched fetch address can cause execution to diverge from the intended PC, the documented behavior makes `fe_mab` relevant to compromise of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_out",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_out -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.execution_unit_0.alu_out` contributes data or a selector to this computed target; the intervening RTL assignments are qualified by `openMSP430.execution_unit_0.register_file_0.inst_bw`, `openMSP430.frontend_0.pc_sw_wr`. The design realizes the propagation through `openMSP430.execution_unit_0.alu_out -> openMSP430.execution_unit_0.register_file_0.reg_dest_val_in -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. For computed control transfers, the ALU and register-file datapaths produce `reg_dest_val_in`, which becomes `pc_sw` when R0 is the destination or a CALL requests a PC write. Corrupting `openMSP430.execution_unit_0.alu_out` during target calculation changes one or more bits of the value presented to the software-PC input. At the following PC write, execution is redirected to an unintended aligned or misaligned address."
+    ],
+    "Justification": "The source provides one authoritative exploitation route for `execution_unit_0.alu_out`, demonstrating how its RTL role can be abused. Since `execution_unit_0.alu_out` delivers ALU results used by branch and software-PC operations and a faulty result can become an incorrect control-flow destination, this evidence supports its secondary-asset status for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_bw",
+    "threat": "fault_injection",
+    "Structural Path": "inst_bw -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "`openMSP430.inst_bw` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the intervening RTL assignments are qualified by `openMSP430.inst_bw`, `openMSP430.frontend_0.pc_sw_wr`. The design realizes the propagation through `openMSP430.inst_bw -> openMSP430.execution_unit_0.register_file_0.reg_dest_val_in -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. Injecting a transient or stuck fault into `openMSP430.inst_bw` before `pc` is enabled can add the wrong increment or prevent the expected increment. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "Mechanism evidence for `inst_bw` consists of one authoritative exploitation route. The candidate controls byte-versus-word instruction operand handling, so an erroneous width decision can perturb PC-related arithmetic and sequencing; this connects `inst_bw` causally to adverse behavior of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_en_s",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_en_s -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "A fault on `openMSP430.cpu_en_s` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. `openMSP430.cpu_en_s` controls that execution sequencing before the frontend selects the next PC update; the active mux/state branches are selected by `openMSP430.frontend_0.pc_sw_wr`. Signal propagation follows `openMSP430.cpu_en_s -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase.",
+      "A transient bit flip or forced value on `openMSP430.cpu_en_s` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. `openMSP430.cpu_en_s` participates in forming or qualifying that software-PC path; the active mux/state branches are selected by `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. Signal propagation follows `openMSP430.cpu_en_s -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.execution_unit_0.exec_cycle -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+    ],
+    "Justification": "`cpu_en_s` is retained on the basis of 2 authoritative exploitation routes covering distinct timing windows or propagation paths. In the documented behavior it synchronizes the effective processor-enable condition, and a fault can gate PC state updates on the wrong cycle, providing a direct threat-specific link to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_halt_st",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_halt_st -> PDG fan-in layer 1 -> pc",
+    "Attack Scenarios": [
+      "RTL connectivity realizes this dependence as `openMSP430.cpu_halt_st -> openMSP430.frontend_0.inst_dest -> openMSP430.execution_unit_0.register_file_0.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. `openMSP430.cpu_halt_st` lies on this debug-control route into the PC-update logic; the relevant assignment conditions include `openMSP430.cpu_halt_st`, `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. Forcing `openMSP430.cpu_halt_st` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+    ],
+    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `cpu_halt_st` in operation. As it records whether the core is halted, corruption can freeze the PC or release execution without the expected control state, which makes the candidate security-relevant to `pc`.",
+    "decision": "retain"
+  }
+]

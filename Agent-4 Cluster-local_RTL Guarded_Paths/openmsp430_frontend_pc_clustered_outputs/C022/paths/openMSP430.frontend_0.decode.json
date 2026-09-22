@@ -1,0 +1,39 @@
+{
+  "candidate": "openMSP430.frontend_0.decode",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.frontend_0.decode",
+          "destination": "openMSP430.frontend_0.inst_bw",
+          "control_signal": [
+            "openMSP430.frontend_0.decode",
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.inst_bw",
+          "destination": "openMSP430.execution_unit_0.register_file_0.reg_dest_val_in",
+          "control_signal": [
+            "openMSP430.frontend_0.inst_bw"
+          ]
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.reg_dest_val_in",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.frontend_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

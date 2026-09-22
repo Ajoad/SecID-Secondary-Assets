@@ -1,0 +1,17 @@
+candidate,width,service_rate_degradation,service_rate_degradation_worst,scenario_count,srd_not_converged_fraction,measurement_status
+axi_resp_i.ar_ready,1,1,1,2,0,resolved
+axi_resp_i.aw_ready,1,1,1,21,0,resolved
+axi_resp_i.w_ready,1,1,1,21,0,resolved
+cnt_d,2,1,1,9,0,resolved
+cnt_q,2,1,1,9,0,resolved
+state_d,4,0.782608696,1,23,0,resolved
+axi_resp_i.r.last,1,0.75,1,2,0,resolved
+state_q,4,0.782608696,1,23,0,resolved
+type_i,1,0.5,1,23,0,resolved
+axi_resp_i.b_valid,1,0.9943977591036415,1,21,0,resolved
+amo_d,4,0.25,1,12,0,resolved
+amo_i,4,0.25,1,12,0,resolved
+amo_q,4,0.25,1,12,0,resolved
+axi_resp_i.r_valid,1,0.6336482471776589,1,11,0,resolved
+req_i,1,0.5,1,23,0,resolved
+we_i,1,0.5,1,23,0,resolved

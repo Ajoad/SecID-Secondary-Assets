@@ -1,0 +1,1 @@
+[JASPER] jg -spv -batch <SOURCE_PACKAGE_ROOT>/generated/core/60_effort_exclude_04_execution_unit_0_mdb_out_nxt_r02.tcl

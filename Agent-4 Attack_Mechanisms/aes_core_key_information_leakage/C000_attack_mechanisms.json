@@ -1,0 +1,42 @@
+[
+  {
+    "candidate": "aes_cipher_top.sa02_next",
+    "attack_mechanism": "Immediately after `ld_r` loads the state registers with `text_in_r XOR w[0:3]`, the combinational AES round network evaluates the first SubBytes/ShiftRows/MixColumns result. `aes_cipher_top.sa02_next` is the next-state byte at position (0,2), formed by XORing that transformed state with the matching expanded-key byte from `w[2]`. Probing `aes_cipher_top.sa02_next` in this first-round window gives a chosen-plaintext attacker an exact intermediate against which candidate key bytes can be tested. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa02_next`. The observation acts as a first-round oracle and can disclose the corresponding round-key, then master-key, bytes."
+  },
+  {
+    "candidate": "aes_cipher_top.sa02_next",
+    "attack_mechanism": "As `dcnt` advances the remaining rounds with `ld_r = 0`, the same combinational next-state node is reevaluated from the current state and current expanded key. `aes_cipher_top.sa02_next` exposes the pre-register value that will be captured into `sa02` at the next rising edge. Sampling `aes_cipher_top.sa02_next` at fixed round offsets across repeated encryptions yields aligned nonlinear intermediates rather than only the final ciphertext. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa02_next`. Those internal observations support differential or hypothesis-based recovery of round-key material that is invertible to the primary AES-128 key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa12_next",
+    "attack_mechanism": "Immediately after `ld_r` loads the state registers with `text_in_r XOR w[0:3]`, the combinational AES round network evaluates the first SubBytes/ShiftRows/MixColumns result. `aes_cipher_top.sa12_next` is the next-state byte at position (1,2), formed by XORing that transformed state with the matching expanded-key byte from `w[2]`. Probing `aes_cipher_top.sa12_next` in this first-round window gives a chosen-plaintext attacker an exact intermediate against which candidate key bytes can be tested. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa12_next`. The observation acts as a first-round oracle and can disclose the corresponding round-key, then master-key, bytes."
+  },
+  {
+    "candidate": "aes_cipher_top.sa12_next",
+    "attack_mechanism": "As `dcnt` advances the remaining rounds with `ld_r = 0`, the same combinational next-state node is reevaluated from the current state and current expanded key. `aes_cipher_top.sa12_next` exposes the pre-register value that will be captured into `sa12` at the next rising edge. Sampling `aes_cipher_top.sa12_next` at fixed round offsets across repeated encryptions yields aligned nonlinear intermediates rather than only the final ciphertext. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa12_next`. Those internal observations support differential or hypothesis-based recovery of round-key material that is invertible to the primary AES-128 key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa22_next",
+    "attack_mechanism": "Immediately after `ld_r` loads the state registers with `text_in_r XOR w[0:3]`, the combinational AES round network evaluates the first SubBytes/ShiftRows/MixColumns result. `aes_cipher_top.sa22_next` is the next-state byte at position (2,2), formed by XORing that transformed state with the matching expanded-key byte from `w[2]`. Probing `aes_cipher_top.sa22_next` in this first-round window gives a chosen-plaintext attacker an exact intermediate against which candidate key bytes can be tested. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa22_next`. The observation acts as a first-round oracle and can disclose the corresponding round-key, then master-key, bytes."
+  },
+  {
+    "candidate": "aes_cipher_top.sa22_next",
+    "attack_mechanism": "As `dcnt` advances the remaining rounds with `ld_r = 0`, the same combinational next-state node is reevaluated from the current state and current expanded key. `aes_cipher_top.sa22_next` exposes the pre-register value that will be captured into `sa22` at the next rising edge. Sampling `aes_cipher_top.sa22_next` at fixed round offsets across repeated encryptions yields aligned nonlinear intermediates rather than only the final ciphertext. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa22_next`. Those internal observations support differential or hypothesis-based recovery of round-key material that is invertible to the primary AES-128 key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa32",
+    "attack_mechanism": "One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa32` contains the byte at state position (3,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa32` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa32`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa32",
+    "attack_mechanism": "After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa32` carries this key-dependent intermediate on each active encryption round. Cycle-aligned observations of `aes_cipher_top.sa32` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa32`. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa32_next",
+    "attack_mechanism": "Immediately after `ld_r` loads the state registers with `text_in_r XOR w[0:3]`, the combinational AES round network evaluates the first SubBytes/ShiftRows/MixColumns result. `aes_cipher_top.sa32_next` is the next-state byte at position (3,2), formed by XORing that transformed state with the matching expanded-key byte from `w[2]`. Probing `aes_cipher_top.sa32_next` in this first-round window gives a chosen-plaintext attacker an exact intermediate against which candidate key bytes can be tested. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa32_next`. The observation acts as a first-round oracle and can disclose the corresponding round-key, then master-key, bytes."
+  },
+  {
+    "candidate": "aes_cipher_top.sa32_next",
+    "attack_mechanism": "As `dcnt` advances the remaining rounds with `ld_r = 0`, the same combinational next-state node is reevaluated from the current state and current expanded key. `aes_cipher_top.sa32_next` exposes the pre-register value that will be captured into `sa32` at the next rising edge. Sampling `aes_cipher_top.sa32_next` at fixed round offsets across repeated encryptions yields aligned nonlinear intermediates rather than only the final ciphertext. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa32_next`. Those internal observations support differential or hypothesis-based recovery of round-key material that is invertible to the primary AES-128 key."
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "candidate": "openMSP430.decode_noirq",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.decode_noirq",
+          "destination": "openMSP430.frontend_0.decode",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.decode",
+          "destination": "openMSP430.frontend_0.exec_jmp",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.exec_jmp",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_jmp"
+          ]
+        }
+      ]
+    }
+  ]
+}

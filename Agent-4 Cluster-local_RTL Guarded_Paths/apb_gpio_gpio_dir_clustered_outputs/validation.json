@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "design": "APB GPIO",
+  "primary": "apb_gpio_gpio_dir_cone.gpio_dir",
+  "relation": "fan-in",
+  "candidate_count": 9,
+  "cluster_count": 3,
+  "cluster_sizes": [
+    3,
+    3,
+    3
+  ],
+  "representative_path_count": 9,
+  "contract": "Each candidate appears exactly once; each candidate retains its own guarded-path JSON; each cluster contains one shared RTL slice regenerated from only that cluster members; every path begins at its candidate and terminates at gpio_dir."
+}

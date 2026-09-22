@@ -1,0 +1,18 @@
+[
+  {
+    "candidate": "aes_cipher_top.us02.d",
+    "attack_mechanism": "The active signal route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w2 -> aes_cipher_top.us02.a -> aes_cipher_top.us02.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us02.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us02.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  },
+  {
+    "candidate": "aes_cipher_top.us21.d",
+    "attack_mechanism": "The active signal route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w1 -> aes_cipher_top.us21.a -> aes_cipher_top.us21.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us21.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us21.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  },
+  {
+    "candidate": "aes_cipher_top.us30.d",
+    "attack_mechanism": "The active signal route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w0 -> aes_cipher_top.us30.a -> aes_cipher_top.us30.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us30.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us30.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  },
+  {
+    "candidate": "aes_cipher_top.us32.d",
+    "attack_mechanism": "The active signal route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w2 -> aes_cipher_top.us32.a -> aes_cipher_top.us32.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us32.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us32.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  }
+]

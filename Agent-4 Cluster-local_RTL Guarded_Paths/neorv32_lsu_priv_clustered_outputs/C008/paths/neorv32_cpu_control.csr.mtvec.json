@@ -1,0 +1,141 @@
+{
+  "candidate": "neorv32_cpu_control.csr.mtvec",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu_control.csr.mtvec",
+          "destination": "neorv32_cpu.csr_rdata",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_re"
+          ]
+        },
+        {
+          "source": "neorv32_cpu.csr_rdata",
+          "destination": "neorv32_cpu_control.csr_wdata",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.csr_wdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_mprv",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mprv",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu_control.csr.mtvec",
+          "destination": "neorv32_cpu_control.exec_nxt.pc2",
+          "control_signal": [
+            "neorv32_cpu.dbus_req.meta",
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.exec_nxt.pc2",
+          "destination": "neorv32_cpu.ctrl.pc_nxt",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu.ctrl.pc_nxt",
+          "destination": "neorv32_cpu_control.exec_nxt.pc",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exec_nxt.pc",
+          "destination": "neorv32_cpu.ctrl.pc_cur",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu.ctrl.pc_cur",
+          "destination": "neorv32_cpu.alu_add",
+          "control_signal": [
+            "neorv32_cpu.ctrl.alu_opa_mux",
+            "neorv32_cpu.ctrl.alu_sub"
+          ]
+        },
+        {
+          "source": "neorv32_cpu.alu_add",
+          "destination": "neorv32_cpu_control.instr_ma",
+          "control_signal": [
+            "neorv32_cpu_control.branch_taken"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.instr_ma",
+          "destination": "neorv32_cpu_control.exc_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exc_buf",
+          "destination": "neorv32_cpu_control.ecause",
+          "control_signal": [
+            "neorv32_cpu_control.exc_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.ecause",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu_control.csr.mtvec",
+          "destination": "neorv32_cpu.csr_rdata",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_re"
+          ]
+        },
+        {
+          "source": "neorv32_cpu.csr_rdata",
+          "destination": "neorv32_cpu_control.csr_wdata",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.csr_wdata",
+          "destination": "neorv32_cpu_control.dcsr_rdata",
+          "control_signal": [
+            "neorv32_cpu.ctrl.csr_we"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.dcsr_rdata",
+          "destination": "neorv32_cpu_control.csr.mstatus_mprv",
+          "control_signal": [
+            "neorv32_cpu_control.dcsr_rdata"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mprv",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    }
+  ]
+}

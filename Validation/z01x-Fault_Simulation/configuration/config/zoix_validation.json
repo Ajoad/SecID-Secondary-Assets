@@ -1,0 +1,96 @@
+{
+  "schema": "secid_openmsp430_reverse_zoix_fault_stats_v1_1_1",
+  "design": "openMSP430",
+  "top": "openMSP430",
+  "testbench_top": "tb",
+  "strobe_top": "secid_pc_strobe",
+  "primary_asset": "tb.dut_g.frontend_0.pc",
+  "fault_model": "single-bit permanent stuck-at-0/stuck-at-1",
+  "fault_direction": "retained candidate -> primary asset",
+  "collapse_faults": false,
+  "detection_status": {
+    "U8": "defined PC corruption detected",
+    "U9": "PC corruption involving X/Z detected"
+  },
+  "scenario_index": {
+    "core_mix": 0,
+    "branch_mix": 1,
+    "call_return": 2,
+    "memory_mix": 3,
+    "peripheral_mix": 4,
+    "interrupt_mix": 5,
+    "dma_contention": 6,
+    "debug_uart": 7
+  },
+  "timing_seeds": [
+    20260818,
+    20260819,
+    20260820
+  ],
+  "timing_sensitive_scenarios": [
+    "interrupt_mix",
+    "dma_contention"
+  ],
+  "deterministic_seed_count": 3,
+  "timing_sensitive_seed_count": 3,
+  "max_mclk_cycles": 220,
+  "debug_max_mclk_cycles": 1800,
+  "baseline_minimum_progress_tokens": 24,
+  "baseline_debug_minimum_activity_tokens": 2,
+  "strict_expected_fault_count": true,
+  "conservative_xz_detection": true,
+  "zoix_compile_fault_instrumentation": [
+    "+fault+var",
+    "+noprune",
+    "-portfaults"
+  ],
+  "generation_identity_policy": "requested == fr2fdef_total == raw_standard_report_records == manifest_mapped_unique_faults",
+  "standard_faultlist_mapping": "exact normalized object path; generated-but-unmapped is fatal",
+  "strict_no_difference_drop_warning": true,
+  "post_simulation_indicator": "FaultInfo.Attempts > 0",
+  "post_outcome_policy": "Attempts>0 + U8/U9 => PC detected; Attempts>0 without U8/U9 (normally U1) => PC not detected; NC/NO/NS explicit zero-attempt testability outcomes",
+  "zoix_status_semantics": {
+    "U1": "Z01X pending/default status; with Attempts>0 and no U8/U9 it is analysis-level PC-not-detected, with Attempts==0 it is unresolved",
+    "U7": "legacy no-PC-difference status accepted only for backward compatibility; v1.1.1 does not emit it",
+    "U8": "PC difference (defined 0/1)",
+    "U9": "PC difference involving X/Z",
+    "NC": "Not Controlled",
+    "NO": "Not Observed",
+    "NS": "Not Strobed",
+    "NA": "initial/not-attempted status"
+  },
+  "strict_no_zero_attempt_pending_status": true,
+  "strict_no_attempted_unknown_status": true,
+  "campaign_design": "balanced_publication_matrix",
+  "balanced_workloads": [
+    "core_mix",
+    "branch_mix",
+    "call_return",
+    "memory_mix",
+    "peripheral_mix",
+    "interrupt_mix",
+    "dma_contention",
+    "debug_uart"
+  ],
+  "seed_variant_policy": "All workloads use seed_variant=SEED%3; deterministic workloads vary operands/data/branch constants while preserving workload semantics; interrupt/DMA/debug also vary timing.",
+  "balanced_matrix_required": true,
+  "ranking": {
+    "primary_score": "balanced_matrix_overall_pc_impact_rate",
+    "primary_definition": "sum PC-detected fault executions / (candidate requested SA faults * workload_seed_cells)",
+    "peak_score": "max per-workload mean overall PC impact across seeds",
+    "bottom_min_attempt_rate": 0.75,
+    "top_k": 20,
+    "bottom_k": 20,
+    "workload_weighting": "equal",
+    "seed_weighting": "equal"
+  },
+  "baseline_fingerprint_audit": {
+    "enabled": true,
+    "stimulus_source": "realized PMEM image + initial DMEM image + realized external stimulus schedule; raw seed label excluded",
+    "pc_trace_source": "cycle-by-cycle golden frontend_0.pc after reset release; raw seed label excluded",
+    "hash": "SHA-256",
+    "strict_stimulus_distinct_across_seeds": true,
+    "strict_pc_trace_distinct_across_seeds": false,
+    "interpretation": "different stimulus hashes prove non-duplicate realized variants; equal PC hashes are allowed and mean different stimuli converged to the same PC trajectory"
+  }
+}

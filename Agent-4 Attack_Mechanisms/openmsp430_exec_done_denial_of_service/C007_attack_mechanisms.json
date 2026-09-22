@@ -1,0 +1,26 @@
+[
+  {
+    "candidate": "openMSP430.decode_noirq",
+    "attack_mechanism": "An attacker who forces `openMSP430.decode_noirq` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.decode_noirq -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.decode_noirq` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.decode",
+    "attack_mechanism": "An attacker who forces `openMSP430.frontend_0.decode` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.decode` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.exec_src_wr",
+    "attack_mechanism": "An attacker who forces `openMSP430.frontend_0.exec_src_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_src_wr` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`. For a source-writeback instruction, `exec_done` is produced by `exec_src_wr ? (e_state == E_SRC_WR)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.inst_type_nxt",
+    "attack_mechanism": "An attacker who forces `openMSP430.frontend_0.inst_type_nxt` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.inst_type_nxt -> openMSP430.frontend_0.inst_branch -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.inst_type_nxt` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.inst_type_nxt",
+    "attack_mechanism": "An attacker who forces `openMSP430.frontend_0.inst_type_nxt` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.inst_type_nxt -> openMSP430.frontend_0.inst_type -> openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.inst_type_nxt` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`. For a source-writeback instruction, `exec_done` is produced by `exec_src_wr ? (e_state == E_SRC_WR)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.irq_acc",
+    "attack_mechanism": "An attacker who forces `openMSP430.frontend_0.irq_acc` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.irq_acc -> openMSP430.watchdog_0.wdtifg_clr -> openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.irq_acc` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.watchdog_0.por`, `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  }
+]

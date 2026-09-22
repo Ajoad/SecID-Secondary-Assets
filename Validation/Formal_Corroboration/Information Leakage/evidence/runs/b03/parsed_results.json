@@ -1,0 +1,30 @@
+{
+  "run_dir": "<SOURCE_PACKAGE_ROOT>/results/core/50_effort_baseline_r03",
+  "exit_code": 0,
+  "properties": [
+    {
+      "property": "SECID_EFFORT_BASE_R03_PRIMARY_TO_UOP",
+      "raw_status": "cex",
+      "normalized_status": "FLOW_FOUND",
+      "source": "status.tsv",
+      "cex_cycles": 573,
+      "proof_seconds": 4.29
+    }
+  ],
+  "process_metrics": {
+    "max_rss_kb": 455504,
+    "wall_seconds": 10.78
+  },
+  "audit": {
+    "signoff_file_present": true,
+    "consistency_file_present": true,
+    "signoff_incomplete_items": [],
+    "blackbox_in_coi": false,
+    "taint_feedback_incomplete": false,
+    "stopat_in_coi": false,
+    "reset_audit_seen": true,
+    "reset_all_concrete": false,
+    "auto_multiplier_blackboxed": false,
+    "material_signoff_risk": false
+  }
+}

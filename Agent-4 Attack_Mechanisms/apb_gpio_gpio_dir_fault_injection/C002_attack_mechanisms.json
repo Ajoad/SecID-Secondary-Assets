@@ -1,0 +1,18 @@
+[
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PWDATA",
+    "attack_mechanism": "`apb_gpio_gpio_dir_cone.PWDATA` carries the direction bitmap selected by the lock check immediately before `r_gpio_dir <= pwdata_l`. The relevant dataflow is `apb_gpio_gpio_dir_cone.PWDATA -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Flipping bits of `apb_gpio_gpio_dir_cone.PWDATA` in the admitted write cycle changes the bitmap captured by `r_gpio_dir`. Pins are configured as outputs or inputs contrary to the authorized software value."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.pwdata_l",
+    "attack_mechanism": "`apb_gpio_gpio_dir_cone.pwdata_l` carries the direction bitmap selected by the lock check immediately before `r_gpio_dir <= pwdata_l`. The relevant dataflow is `apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Flipping bits of `apb_gpio_gpio_dir_cone.pwdata_l` in the admitted write cycle changes the bitmap captured by `r_gpio_dir`. Pins are configured as outputs or inputs contrary to the authorized software value."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.r_gpio_lock",
+    "attack_mechanism": "`apb_gpio_gpio_dir_cone.r_gpio_lock[0]` selects whether `PWDATA` or zero is assigned to `pwdata_l` in the PADDIR case. The relevant dataflow is `apb_gpio_gpio_dir_cone.r_gpio_lock -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. A fault that clears `apb_gpio_gpio_dir_cone.r_gpio_lock[0]` admits an otherwise blocked direction write, while a fault that sets it during a legitimate write forces the captured direction word to zero. The lock policy no longer preserves the authorized pad-direction configuration."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.r_gpio_lock",
+    "attack_mechanism": "A fault that sets `r_gpio_lock[0]` selects the `pwdata_l = '0` branch, yet the following nonblocking assignment to `r_gpio_dir` still executes. The relevant dataflow is `apb_gpio_gpio_dir_cone.r_gpio_lock -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. During a legitimate PADDIR write with `PSEL`, `PENABLE`, and `PWRITE` asserted, software expects an unlocked register to capture `PWDATA`. The injected lock-bit fault therefore replaces the requested direction bitmap with all zeros at the active `HCLK` edge. Every affected pad is forced toward input mode, corrupting the primary asset even though the bus transaction itself is legal."
+  }
+]

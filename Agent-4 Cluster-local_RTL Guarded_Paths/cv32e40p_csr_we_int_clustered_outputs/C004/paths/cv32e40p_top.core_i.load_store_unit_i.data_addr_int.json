@@ -1,0 +1,27 @@
+{
+  "candidate": "cv32e40p_top.core_i.load_store_unit_i.data_addr_int",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.load_store_unit_i.data_addr_int",
+          "destination": "cv32e40p_top.core_i.load_store_unit_i.data_misaligned_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.load_store_unit_i.data_misaligned_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    }
+  ]
+}

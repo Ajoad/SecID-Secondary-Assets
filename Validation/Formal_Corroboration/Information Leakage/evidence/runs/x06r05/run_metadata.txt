@@ -1,0 +1,8 @@
+utc_start=2026-09-21T00:19:45Z
+hostname=[redacted]
+scope=core
+run_id=60_effort_exclude_06_dbg_0_mem_data_r05
+fresh_work=1
+wall_timeout_seconds=0
+command=jg -spv -batch <SOURCE_PACKAGE_ROOT>/generated/core/60_effort_exclude_06_dbg_0_mem_data_r05.tcl 
+utc_end=2026-09-21T00:20:41Z

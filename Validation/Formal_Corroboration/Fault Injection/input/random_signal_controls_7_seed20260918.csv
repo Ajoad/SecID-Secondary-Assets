@@ -1,0 +1,8 @@
+random_id,candidate,rtl_width,analysis_bit_count,bit_budget,domain,scenario,static_filter_decision,static_filter_reason,static_score,seed,sampling_rule
+0,core_i.id_stage_i.regfile_alu_we_id,1,1,1,alu,csr_alu,PRUNE,BELOW_THRESHOLD,0.0004043646081324237,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+1,core_i.id_stage_i.controller_i.debug_req_q,1,1,1,debug,csr_debug,PRUNE,BELOW_THRESHOLD,0.002802729606628418,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+2,core_i.if_stage_i.aligner_i.branch_addr_i,31,31,4,ifetch,csr_branch,PRUNE,BELOW_THRESHOLD,0.007451017420743833,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+3,core_i.ex_stage_i.mult_result,32,32,4,mult,csr_stall,PRUNE,BELOW_THRESHOLD,7.789582014083862e-05,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+4,core_i.ex_stage_i.mult_i.dot_char_op_b,36,36,4,mult,csr_stall,PRUNE,BELOW_THRESHOLD,0.00010688723903984343,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+5,core_i.ex_stage_i.alu_i.alu_div_i.BRegEn_S,1,1,1,alu,csr_alu,PRUNE,BELOW_THRESHOLD,7.607010362731259e-07,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+6,core_i.cs_registers_i.dscratch1_q,32,32,4,csr,csr_mix,PRUNE,BELOW_THRESHOLD,0.00048828125,20260918,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection

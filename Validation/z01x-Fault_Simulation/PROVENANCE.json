@@ -1,0 +1,872 @@
+{
+  "schema": "secid_openmsp430_z01x_windows_safe_provenance_v1",
+  "artifact": "z01x-review-v1.1.1",
+  "source_package": "openmsp430_pc_reverse_zoix_fault_stats_v1_1_1",
+  "windows_path_policy": {
+    "short_root_name": true,
+    "campaign_audits_flattened": true,
+    "full_campaign_identity_preserved_in_file_contents_and_map": true
+  },
+  "privacy_policy": {
+    "removed_markers": [
+      "personal username",
+      "personal POSIX home/download paths"
+    ],
+    "replacements": [
+      "<RUN_ROOT>",
+      "<EXPERIMENT_ROOT>"
+    ],
+    "scientific_values_changed": false
+  },
+  "exclusions": [
+    "RTL and execution/analysis scripts",
+    "compiled simulator executables and databases",
+    "isolated simulator workspaces",
+    "smoke-run output",
+    "repetitive raw reports",
+    "old package versions",
+    "license-test material",
+    "conversation transcript",
+    "FIF/FM comparison claim and data"
+  ],
+  "files": [
+    {
+      "published_path": ".gitignore",
+      "published_sha256": "671fb7d34da01018ba4a6dabf23fd803152569546c3285b4a2e399fdf60041b0",
+      "transformation": "authored_or_derived_for_windows_safe_artifact"
+    },
+    {
+      "published_path": "ARTIFACT_VERSION",
+      "published_sha256": "49cef139fbff957e0952a738aec4138154c8ad383c012165ed56597e3fae03fb",
+      "transformation": "authored_or_derived_for_windows_safe_artifact"
+    },
+    {
+      "published_path": "README.md",
+      "published_sha256": "e0a0092c9cf2839d8aac9f63ed034581abbf732f678c0ab490aab536750db7f3",
+      "transformation": "authored_or_derived_for_windows_safe_artifact"
+    },
+    {
+      "published_path": "RESULTS.md",
+      "published_sha256": "0a71d2f800b75be298439b6bb231c57ada302d1186afb7b5ede2d063654d971e",
+      "transformation": "authored_or_derived_for_windows_safe_artifact"
+    },
+    {
+      "published_path": "THIRD_PARTY_NOTICES.md",
+      "published_sha256": "9cd3af3f69af8d2776ef7c49c8c9c124a3ef721b771a264a9ea32e33b127f71c",
+      "transformation": "authored_or_derived_for_windows_safe_artifact"
+    },
+    {
+      "published_path": "configuration/config/zoix_validation.json",
+      "published_sha256": "a40ca944997e17c87e4b322108ab21183aa80c0860eca9292361e43ad651e29c",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "config/zoix_validation.json",
+      "source_sha256": "a40ca944997e17c87e4b322108ab21183aa80c0860eca9292361e43ad651e29c"
+    },
+    {
+      "published_path": "configuration/generated/G00_balanced_all_workloads/candidate_faults.sff",
+      "published_sha256": "f7ab809df97eb8d445b7983835747ef998d58ebf2ddb30e240c0835aa3726cda",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "generated/G00_balanced_all_workloads/candidate_faults.sff",
+      "source_sha256": "f7ab809df97eb8d445b7983835747ef998d58ebf2ddb30e240c0835aa3726cda"
+    },
+    {
+      "published_path": "configuration/generated/campaign_manifest.json",
+      "published_sha256": "079db07bebe1674f8885bea315e8100a410bfef1b2e31841bbd6c489827ebcc9",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "generated/campaign_manifest.json",
+      "source_sha256": "079db07bebe1674f8885bea315e8100a410bfef1b2e31841bbd6c489827ebcc9"
+    },
+    {
+      "published_path": "configuration/generated/expected_candidate_fault_counts.csv",
+      "published_sha256": "905a7b5513378d8db6a6a46f403e1f76ba8352e0460103c40db007576c10c343",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "generated/expected_candidate_fault_counts.csv",
+      "source_sha256": "905a7b5513378d8db6a6a46f403e1f76ba8352e0460103c40db007576c10c343"
+    },
+    {
+      "published_path": "configuration/generated/fault_target_manifest.csv",
+      "published_sha256": "16c0cf93bbc373288bfcadf9db752394d9bf7c1cc6524e1fe23e642dbd53fb34",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "generated/fault_target_manifest.csv",
+      "source_sha256": "16c0cf93bbc373288bfcadf9db752394d9bf7c1cc6524e1fe23e642dbd53fb34"
+    },
+    {
+      "published_path": "configuration/manifests/STATIC_VALIDATION.json",
+      "published_sha256": "0e97142d3474a9e24fab16f20570da67e8f2ccb2c09d5ac872de06c5b9de3a49",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "analysis_output/STATIC_VALIDATION.json",
+      "source_sha256": "0e97142d3474a9e24fab16f20570da67e8f2ccb2c09d5ac872de06c5b9de3a49"
+    },
+    {
+      "published_path": "configuration/manifests/candidate_manifest.csv",
+      "published_sha256": "dff2e32728e119cd49da8a59c26a9ce4d9e161a5fe3ed4998ba939174a59146b",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "analysis_output/candidate_manifest.csv",
+      "source_sha256": "dff2e32728e119cd49da8a59c26a9ce4d9e161a5fe3ed4998ba939174a59146b"
+    },
+    {
+      "published_path": "configuration/testbench/zoix_validation_tb.sv",
+      "published_sha256": "81ac4cf5fdc270ff443b8c927d95225875422c678a2d99fea3ad1089b04d345b",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "tb/zoix_validation_tb.sv",
+      "source_sha256": "81ac4cf5fdc270ff443b8c927d95225875422c678a2d99fea3ad1089b04d345b"
+    },
+    {
+      "published_path": "configuration/zoix/fault_simulation.fmsh.in",
+      "published_sha256": "cc078834245544021bf8a887f7af6abd1235a7734086f601eae52d765cbdfa9d",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix/fault_simulation.fmsh.in",
+      "source_sha256": "cc078834245544021bf8a887f7af6abd1235a7734086f601eae52d765cbdfa9d"
+    },
+    {
+      "published_path": "configuration/zoix/secid_pc_strobe.sv",
+      "published_sha256": "67c611d8e964b8c238b95c02551c49eb8380b0b1ce349d6e327eefdfd98f2890",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix/secid_pc_strobe.sv",
+      "source_sha256": "67c611d8e964b8c238b95c02551c49eb8380b0b1ce349d6e327eefdfd98f2890"
+    },
+    {
+      "published_path": "configuration/zoix/untestability.fstrobe",
+      "published_sha256": "ab76384fafd62f4d9c8cc83323d976028bcbf6e7e57474e5a4411777846e042e",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix/untestability.fstrobe",
+      "source_sha256": "ab76384fafd62f4d9c8cc83323d976028bcbf6e7e57474e5a4411777846e042e"
+    },
+    {
+      "published_path": "results/full_run/BASELINE_FINGERPRINTS.csv",
+      "published_sha256": "7b55f6067ea4c2800372513d114444daa85c31a267bfb55a894c4e05f28c6d08",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/BASELINE_FINGERPRINTS.csv",
+      "source_sha256": "7b55f6067ea4c2800372513d114444daa85c31a267bfb55a894c4e05f28c6d08"
+    },
+    {
+      "published_path": "results/full_run/BASELINE_FINGERPRINT_AUDIT.json",
+      "published_sha256": "458e65885419ffaf72596176c66ce1469aa572b6d527a35f49b4a910a602adbb",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/BASELINE_FINGERPRINT_AUDIT.json",
+      "source_sha256": "458e65885419ffaf72596176c66ce1469aa572b6d527a35f49b4a910a602adbb"
+    },
+    {
+      "published_path": "results/full_run/BASELINE_PREFLIGHT.json",
+      "published_sha256": "52d02c84cefb4438b77da6f01aee532214f5fd4c27b94a7a01b302a043c9a89a",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/BASELINE_PREFLIGHT.json",
+      "source_sha256": "52d02c84cefb4438b77da6f01aee532214f5fd4c27b94a7a01b302a043c9a89a"
+    },
+    {
+      "published_path": "results/full_run/COMPILE_AUDIT.json",
+      "published_sha256": "61747761f065de0ec657d6db570e7649bab2d5e0c7682d946a5ea6ae8639ffa9",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/COMPILE_AUDIT.json",
+      "source_sha256": "61747761f065de0ec657d6db570e7649bab2d5e0c7682d946a5ea6ae8639ffa9"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/ZOIX_FAULT_STATS.json",
+      "published_sha256": "84d4277265f6a501bfe821865b07a4316357e0189ff2185004f6fccf314552cd",
+      "transformation": "privacy_sanitized_absolute_paths",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/ZOIX_FAULT_STATS.json",
+      "source_sha256": "a1c15475593333d52cd166cc7ca0b867f388bbfe324d8defe60e0585484255a8"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/ZOIX_RANKING_SUMMARY.json",
+      "published_sha256": "18424d12e728dce218b4f4982aaaaf4be8873df77e625aeecf20076f746d666c",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/ZOIX_RANKING_SUMMARY.json",
+      "source_sha256": "18424d12e728dce218b4f4982aaaaf4be8873df77e625aeecf20076f746d666c"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/parser_unmatched_lines.json",
+      "published_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/parser_unmatched_lines.json",
+      "source_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_bottom_candidates.csv",
+      "published_sha256": "823a258c048db5df94c43b08542f8b9c2ef5bca386899c728e1e6e8e3d3abcf3",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_bottom_candidates.csv",
+      "source_sha256": "823a258c048db5df94c43b08542f8b9c2ef5bca386899c728e1e6e8e3d3abcf3"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_bottom_candidates_high_coverage.csv",
+      "published_sha256": "49397c9654d28870a07e2dc35854f647f3ff34e9162fc7067f2fc966f6661230",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_bottom_candidates_high_coverage.csv",
+      "source_sha256": "49397c9654d28870a07e2dc35854f647f3ff34e9162fc7067f2fc966f6661230"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_candidate_fault_stats.csv",
+      "published_sha256": "1d1f99fd48143edd3d11d2ede9653acaa02fa2cb0e9840a1861276227ec492cb",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_candidate_fault_stats.csv",
+      "source_sha256": "1d1f99fd48143edd3d11d2ede9653acaa02fa2cb0e9840a1861276227ec492cb"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_candidate_ranking.csv",
+      "published_sha256": "0dc83dcc699b89840f15db7e87ec770d60969a3374a30d3f50d416317aafff6f",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_candidate_ranking.csv",
+      "source_sha256": "0dc83dcc699b89840f15db7e87ec770d60969a3374a30d3f50d416317aafff6f"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_candidate_workload_seed_stats.csv",
+      "published_sha256": "399839e626acd01045cb9bcb50369abaa5e8e7e36cd80bbb1ec3bf81de083f89",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_candidate_workload_seed_stats.csv",
+      "source_sha256": "399839e626acd01045cb9bcb50369abaa5e8e7e36cd80bbb1ec3bf81de083f89"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_candidate_workload_stats.csv",
+      "published_sha256": "91d0b54cee61f328d1341c98355721c2a8bc9907fa1dad555abaaa412dc1ac22",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_candidate_workload_stats.csv",
+      "source_sha256": "91d0b54cee61f328d1341c98355721c2a8bc9907fa1dad555abaaa412dc1ac22"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_per_fault_outcomes.json.gz",
+      "published_sha256": "c9f044435f41b11d6dcd7ce06a08c92483efb14f942d01255cf1090cb08c4e39",
+      "transformation": "deterministic_gzip_mtime_0",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_per_fault_outcomes.json",
+      "source_sha256": "bbb7b36cbe2b7d3b8b364d22c12ff79abf7e75348c466685a5d7a82bfe1d79e1"
+    },
+    {
+      "published_path": "results/full_run/analysis_output/zoix_top_candidates.csv",
+      "published_sha256": "90fda2a75e185cc1d013ac972f08cca3d89654d4d9f507bcc3d34e6f32074353",
+      "transformation": "copied_byte_for_byte",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/analysis_output/zoix_top_candidates.csv",
+      "source_sha256": "90fda2a75e185cc1d013ac972f08cca3d89654d4d9f507bcc3d34e6f32074353"
+    },
+    {
+      "published_path": "results/full_run/audits/audit_file_map.csv",
+      "published_sha256": "6ca0b3edcc0866b526833d137d46bff551b291a9f1f787a8c10ed87cb38cd224",
+      "transformation": "derived_windows_safe_audit_filename_map"
+    },
+    {
+      "published_path": "results/full_run/audits/c00_gen.json",
+      "published_sha256": "0ec3e95a6cf3208661b714619cd62ae4e0bc8cf6515df6331d2e8eccca5d4d5e",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260818/generation_audit.json",
+      "source_sha256": "0ec3e95a6cf3208661b714619cd62ae4e0bc8cf6515df6331d2e8eccca5d4d5e"
+    },
+    {
+      "published_path": "results/full_run/audits/c00_post.json",
+      "published_sha256": "9760cb7af083ff44cca89b4b4d2b0ec5d030ba2a056e5d406667fb8263066826",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260818/post_report_audit.json",
+      "source_sha256": "9760cb7af083ff44cca89b4b4d2b0ec5d030ba2a056e5d406667fb8263066826"
+    },
+    {
+      "published_path": "results/full_run/audits/c00_summary.rpt",
+      "published_sha256": "b4eb430040b1314c153e8e996f65275bcd14050159c4e5083425cdd7e90c4d33",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260818/summary.rpt",
+      "source_sha256": "b4eb430040b1314c153e8e996f65275bcd14050159c4e5083425cdd7e90c4d33"
+    },
+    {
+      "published_path": "results/full_run/audits/c01_gen.json",
+      "published_sha256": "ce153d1924207c2aa3c2146238271c5b8892b1b749444c04fccef595dab22810",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260819/generation_audit.json",
+      "source_sha256": "ce153d1924207c2aa3c2146238271c5b8892b1b749444c04fccef595dab22810"
+    },
+    {
+      "published_path": "results/full_run/audits/c01_post.json",
+      "published_sha256": "abf0a49fb201952e3cd87b70b1ad92e6663171217e4eb36f34874c04f791599e",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260819/post_report_audit.json",
+      "source_sha256": "abf0a49fb201952e3cd87b70b1ad92e6663171217e4eb36f34874c04f791599e"
+    },
+    {
+      "published_path": "results/full_run/audits/c01_summary.rpt",
+      "published_sha256": "afb1cda9b88ec69d27b14ce330864b94c34364afb98256c345b24132834d1626",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260819/summary.rpt",
+      "source_sha256": "afb1cda9b88ec69d27b14ce330864b94c34364afb98256c345b24132834d1626"
+    },
+    {
+      "published_path": "results/full_run/audits/c02_gen.json",
+      "published_sha256": "2b0a6cdd2427cb0bc9b394dfd08fcfaf8604705bb02e861d550204dc5c9e1203",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260820/generation_audit.json",
+      "source_sha256": "2b0a6cdd2427cb0bc9b394dfd08fcfaf8604705bb02e861d550204dc5c9e1203"
+    },
+    {
+      "published_path": "results/full_run/audits/c02_post.json",
+      "published_sha256": "35b4a8a088bc126e645ab6fd777d8944dd3b35e03f31772c75e8de22e428c4e1",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260820/post_report_audit.json",
+      "source_sha256": "35b4a8a088bc126e645ab6fd777d8944dd3b35e03f31772c75e8de22e428c4e1"
+    },
+    {
+      "published_path": "results/full_run/audits/c02_summary.rpt",
+      "published_sha256": "ba491ee25ebcc4f993bfab2dfee65bbfc3c743cf71108cd2652c034e70101c76",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260820/summary.rpt",
+      "source_sha256": "ba491ee25ebcc4f993bfab2dfee65bbfc3c743cf71108cd2652c034e70101c76"
+    },
+    {
+      "published_path": "results/full_run/audits/c03_gen.json",
+      "published_sha256": "ee84c27108bdf3ccd82e2b1450df1b0f74174d8153f83d14be5c8ee928fc4437",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260818/generation_audit.json",
+      "source_sha256": "ee84c27108bdf3ccd82e2b1450df1b0f74174d8153f83d14be5c8ee928fc4437"
+    },
+    {
+      "published_path": "results/full_run/audits/c03_post.json",
+      "published_sha256": "8fa008289b831655cadd4a036b461848c8e3ffbb1eb53ecee508561e3f164a65",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260818/post_report_audit.json",
+      "source_sha256": "8fa008289b831655cadd4a036b461848c8e3ffbb1eb53ecee508561e3f164a65"
+    },
+    {
+      "published_path": "results/full_run/audits/c03_summary.rpt",
+      "published_sha256": "b19e0e3fa45132dbdb9207cdedf21ea552063e896c7897d66bfc96698636ddcc",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260818/summary.rpt",
+      "source_sha256": "b19e0e3fa45132dbdb9207cdedf21ea552063e896c7897d66bfc96698636ddcc"
+    },
+    {
+      "published_path": "results/full_run/audits/c04_gen.json",
+      "published_sha256": "bc87e6fdbf89d191f2decd49d5ba6faf5e256be9aca8a2c902abd91431bdcd65",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260819/generation_audit.json",
+      "source_sha256": "bc87e6fdbf89d191f2decd49d5ba6faf5e256be9aca8a2c902abd91431bdcd65"
+    },
+    {
+      "published_path": "results/full_run/audits/c04_post.json",
+      "published_sha256": "bae336f5ca4637d881af4c63ddb75546c6336bd33321ec630e4b18f0c1dd7e0f",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260819/post_report_audit.json",
+      "source_sha256": "bae336f5ca4637d881af4c63ddb75546c6336bd33321ec630e4b18f0c1dd7e0f"
+    },
+    {
+      "published_path": "results/full_run/audits/c04_summary.rpt",
+      "published_sha256": "dd38b391e877935a05217aae68c2a3b4eb844a5b70e2fe048b19015e123e4bee",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260819/summary.rpt",
+      "source_sha256": "dd38b391e877935a05217aae68c2a3b4eb844a5b70e2fe048b19015e123e4bee"
+    },
+    {
+      "published_path": "results/full_run/audits/c05_gen.json",
+      "published_sha256": "ae1f09372416559078d0b8a2bec41498553699b7adaa5b08344038584a739da2",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260820/generation_audit.json",
+      "source_sha256": "ae1f09372416559078d0b8a2bec41498553699b7adaa5b08344038584a739da2"
+    },
+    {
+      "published_path": "results/full_run/audits/c05_post.json",
+      "published_sha256": "3659a05c7b82c0985832b20a05bcd9bdfc874af800c4ff1042561402dfd07689",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260820/post_report_audit.json",
+      "source_sha256": "3659a05c7b82c0985832b20a05bcd9bdfc874af800c4ff1042561402dfd07689"
+    },
+    {
+      "published_path": "results/full_run/audits/c05_summary.rpt",
+      "published_sha256": "2d294b5636920e5817c0c89b0f4129712356cda1faa7a2f03ad3bbd913662b7a",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260820/summary.rpt",
+      "source_sha256": "2d294b5636920e5817c0c89b0f4129712356cda1faa7a2f03ad3bbd913662b7a"
+    },
+    {
+      "published_path": "results/full_run/audits/c06_gen.json",
+      "published_sha256": "e34ff8a2ba8e150df2819d0f2c494ee482c749351cce6deccac830a1a36b388c",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260818/generation_audit.json",
+      "source_sha256": "e34ff8a2ba8e150df2819d0f2c494ee482c749351cce6deccac830a1a36b388c"
+    },
+    {
+      "published_path": "results/full_run/audits/c06_post.json",
+      "published_sha256": "cf2acafcd5c7522f0bcd06b11ea5666361254c4bf7c687eb85532699e50d27e6",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260818/post_report_audit.json",
+      "source_sha256": "cf2acafcd5c7522f0bcd06b11ea5666361254c4bf7c687eb85532699e50d27e6"
+    },
+    {
+      "published_path": "results/full_run/audits/c06_summary.rpt",
+      "published_sha256": "6ca1c22263f1d4e4965e69c3539b68bfd414de25ff254357fc0cc59b691a16c9",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260818/summary.rpt",
+      "source_sha256": "6ca1c22263f1d4e4965e69c3539b68bfd414de25ff254357fc0cc59b691a16c9"
+    },
+    {
+      "published_path": "results/full_run/audits/c07_gen.json",
+      "published_sha256": "34c71f7b620b03ddf1662c17ff502c1e1bf1b8f828e32b4a59c719ee9cf8e0a9",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260819/generation_audit.json",
+      "source_sha256": "34c71f7b620b03ddf1662c17ff502c1e1bf1b8f828e32b4a59c719ee9cf8e0a9"
+    },
+    {
+      "published_path": "results/full_run/audits/c07_post.json",
+      "published_sha256": "f7443a639c7ca737186562fe92da510b75e4f457d8c702c5d3be139d0e6bd3d5",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260819/post_report_audit.json",
+      "source_sha256": "f7443a639c7ca737186562fe92da510b75e4f457d8c702c5d3be139d0e6bd3d5"
+    },
+    {
+      "published_path": "results/full_run/audits/c07_summary.rpt",
+      "published_sha256": "834c6db247cd074688eff11f68335c1b5be0e5dbc84786b6cb7e1dfff37b44c1",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260819/summary.rpt",
+      "source_sha256": "834c6db247cd074688eff11f68335c1b5be0e5dbc84786b6cb7e1dfff37b44c1"
+    },
+    {
+      "published_path": "results/full_run/audits/c08_gen.json",
+      "published_sha256": "b4101620cdeb74ac417335efcc1957c708ac1268a03e95b78ac94f649bbf9227",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260820/generation_audit.json",
+      "source_sha256": "b4101620cdeb74ac417335efcc1957c708ac1268a03e95b78ac94f649bbf9227"
+    },
+    {
+      "published_path": "results/full_run/audits/c08_post.json",
+      "published_sha256": "c946f4a4be8093200625460257b9e8593cd1b6a1d9cb2e248b034baaf0187338",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260820/post_report_audit.json",
+      "source_sha256": "c946f4a4be8093200625460257b9e8593cd1b6a1d9cb2e248b034baaf0187338"
+    },
+    {
+      "published_path": "results/full_run/audits/c08_summary.rpt",
+      "published_sha256": "168a3dbf523435d3ec740db19fc63df1bc53e123ed749ab02f8a9e8685fd98eb",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260820/summary.rpt",
+      "source_sha256": "168a3dbf523435d3ec740db19fc63df1bc53e123ed749ab02f8a9e8685fd98eb"
+    },
+    {
+      "published_path": "results/full_run/audits/c09_gen.json",
+      "published_sha256": "289ca6af66f6455f4b5f00210aa394750d23bbc12a2e8ab9021ea0a59091b0e6",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260818/generation_audit.json",
+      "source_sha256": "289ca6af66f6455f4b5f00210aa394750d23bbc12a2e8ab9021ea0a59091b0e6"
+    },
+    {
+      "published_path": "results/full_run/audits/c09_post.json",
+      "published_sha256": "89e27487fbdab3d009671fb8847abc235d250408828a3509baa6757e3a269484",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260818/post_report_audit.json",
+      "source_sha256": "89e27487fbdab3d009671fb8847abc235d250408828a3509baa6757e3a269484"
+    },
+    {
+      "published_path": "results/full_run/audits/c09_summary.rpt",
+      "published_sha256": "cc710aeefd9ead13bb276a7dc523fc8ef81436d4d5eeb43642e39a7bf67c356e",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260818/summary.rpt",
+      "source_sha256": "cc710aeefd9ead13bb276a7dc523fc8ef81436d4d5eeb43642e39a7bf67c356e"
+    },
+    {
+      "published_path": "results/full_run/audits/c10_gen.json",
+      "published_sha256": "73dd880d10540a2fc3e5588d53637cd75ed2529325c700a0f7416e133573e0b4",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260819/generation_audit.json",
+      "source_sha256": "73dd880d10540a2fc3e5588d53637cd75ed2529325c700a0f7416e133573e0b4"
+    },
+    {
+      "published_path": "results/full_run/audits/c10_post.json",
+      "published_sha256": "acb06c9ae6fdf3a9f796782649e4d351dde7fbc62769431891c645e9165f4972",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260819/post_report_audit.json",
+      "source_sha256": "acb06c9ae6fdf3a9f796782649e4d351dde7fbc62769431891c645e9165f4972"
+    },
+    {
+      "published_path": "results/full_run/audits/c10_summary.rpt",
+      "published_sha256": "b6de322e5d45298b49565757db3535b9f2d0f69dd5c1c4bbc32a81455c7dc037",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260819/summary.rpt",
+      "source_sha256": "b6de322e5d45298b49565757db3535b9f2d0f69dd5c1c4bbc32a81455c7dc037"
+    },
+    {
+      "published_path": "results/full_run/audits/c11_gen.json",
+      "published_sha256": "f6a0a11aa312cee4563ef266b41274265966043f04b0a5d18fbb0ca922bbf529",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260820/generation_audit.json",
+      "source_sha256": "f6a0a11aa312cee4563ef266b41274265966043f04b0a5d18fbb0ca922bbf529"
+    },
+    {
+      "published_path": "results/full_run/audits/c11_post.json",
+      "published_sha256": "cc92e20405707e601233852691f379ec403e6b048628d2bf93773b02e25b00df",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260820/post_report_audit.json",
+      "source_sha256": "cc92e20405707e601233852691f379ec403e6b048628d2bf93773b02e25b00df"
+    },
+    {
+      "published_path": "results/full_run/audits/c11_summary.rpt",
+      "published_sha256": "a841aa2d217097c0bc6c83e996b4a0fb3cb6cfb3e0ec39124911725b50de3018",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260820/summary.rpt",
+      "source_sha256": "a841aa2d217097c0bc6c83e996b4a0fb3cb6cfb3e0ec39124911725b50de3018"
+    },
+    {
+      "published_path": "results/full_run/audits/c12_gen.json",
+      "published_sha256": "4f8a6857d56603e3ab3a886d4e2510cfefd612efffff8941f99935fa3ce98998",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260818/generation_audit.json",
+      "source_sha256": "4f8a6857d56603e3ab3a886d4e2510cfefd612efffff8941f99935fa3ce98998"
+    },
+    {
+      "published_path": "results/full_run/audits/c12_post.json",
+      "published_sha256": "e161612f2ca149d6092428ca7869767a6688ce0ae83d82c054ede4025171ab24",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260818/post_report_audit.json",
+      "source_sha256": "e161612f2ca149d6092428ca7869767a6688ce0ae83d82c054ede4025171ab24"
+    },
+    {
+      "published_path": "results/full_run/audits/c12_summary.rpt",
+      "published_sha256": "32bc01136e286c1a4734cf42105d7ce93342fa0d8b61aaef2e61e7d17eb44fa9",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260818/summary.rpt",
+      "source_sha256": "32bc01136e286c1a4734cf42105d7ce93342fa0d8b61aaef2e61e7d17eb44fa9"
+    },
+    {
+      "published_path": "results/full_run/audits/c13_gen.json",
+      "published_sha256": "441b20cc4c19c86da64d3ed34d078733df13f9ec14a4aa47771438d3d949f73a",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260819/generation_audit.json",
+      "source_sha256": "441b20cc4c19c86da64d3ed34d078733df13f9ec14a4aa47771438d3d949f73a"
+    },
+    {
+      "published_path": "results/full_run/audits/c13_post.json",
+      "published_sha256": "749004aa54f31aa29bf1a950bb8892f438593fbf66364272406f871cc6e24d2a",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260819/post_report_audit.json",
+      "source_sha256": "749004aa54f31aa29bf1a950bb8892f438593fbf66364272406f871cc6e24d2a"
+    },
+    {
+      "published_path": "results/full_run/audits/c13_summary.rpt",
+      "published_sha256": "6307d6081782d36090cdcf3e489e3c8213346f5dbc973e0121120062a51da317",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260819/summary.rpt",
+      "source_sha256": "6307d6081782d36090cdcf3e489e3c8213346f5dbc973e0121120062a51da317"
+    },
+    {
+      "published_path": "results/full_run/audits/c14_gen.json",
+      "published_sha256": "fd766f1445232e1a100887a11fb6d540c6af9bb614cb3cc4f44e0c0268a3fefb",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260820/generation_audit.json",
+      "source_sha256": "fd766f1445232e1a100887a11fb6d540c6af9bb614cb3cc4f44e0c0268a3fefb"
+    },
+    {
+      "published_path": "results/full_run/audits/c14_post.json",
+      "published_sha256": "5f685817402bedb6985cbf748185d192d1b72e95f1fb9115a582143408220282",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260820/post_report_audit.json",
+      "source_sha256": "5f685817402bedb6985cbf748185d192d1b72e95f1fb9115a582143408220282"
+    },
+    {
+      "published_path": "results/full_run/audits/c14_summary.rpt",
+      "published_sha256": "af4ef4bbfdc281db07b95a5fe3f8c222d9f7e6cc4079c0a4c920958c00504028",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260820/summary.rpt",
+      "source_sha256": "af4ef4bbfdc281db07b95a5fe3f8c222d9f7e6cc4079c0a4c920958c00504028"
+    },
+    {
+      "published_path": "results/full_run/audits/c15_gen.json",
+      "published_sha256": "fe653559c50e579fbc9666872e6bef653481dc3828a9f1e552ac679477b668b6",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260818/generation_audit.json",
+      "source_sha256": "fe653559c50e579fbc9666872e6bef653481dc3828a9f1e552ac679477b668b6"
+    },
+    {
+      "published_path": "results/full_run/audits/c15_post.json",
+      "published_sha256": "32687c13d7883c3b4e9cbde9b7368c44b9315b0589176955ea7c5b5d047b092a",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260818/post_report_audit.json",
+      "source_sha256": "32687c13d7883c3b4e9cbde9b7368c44b9315b0589176955ea7c5b5d047b092a"
+    },
+    {
+      "published_path": "results/full_run/audits/c15_summary.rpt",
+      "published_sha256": "557029927f16fd154f3d941f1bd5fe1af876f37638d6aac0b3f641b166ae780e",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260818/summary.rpt",
+      "source_sha256": "557029927f16fd154f3d941f1bd5fe1af876f37638d6aac0b3f641b166ae780e"
+    },
+    {
+      "published_path": "results/full_run/audits/c16_gen.json",
+      "published_sha256": "8859b28f360a205571eae6f9de6b0a225ba3e4a57f18011e71b1cca7ede930ff",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260819/generation_audit.json",
+      "source_sha256": "8859b28f360a205571eae6f9de6b0a225ba3e4a57f18011e71b1cca7ede930ff"
+    },
+    {
+      "published_path": "results/full_run/audits/c16_post.json",
+      "published_sha256": "008d941cdd91bd47bc35f987cf01753dc8ea6cc636bccc8b3b6a691b7d68f58c",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260819/post_report_audit.json",
+      "source_sha256": "008d941cdd91bd47bc35f987cf01753dc8ea6cc636bccc8b3b6a691b7d68f58c"
+    },
+    {
+      "published_path": "results/full_run/audits/c16_summary.rpt",
+      "published_sha256": "053ab832b017c57a4620ac02c954e88f2c7877ee8c2a06763a44b498d9d060eb",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260819/summary.rpt",
+      "source_sha256": "053ab832b017c57a4620ac02c954e88f2c7877ee8c2a06763a44b498d9d060eb"
+    },
+    {
+      "published_path": "results/full_run/audits/c17_gen.json",
+      "published_sha256": "b2b2df2726dacf4a935ab5640f3adcc22e0b18b254060935a0662e37bbcef430",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260820/generation_audit.json",
+      "source_sha256": "b2b2df2726dacf4a935ab5640f3adcc22e0b18b254060935a0662e37bbcef430"
+    },
+    {
+      "published_path": "results/full_run/audits/c17_post.json",
+      "published_sha256": "0d40d39cb78c0fe893122390805c44964cff5391c7a49b2bee3f6dc9d6326854",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260820/post_report_audit.json",
+      "source_sha256": "0d40d39cb78c0fe893122390805c44964cff5391c7a49b2bee3f6dc9d6326854"
+    },
+    {
+      "published_path": "results/full_run/audits/c17_summary.rpt",
+      "published_sha256": "f368a1993d8701c55480e810e8cb61e533a39d1eb5cf1a6b3572f8dee2b4608a",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260820/summary.rpt",
+      "source_sha256": "f368a1993d8701c55480e810e8cb61e533a39d1eb5cf1a6b3572f8dee2b4608a"
+    },
+    {
+      "published_path": "results/full_run/audits/c18_gen.json",
+      "published_sha256": "bca8519cf8b34529a21052793a9c143fdf466681385914ab8ab02df29641ea69",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260818/generation_audit.json",
+      "source_sha256": "bca8519cf8b34529a21052793a9c143fdf466681385914ab8ab02df29641ea69"
+    },
+    {
+      "published_path": "results/full_run/audits/c18_post.json",
+      "published_sha256": "bdb32dd82af213596ac0f041e63d5ddbe679a65bb87b8ab6e215204af87d42ba",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260818/post_report_audit.json",
+      "source_sha256": "bdb32dd82af213596ac0f041e63d5ddbe679a65bb87b8ab6e215204af87d42ba"
+    },
+    {
+      "published_path": "results/full_run/audits/c18_summary.rpt",
+      "published_sha256": "6a83882d99b46079f768c15cb9d14d8014884325259837f5fa040a41a0a2bdfe",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260818/summary.rpt",
+      "source_sha256": "6a83882d99b46079f768c15cb9d14d8014884325259837f5fa040a41a0a2bdfe"
+    },
+    {
+      "published_path": "results/full_run/audits/c19_gen.json",
+      "published_sha256": "32c2fc47e66f180a57056dd54bb81cc6699a8d279d83255d2c63f37ba3d3f343",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260819/generation_audit.json",
+      "source_sha256": "32c2fc47e66f180a57056dd54bb81cc6699a8d279d83255d2c63f37ba3d3f343"
+    },
+    {
+      "published_path": "results/full_run/audits/c19_post.json",
+      "published_sha256": "8fdbd755538f89ddcab0d8bd2db2254a2f85080706d693c26ec298d59e0f4b0f",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260819/post_report_audit.json",
+      "source_sha256": "8fdbd755538f89ddcab0d8bd2db2254a2f85080706d693c26ec298d59e0f4b0f"
+    },
+    {
+      "published_path": "results/full_run/audits/c19_summary.rpt",
+      "published_sha256": "cbcd1eb389f85a2765e2317af73b200ab91ce8c5b0d69bb210484caca8bebec7",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260819/summary.rpt",
+      "source_sha256": "cbcd1eb389f85a2765e2317af73b200ab91ce8c5b0d69bb210484caca8bebec7"
+    },
+    {
+      "published_path": "results/full_run/audits/c20_gen.json",
+      "published_sha256": "c07da2aa3aaf1f2070620f6e7253ce538c878d75ae0e350d8fe82e33a7a9582a",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260820/generation_audit.json",
+      "source_sha256": "c07da2aa3aaf1f2070620f6e7253ce538c878d75ae0e350d8fe82e33a7a9582a"
+    },
+    {
+      "published_path": "results/full_run/audits/c20_post.json",
+      "published_sha256": "394e32c8b024b822f6987bfa2dd27f4334fa410d9d1ef14bdb33c5bc9ad5aa52",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260820/post_report_audit.json",
+      "source_sha256": "394e32c8b024b822f6987bfa2dd27f4334fa410d9d1ef14bdb33c5bc9ad5aa52"
+    },
+    {
+      "published_path": "results/full_run/audits/c20_summary.rpt",
+      "published_sha256": "1a1211fd48894689ccca2e6cda73f0549ba25d2b8f7e8cd40e1036aeaac1c63c",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260820/summary.rpt",
+      "source_sha256": "1a1211fd48894689ccca2e6cda73f0549ba25d2b8f7e8cd40e1036aeaac1c63c"
+    },
+    {
+      "published_path": "results/full_run/audits/c21_gen.json",
+      "published_sha256": "e95e7af397754e6c5c9b025954ab9cedf0723df65f604a21aaa6227130947e7f",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260818/generation_audit.json",
+      "source_sha256": "e95e7af397754e6c5c9b025954ab9cedf0723df65f604a21aaa6227130947e7f"
+    },
+    {
+      "published_path": "results/full_run/audits/c21_post.json",
+      "published_sha256": "c322f4c26c3a92e66f6df28d245f6bc8412c3d7df4d84590c7ba225b2dc60e77",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260818/post_report_audit.json",
+      "source_sha256": "c322f4c26c3a92e66f6df28d245f6bc8412c3d7df4d84590c7ba225b2dc60e77"
+    },
+    {
+      "published_path": "results/full_run/audits/c21_summary.rpt",
+      "published_sha256": "f42db2b3dbd17a16139420218322114205328fe9806279dae56a25c4d18afdd0",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260818/summary.rpt",
+      "source_sha256": "f42db2b3dbd17a16139420218322114205328fe9806279dae56a25c4d18afdd0"
+    },
+    {
+      "published_path": "results/full_run/audits/c22_gen.json",
+      "published_sha256": "048cb3b0ae0eff5bb11f7822c9b829902af7148d36e44bf9f2f1131f889eca27",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260819/generation_audit.json",
+      "source_sha256": "048cb3b0ae0eff5bb11f7822c9b829902af7148d36e44bf9f2f1131f889eca27"
+    },
+    {
+      "published_path": "results/full_run/audits/c22_post.json",
+      "published_sha256": "f25050d01e1bd24e30f4c4fb6088d04b7d315519c24052ca4333ae91c22ccb30",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260819/post_report_audit.json",
+      "source_sha256": "f25050d01e1bd24e30f4c4fb6088d04b7d315519c24052ca4333ae91c22ccb30"
+    },
+    {
+      "published_path": "results/full_run/audits/c22_summary.rpt",
+      "published_sha256": "ad7983a89ec6221137bde385cc1a0380fa755314ddc05eac9d64b8032d014e4b",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260819/summary.rpt",
+      "source_sha256": "ad7983a89ec6221137bde385cc1a0380fa755314ddc05eac9d64b8032d014e4b"
+    },
+    {
+      "published_path": "results/full_run/audits/c23_gen.json",
+      "published_sha256": "df967f79545829da84a4b59d4e95a968899e360f0eae8921253ddfdf6a67aa90",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260820/generation_audit.json",
+      "source_sha256": "df967f79545829da84a4b59d4e95a968899e360f0eae8921253ddfdf6a67aa90"
+    },
+    {
+      "published_path": "results/full_run/audits/c23_post.json",
+      "published_sha256": "44571b9208cb6a0e4f65231817e549b97776f311eaaeb630fb85cd77535ce3f1",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260820/post_report_audit.json",
+      "source_sha256": "44571b9208cb6a0e4f65231817e549b97776f311eaaeb630fb85cd77535ce3f1"
+    },
+    {
+      "published_path": "results/full_run/audits/c23_summary.rpt",
+      "published_sha256": "7fabec6b867d25b8a7eb60a2dfd723c13741d484344cab3a6bed1b7a424c27b6",
+      "transformation": "renamed_for_windows_path_compatibility",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260820/summary.rpt",
+      "source_sha256": "7fabec6b867d25b8a7eb60a2dfd723c13741d484344cab3a6bed1b7a424c27b6"
+    },
+    {
+      "published_path": "results/full_run/campaign_matrix.csv",
+      "published_sha256": "7da78a7cb662e4710bed6e9cf86d95c6dd548c5beb257ac85a91786a3c33d244",
+      "transformation": "derived_campaign_index_excluding_absolute_paths",
+      "derived_from": [
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "9c20065263cb85336038a464226862f53778551e6491aa215b88f34c1cf145eb"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "663313919d488ab25506f4c352b7f4f4ae80809c7107986937511eab981a1543"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__branch_mix__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "c4173f37aea13631f673d0fb6ba0874a218c04b3e48a816bb1dcfb5cf9c9e9ef"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "608829030406864df920132506debf9088c07b7ffe70ba507a7e1e4ca54db9aa"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "8f4f0aa901e912a80495f5a39cc79783158b85b61e90178149e2959b1a594592"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__call_return__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "e4b36b4cad211734072e9c2f744533e6eae7f7f7480dd634c4d1333fae3acdf5"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "411f3d05d9f1a894cc6e16d1157cf83369e33f814da1d28c7d3b591d309850fc"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "622edde12da244d93d415cca6dcfc3c4cc33df2b0b0fb342026858ced8809bea"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__core_mix__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "fd135aa31ec2aeafb454a66adf7929b1f49c84589a5b47bbeda7903d0858a00b"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "42bff56832b6ac2faac29cec4f8d4cc09ef0aba4a78e52c807d87e7df6658e9f"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "310c98dcb7fcdad2fc9ef0419d781af9bec76660ce98bc00396328d53941ed17"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__debug_uart__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "6dd0e69b02a2e659fc2f262e3447abe0851347964a4840db4c71f5c3edcb8e99"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "537ef84e2aa106e0d3fd0b0d19b4ad219d58ffcd1de57be4f495417ff4249eca"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "ec96bbd40419cbbd50e51fb4e6400adf7e5beac670791c9da6dabae4799852a6"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__dma_contention__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "864dcdb339ddf0f63220a8469734a7ad8a89bfe0b4905d187c89b3ee88dfdff1"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "60b217ac41166ec5eeb88606ffeea3077c1315fc0b19b004ad593c4e99383879"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "33317b66fcc8bf34d4b3dbe43d61c1011fc74d2289c188f716bac1a8549c76b2"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__interrupt_mix__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "832101c4dac893d751a6f7ad9d584479b0ad9ce98265dbb71ac7068c47f5e9a9"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "463774d77d70d2b858ea94eb90b0ca8e5d5b8bd823cea0c5c0440f1db0699d3b"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "b11541e03e08a6a64ccd270c004dfca56e10cb6cd9312eddbaaff8f8c14241f6"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__memory_mix__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "8ce402d7a3a5d95a896232c5aac32760f004e94833bdee320b2069b6844af2e0"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260818/CAMPAIGN_DONE.json",
+          "source_sha256": "dd5a0fd32f8bfbb8ccaeff6e4268a8d90ceb54990020eea71065a31708142aa6"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260819/CAMPAIGN_DONE.json",
+          "source_sha256": "893a934e325e45651a6e5c7a85677c062a75918efc9e07bb3f3efa8e1ca7b0bc"
+        },
+        {
+          "source_path": "zoix_reverse_pc_run_v1_1_1/campaigns/G00_balanced_all_workloads__peripheral_mix__seed20260820/CAMPAIGN_DONE.json",
+          "source_sha256": "60115e555d04ae3e12518b5810b9a554ef76c90ce462c4bcfd36c173faf56ca3"
+        }
+      ]
+    },
+    {
+      "published_path": "results/full_run/logs/compile.console.log",
+      "published_sha256": "2aec465edaa83a3d0431b598d6eba13a2ded25a6b62ed16622067180f1db6e7d",
+      "transformation": "privacy_sanitized_absolute_paths",
+      "source_path": "zoix_reverse_pc_run_v1_1_1/compile/compile.console.log",
+      "source_sha256": "2aec465edaa83a3d0431b598d6eba13a2ded25a6b62ed16622067180f1db6e7d"
+    },
+    {
+      "published_path": "results/full_run/logs/full_run_console.log",
+      "published_sha256": "93ce9715c8c30f56f4d2638a988ef040fb67c55853419147a67e8eda99f4742e",
+      "transformation": "privacy_sanitized_absolute_paths",
+      "source_path": "full_run_console_v1_1_1.log",
+      "source_sha256": "54549fad75bb4df6f84469954fc01cfdf1d54e9d5dcc0b728e54fd44d4c8833c"
+    },
+    {
+      "published_path": "verification/verify_artifact.py",
+      "published_sha256": "8a83521ba3986cacb605a0737aa80d165574a12db620a2e006fde7617e1193aa",
+      "transformation": "authored_or_derived_for_windows_safe_artifact"
+    }
+  ]
+}

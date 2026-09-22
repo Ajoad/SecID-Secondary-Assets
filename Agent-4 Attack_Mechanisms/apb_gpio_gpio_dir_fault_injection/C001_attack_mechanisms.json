@@ -1,0 +1,14 @@
+[
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PSEL",
+    "attack_mechanism": "A stuck-at or transient assertion of `apb_gpio_gpio_dir_cone.PSEL` can turn a non-write or wrong-phase transfer into a PADDIR update. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PSEL` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PSEL -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.PWRITE",
+    "attack_mechanism": "A stuck-at or transient assertion of `apb_gpio_gpio_dir_cone.PWRITE` can turn a non-write or wrong-phase transfer into a PADDIR update. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PWRITE` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PWRITE -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+  },
+  {
+    "candidate": "apb_gpio_gpio_dir_cone.r_gpio_dir",
+    "attack_mechanism": "A bit flip in `apb_gpio_gpio_dir_cone.r_gpio_dir` persists until reset or a later PADDIR write and immediately changes the corresponding output-enable direction. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.r_gpio_dir` is the clocked storage directly assigned to the external `gpio_dir` output. Signal propagation follows `apb_gpio_gpio_dir_cone.r_gpio_dir -> apb_gpio_gpio_dir_cone.gpio_dir`. The primary direction value and the physical pad configuration are corrupted."
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "candidate": "openMSP430.cpuoff",
+    "attack_mechanism": "Holding or toggling `openMSP430.cpuoff` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. `openMSP430.cpuoff` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the active mux/state branches are selected by `openMSP430.cpuoff`, `openMSP430.frontend_0.exec_jmp`. Signal propagation follows `openMSP430.cpuoff -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  },
+  {
+    "candidate": "openMSP430.dbg_0.cpu_ctl_wr",
+    "attack_mechanism": "Holding or toggling `openMSP430.dbg_0.cpu_ctl_wr` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. `openMSP430.dbg_0.cpu_ctl_wr` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. Signal propagation follows `openMSP430.dbg_0.cpu_ctl_wr -> openMSP430.dbg_0.halt_cpu -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  },
+  {
+    "candidate": "openMSP430.dbg_0.dbg_uart_0.dbg_din_bw",
+    "attack_mechanism": "Holding or toggling `openMSP430.dbg_0.dbg_uart_0.dbg_din_bw` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. `openMSP430.dbg_0.dbg_uart_0.dbg_din_bw` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the active mux/state branches are selected by `openMSP430.dbg_0.dbg_uart_0.dbg_din_bw`, `openMSP430.frontend_0.exec_jmp`. Signal propagation follows `openMSP430.dbg_0.dbg_uart_0.dbg_din_bw -> openMSP430.dbg_0.dbg_uart_0.dbg_din -> openMSP430.mem_backbone_0.cpu_halt_cmd -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  }
+]

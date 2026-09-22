@@ -1,0 +1,280 @@
+{
+  "schema": "secid_openmsp430_reverse_zoix_static_validation_v1_1_1",
+  "passed": true,
+  "errors": [],
+  "checks": [
+    {
+      "check": "candidate_count",
+      "passed": true,
+      "detail": "148"
+    },
+    {
+      "check": "selected_candidate_bits",
+      "passed": true,
+      "detail": "1304"
+    },
+    {
+      "check": "expected_unique_faults",
+      "passed": true,
+      "detail": "2608"
+    },
+    {
+      "check": "group_count",
+      "passed": true,
+      "detail": "1"
+    },
+    {
+      "check": "balanced_campaign_design",
+      "passed": true,
+      "detail": "balanced_publication_matrix"
+    },
+    {
+      "check": "balanced_workloads",
+      "passed": true,
+      "detail": "['core_mix', 'branch_mix', 'call_return', 'memory_mix', 'peripheral_mix', 'interrupt_mix', 'dma_contention', 'debug_uart']"
+    },
+    {
+      "check": "balanced_three_seeds",
+      "passed": true,
+      "detail": "[20260818, 20260819, 20260820]"
+    },
+    {
+      "check": "balanced_matrix_cells",
+      "passed": true,
+      "detail": "24"
+    },
+    {
+      "check": "balanced_full_fault_executions",
+      "passed": true,
+      "detail": "62592"
+    },
+    {
+      "check": "target_unique",
+      "passed": true,
+      "detail": "candidate-bit targets"
+    },
+    {
+      "check": "target_path_unique",
+      "passed": true,
+      "detail": "exact normalized Z01X target paths"
+    },
+    {
+      "check": "fault_classes",
+      "passed": true,
+      "detail": "['PORT', 'VARI', 'WIRE']"
+    },
+    {
+      "check": "sff_bits_G00_balanced_all_workloads",
+      "passed": true,
+      "detail": "1304/1304"
+    },
+    {
+      "check": "sff_total_selected_bits",
+      "passed": true,
+      "detail": "1304"
+    },
+    {
+      "check": "sff_u1_default_defined",
+      "passed": true,
+      "detail": "U1 explicitly defined because this Z01X SFF parser requires statuses referenced by PromoteOrder to be declared"
+    },
+    {
+      "check": "sff_no_u7_definition",
+      "passed": true,
+      "detail": "no synthetic no-difference U7; U1/U8/U9 are selected for auditable pending/detection outcomes"
+    },
+    {
+      "check": "sff_status_reference_definitions",
+      "passed": true,
+      "detail": "referenced=['U1', 'U8', 'U9'] defined=['U1', 'U8', 'U9']"
+    },
+    {
+      "check": "pc_only_detector",
+      "passed": true,
+      "detail": "primary detector"
+    },
+    {
+      "check": "defined_and_xz_status",
+      "passed": true,
+      "detail": "U8/U9 via signal-difference drop"
+    },
+    {
+      "check": "no_synthetic_no_difference_status",
+      "passed": true,
+      "detail": "no tool-side U7 closure"
+    },
+    {
+      "check": "no_final_status_assignment",
+      "passed": true,
+      "detail": "no final-block status assignment"
+    },
+    {
+      "check": "no_prefinish_status_handshake",
+      "passed": true,
+      "detail": "no late no-difference handshake"
+    },
+    {
+      "check": "centralized_finish_task",
+      "passed": true,
+      "detail": "all normal finish paths route through one finish task"
+    },
+    {
+      "check": "seed_variant_active_all_workloads",
+      "passed": true,
+      "detail": "three controlled seed variants perturb deterministic data/branches/memory/peripheral/debug while preserving workload semantics"
+    },
+    {
+      "check": "baseline_fingerprint_sources",
+      "passed": true,
+      "detail": "realized stimulus + cycle-by-cycle PC trace sources emitted on baseline only"
+    },
+    {
+      "check": "fingerprint_seed_label_excluded",
+      "passed": true,
+      "detail": "raw seed label excluded from hashed fingerprint source"
+    },
+    {
+      "check": "fingerprint_realized_program_image",
+      "passed": true,
+      "detail": "full PMEM/DMEM initial image plus realized external schedule"
+    },
+    {
+      "check": "fingerprint_pc_cycle_trace",
+      "passed": true,
+      "detail": "cycle-indexed golden PC trajectory"
+    },
+    {
+      "check": "no_fault_collapse",
+      "passed": true,
+      "detail": "+nocollapse"
+    },
+    {
+      "check": "variable_fault_instrumentation",
+      "passed": true,
+      "detail": "+fault+var"
+    },
+    {
+      "check": "candidate_preservation_noprune",
+      "passed": true,
+      "detail": "+noprune"
+    },
+    {
+      "check": "port_fault_instrumentation",
+      "passed": true,
+      "detail": "-portfaults"
+    },
+    {
+      "check": "four_layer_generation_audit",
+      "passed": true,
+      "detail": "requested/fr2fdef/raw/mapped"
+    },
+    {
+      "check": "exact_standard_path_mapping",
+      "passed": true,
+      "detail": "exact path + hard unmapped audit"
+    },
+    {
+      "check": "status_agnostic_standard_parser",
+      "passed": true,
+      "detail": "open-ended standard FaultList status parsing"
+    },
+    {
+      "check": "faultinfo_attempts_parser",
+      "passed": true,
+      "detail": "FaultInfo Attempts captured"
+    },
+    {
+      "check": "attempts_authoritative_accounting",
+      "passed": true,
+      "detail": "Attempts-based simulation accounting + normalized metrics"
+    },
+    {
+      "check": "attempted_partition_invariant",
+      "passed": true,
+      "detail": "attempted = detected + no-PC-detection + attempted-unknown"
+    },
+    {
+      "check": "tool_simulated_crosscheck",
+      "passed": true,
+      "detail": "Faults Simulated cross-check"
+    },
+    {
+      "check": "attempted_u1_is_valid_no_detection",
+      "passed": true,
+      "detail": "Attempts>0 U1 accepted as PC-not-detected; zero-attempt pending remains invalid"
+    },
+    {
+      "check": "strict_unknown_status_guards",
+      "passed": true,
+      "detail": "strict guards target truly unresolved outcomes"
+    },
+    {
+      "check": "explicit_nc_no_ns",
+      "passed": true,
+      "detail": "NC/NO/NS explicit"
+    },
+    {
+      "check": "resume_checkpoint",
+      "passed": true,
+      "detail": "audited campaign resume support"
+    },
+    {
+      "check": "baseline_fingerprint_audit_runner",
+      "passed": true,
+      "detail": "SHA-256 baseline seed-diversity audit gates fault campaign"
+    },
+    {
+      "check": "balanced_ranking_outputs",
+      "passed": true,
+      "detail": "balanced width-normalized ranking outputs"
+    },
+    {
+      "check": "ranking_matrix_audit",
+      "passed": true,
+      "detail": "requires complete identical workload/seed matrix per physical fault"
+    },
+    {
+      "check": "ranking_bottom_coverage_guard",
+      "passed": true,
+      "detail": "bottom ranking qualified by attempt coverage"
+    },
+    {
+      "check": "smoke_u1_regression_candidate",
+      "passed": true,
+      "detail": "known v1.0.10 attempted-U1 regression target"
+    },
+    {
+      "check": "smoke_manifest_shape",
+      "passed": true,
+      "detail": "9 candidates/25 bits/50 faults/1 groups"
+    },
+    {
+      "check": "smoke_balanced_fault_executions",
+      "passed": true,
+      "detail": "1200"
+    },
+    {
+      "check": "source_scope_decl_kind_consistency",
+      "passed": true,
+      "detail": "148/148 source declarations agree"
+    },
+    {
+      "check": "irq_all_module_wire_not_function_arg",
+      "passed": true,
+      "detail": "frontend_0.irq_all -> WIRE"
+    },
+    {
+      "check": "irq_all_sff_wire_class",
+      "passed": true,
+      "detail": "63 bits classes=['WIRE']"
+    },
+    {
+      "check": "function_scope_shadow_regression",
+      "passed": true,
+      "detail": "wire"
+    }
+  ],
+  "candidate_count": 148,
+  "selected_candidate_bits": 1304,
+  "expected_unique_faults": 2608
+}

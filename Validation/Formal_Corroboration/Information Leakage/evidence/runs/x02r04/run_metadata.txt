@@ -1,0 +1,8 @@
+utc_start=2026-09-21T00:17:44Z
+hostname=[redacted]
+scope=core
+run_id=60_effort_exclude_02_execution_unit_0_alu_out_r04
+fresh_work=1
+wall_timeout_seconds=0
+command=jg -spv -batch <SOURCE_PACKAGE_ROOT>/generated/core/60_effort_exclude_02_execution_unit_0_alu_out_r04.tcl 
+utc_end=2026-09-21T00:17:55Z

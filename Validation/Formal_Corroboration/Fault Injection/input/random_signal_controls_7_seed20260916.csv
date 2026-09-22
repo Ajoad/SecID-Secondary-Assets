@@ -1,0 +1,8 @@
+random_id,candidate,rtl_width,analysis_bit_count,bit_budget,domain,scenario,static_filter_decision,static_filter_reason,static_score,seed,sampling_rule
+0,core_i.id_stage_i.halt_id,1,1,1,decode_control,csr_mix,KEEP,INFLUENCE,0.17937469482421875,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+1,core_i.id_stage_i.alu_op_c_mux_sel,2,2,2,alu,csr_alu,PRUNE,BELOW_THRESHOLD,6.3898407123286205e-06,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+2,core_i.id_stage_i.mult_operator,3,3,3,mult,csr_stall,PRUNE,BELOW_THRESHOLD,7.789582014083862e-05,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+3,core_i.ex_stage_i.alu_i.alu_div_i.AReg_DP,32,32,4,alu,csr_alu,PRUNE,BELOW_THRESHOLD,6.085610948503017e-07,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+4,core_i.cs_registers_i.dcsr_n,13,13,4,csr,csr_mix,KEEP,INCOMPLETE_COVERAGE,0.0001220703125,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+5,core_i.ex_stage_i.alu_i.bset_result,32,32,4,alu,csr_alu,PRUNE,BELOW_THRESHOLD,2.434244379401207e-06,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection
+6,core_i.id_stage_i.operand_b_fw_mux_sel,2,2,2,decode_control,csr_mix,PRUNE,BELOW_THRESHOLD,3.8947151600576824e-05,20260916,prefix-7 reuse of previously frozen v1.3.0 seed-shuffled ordered cohort; no outcome-based reselection

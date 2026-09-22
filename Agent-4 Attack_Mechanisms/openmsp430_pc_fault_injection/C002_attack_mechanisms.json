@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "openMSP430.cpu_halt_cmd",
+    "attack_mechanism": "`openMSP430.cpu_halt_cmd` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.cpu_halt_cmd -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.cpu_halt_cmd` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  },
+  {
+    "candidate": "openMSP430.dbg_0.cpu_ctl",
+    "attack_mechanism": "`openMSP430.dbg_0.cpu_ctl` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.dbg_0.cpu_ctl -> openMSP430.dbg_0.dbg_swbrk -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.dbg_0.cpu_ctl` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  },
+  {
+    "candidate": "openMSP430.dbg_halt_cmd",
+    "attack_mechanism": "`openMSP430.dbg_halt_cmd` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.dbg_halt_cmd -> openMSP430.mem_backbone_0.cpu_halt_cmd -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.dbg_halt_cmd` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  },
+  {
+    "candidate": "openMSP430.dbg_reg_wr",
+    "attack_mechanism": "`openMSP430.dbg_reg_wr` participates in forming or qualifying that software-PC path; the transfer is guarded in the RTL by `openMSP430.execution_unit_0.register_file_0.pc_sw_wr`. The relevant dataflow is `openMSP430.dbg_reg_wr -> openMSP430.execution_unit_0.reg_dest_wr -> openMSP430.execution_unit_0.register_file_0.pc_sw_wr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. During a CALL, jump, or instruction that writes R0, `pc_sw_wr` has priority in the `pc_nxt` multiplexer and selects `pc_sw`. A transient bit flip or forced value on `openMSP430.dbg_reg_wr` before the next `mclk` edge can substitute a false target or assert the software-write selection on the wrong instruction. The corrupted target is captured in `pc`, redirecting control flow, skipping intended instructions, or executing an unintended basic block."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.cpu_halt_req",
+    "attack_mechanism": "`openMSP430.frontend_0.cpu_halt_req` lies on this debug-control route into the PC-update logic; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The relevant dataflow is `openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.frontend_0.cpu_halt_req` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  }
+]

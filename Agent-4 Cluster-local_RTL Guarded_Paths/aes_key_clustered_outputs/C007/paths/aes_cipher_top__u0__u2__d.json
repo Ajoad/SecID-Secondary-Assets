@@ -1,0 +1,306 @@
+{
+  "candidate": "aes_cipher_top.u0.u2.d",
+  "primary_asset": "aes_cipher_top.key",
+  "paths": [
+    {
+      "path_id": "P00",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P01",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[0]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[0]",
+          "destination": "aes_cipher_top.u0.w[1]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[1]",
+          "destination": "aes_cipher_top.u0.w[2]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[2]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P02",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[0]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[0]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P03",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[1]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[1]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P04",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[2]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[2]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P05",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[0]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[0]",
+          "destination": "aes_cipher_top.u0.w[1]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[1]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P06",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[1]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[1]",
+          "destination": "aes_cipher_top.u0.w[2]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[2]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    },
+    {
+      "path_id": "P07",
+      "hops": [
+        {
+          "source": "aes_cipher_top.key",
+          "destination": "aes_cipher_top.u0.key",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.key",
+          "destination": "aes_cipher_top.u0.w[0]",
+          "control_signal": "aes_cipher_top.u0.kld"
+        },
+        {
+          "source": "aes_cipher_top.u0.w[0]",
+          "destination": "aes_cipher_top.u0.w[2]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[2]",
+          "destination": "aes_cipher_top.u0.w[3]",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.w[3]",
+          "destination": "aes_cipher_top.u0.tmp_w",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.tmp_w",
+          "destination": "aes_cipher_top.u0.u2.a",
+          "control_signal": ""
+        },
+        {
+          "source": "aes_cipher_top.u0.u2.a",
+          "destination": "aes_cipher_top.u0.u2.d",
+          "control_signal": ""
+        }
+      ]
+    }
+  ]
+}

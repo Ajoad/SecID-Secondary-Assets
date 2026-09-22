@@ -1,0 +1,6 @@
+[
+  {
+    "candidate": "openMSP430.dbg_en_s",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `openMSP430.dbg_en_s -> openMSP430.dbg_0.halt_rst -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. `openMSP430.dbg_en_s` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the relevant assignment conditions include `openMSP430.frontend_0.exec_jmp`. Holding or toggling `openMSP430.dbg_en_s` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {
+    "candidate": "openMSP430.dbg_0.dbg_uart_0.xfer_buf",
+    "attack_mechanism": "Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. Holding or toggling `openMSP430.dbg_0.dbg_uart_0.xfer_buf` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. `openMSP430.dbg_0.dbg_uart_0.xfer_buf` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the state and data choices on this path depend on `openMSP430.dbg_0.dbg_uart_0.dbg_din_bw`, `openMSP430.frontend_0.exec_jmp`. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase. The causal signal chain is `openMSP430.dbg_0.dbg_uart_0.xfer_buf -> openMSP430.dbg_0.dbg_uart_0.dbg_din -> openMSP430.mem_backbone_0.cpu_halt_cmd -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`."
+  }
+]

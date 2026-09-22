@@ -1,0 +1,501 @@
+{
+  "candidate": "keccak.f_permutation_.round_.c[4][1]",
+  "relation": "fan-out",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[4][1]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[4][1]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.p0.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.p0.in",
+          "destination": "keccak.padder_.p0.out",
+          "control_signal": [
+            "keccak.padder_.p0.byte_num"
+          ]
+        },
+        {
+          "source": "keccak.padder_.p0.out",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[3][4]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[3][4]",
+          "destination": "keccak.f_permutation_.round_.b[3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[3]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[0][4]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[0][4]",
+          "destination": "keccak.f_permutation_.round_.b[0]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[0]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[3][3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[3][3]",
+          "destination": "keccak.f_permutation_.round_.b[3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[3]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[3][2]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[3][2]",
+          "destination": "keccak.f_permutation_.round_.b[3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[3]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[3][1]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[3][1]",
+          "destination": "keccak.f_permutation_.round_.b[3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[3]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[3][0]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[3][0]",
+          "destination": "keccak.f_permutation_.round_.b[3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[3]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.v1",
+          "control_signal": [
+            "keccak.padder_.state",
+            "keccak.is_last"
+          ]
+        },
+        {
+          "source": "keccak.padder_.v1",
+          "destination": "keccak.padder_.out",
+          "control_signal": [
+            "keccak.padder_.update"
+          ]
+        },
+        {
+          "source": "keccak.padder_.out",
+          "destination": "keccak.padder_out_1",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out_1",
+          "destination": "keccak.padder_out",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_out",
+          "destination": "keccak.f_permutation_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.in",
+          "destination": "keccak.f_permutation_.round_in",
+          "control_signal": [
+            "keccak.f_permutation_.accept"
+          ]
+        },
+        {
+          "source": "keccak.f_permutation_.round_in",
+          "destination": "keccak.f_permutation_.round_.a[0][3]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.a[0][3]",
+          "destination": "keccak.f_permutation_.round_.b[0]",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.f_permutation_.round_.b[0]",
+          "destination": "keccak.f_permutation_.round_.c[4][1]",
+          "control_signal": []
+        }
+      ]
+    }
+  ]
+}

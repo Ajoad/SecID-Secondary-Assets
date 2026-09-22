@@ -1,0 +1,1 @@
+[JASPER] jg -spv -batch <SOURCE_PACKAGE_ROOT>/generated/core/60_effort_exclude_01_execution_unit_0_op_src_r01.tcl

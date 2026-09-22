@@ -1,0 +1,486 @@
+{
+  "candidate": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i",
+            "cv32e40p_top.core_i.if_stage_i.branch_addr_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.decoder_i.deassert_we_i"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.pc_n",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.pc_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.pc_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.pc_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.pc_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.pc_id_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.trigger_match_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.cs_registers_i.trigger_match_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.halt_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.branch_taken_ex_i",
+            "cv32e40p_top.core_i.id_stage_i.controller_i.instr_valid_i",
+            "cv32e40p_top.core_i.id_stage_i.controller_i.is_fetch_failed_i"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.halt_id_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i",
+            "cv32e40p_top.core_i.if_stage_i.branch_addr_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.illegal_c_insn_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.illegal_c_insn_id_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_insn_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.illegal_c_insn_id_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_insn_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_insn_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i",
+            "cv32e40p_top.core_i.if_stage_i.branch_addr_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.regfile_addr_rc_id",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.regfile_addr_rc_id",
+          "destination": "cv32e40p_top.core_i.id_stage_i.reg_d_ex_is_reg_c_id",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.reg_d_ex_is_reg_c_id",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i",
+            "cv32e40p_top.core_i.if_stage_i.branch_addr_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.pc_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.pc_id_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.trigger_match_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.cs_registers_i.trigger_match_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.is_decoding_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.branch_taken_ex_i",
+            "cv32e40p_top.core_i.id_stage_i.controller_i.instr_valid_i",
+            "cv32e40p_top.core_i.id_stage_i.controller_i.is_fetch_failed_i"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.is_decoding_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.illegal_insn_i",
+            "cv32e40p_top.core_i.id_stage_i.controller_i.is_decoding_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i",
+            "cv32e40p_top.core_i.if_stage_i.branch_addr_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.regfile_alu_waddr_id",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.regfile_alu_waddr_mux_sel"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.regfile_alu_waddr_id",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.exc_pc",
+          "destination": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.branch_addr_n",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.branch_i",
+            "cv32e40p_top.core_i.if_stage_i.branch_addr_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.next_state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.aligner_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.state",
+          "destination": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "control_signal": []
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.aligner_i.instr_valid_o",
+          "destination": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.if_stage_i.rst_n"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.if_stage_i.instr_rdata_id_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_insn_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_c_insn_i"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_insn_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.decoder_i.illegal_insn_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.controller_i.deassert_we_o"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o",
+          "destination": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "control_signal": [
+            "cv32e40p_top.core_i.id_stage_i.id_valid_o",
+            "cv32e40p_top.core_i.rst_ni"
+          ]
+        },
+        {
+          "source": "cv32e40p_top.core_i.id_stage_i.csr_op_ex_o",
+          "destination": "cv32e40p_top.core_i.cs_registers_i.csr_we_int",
+          "control_signal": []
+        }
+      ]
+    }
+  ]
+}

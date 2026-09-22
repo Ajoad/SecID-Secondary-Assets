@@ -1,0 +1,32 @@
+{
+  "candidate": "openMSP430.frontend_0.irq_all",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.frontend_0.irq_all",
+          "destination": "openMSP430.frontend_0.irq_num",
+          "control_signal": [
+            "openMSP430.frontend_0.irq_all",
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.irq_num",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.frontend_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

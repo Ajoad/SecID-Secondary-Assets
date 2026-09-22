@@ -1,0 +1,43 @@
+{
+  "schema": "secid_openmsp430_zoix_generation_audit_v1_1_1",
+  "campaign": "G00_balanced_all_workloads__core_mix__seed20260818",
+  "passed": true,
+  "counts": {
+    "requested_faults": 2608,
+    "fr2fdef_total_faults": 2608,
+    "raw_standard_report_records": 2608,
+    "parsed_rows": 2608,
+    "manifest_mapped_unique_faults": 2608,
+    "parser_issue_count": 0,
+    "missing_expected_fault_count": 0,
+    "unexpected_mapped_fault_count": 0
+  },
+  "checks": {
+    "requested_equals_fr2fdef_total": true,
+    "requested_equals_raw_standard_report_records": true,
+    "requested_equals_manifest_mapped_unique_faults": true,
+    "raw_report_equals_manifest_mapped_rows": true,
+    "no_parser_mapping_issues": true,
+    "no_missing_expected_faults": true,
+    "no_unexpected_mapped_faults": true
+  },
+  "missing_expected_faults": [],
+  "unexpected_mapped_faults": [],
+  "parser_issues": [],
+  "report_audit": {
+    "raw_standard_fault_records": 2608,
+    "parsed_rows": 2608,
+    "mapped_unique_faults": 2608,
+    "generated_unmapped_records": 0,
+    "ambiguous_mapping_records": 0,
+    "issue_count": 0,
+    "faultinfo_records": 0,
+    "attempted_rows": 0,
+    "attempts_sum": 0
+  },
+  "policy": {
+    "required_identity": "requested == fr2fdef_total == raw_report_records == manifest_mapped_unique",
+    "generated_unmapped_faults": "hard error",
+    "mapping": "exact normalized object path for standard Z01X FaultList records"
+  }
+}

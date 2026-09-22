@@ -1,0 +1,142 @@
+[
+  {
+    "Name": "execution_unit_0.reg_src",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.reg_src -> operand/ALU path -> debug-visible output",
+    "Attack Mechanisms": [
+      "`openMSP430.execution_unit_0.reg_src` is an operand, result, or status-producing intermediate reached while the corresponding assignment directly implements this connection. When the instruction decoder selects R4 as `reg_src` or `reg_dest`, the execution unit presents its value to the ALU operand network. The implemented dependency runs through `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.reg_src`. An internal probe of `openMSP430.execution_unit_0.reg_src` during a chosen MOV, logical, add, or shift operation reveals R4 directly or as a known reversible function. The observation bypasses direct protection of R4; even a one-bit flag leaks a predicate that can be accumulated over chosen operations."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "A read of R4 is materialized on this source-operand bus with full temporal information preservation and an observable route.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.op_src",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.op_src -> ALU/memory-data path -> debug-visible output",
+    "Attack Mechanisms": [
+      "`openMSP430.execution_unit_0.op_src` is an operand, result, or status-producing intermediate reached while the intervening RTL assignments are qualified by `openMSP430.execution_unit_0.src_reg_src_sel`. When the instruction decoder selects R4 as `reg_src` or `reg_dest`, the execution unit presents its value to the ALU operand network. The implemented dependency runs through `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_src -> openMSP430.execution_unit_0.op_src`. An internal probe of `openMSP430.execution_unit_0.op_src` during a chosen MOV, logical, add, or shift operation reveals R4 directly or as a known reversible function. The observation bypasses direct protection of R4; even a one-bit flag leaks a predicate that can be accumulated over chosen operations."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8645833333333334,
+      "uop_observability": 1.0
+    },
+    "Justification": "R4-derived operand data crosses this execution datapath and can continue toward memory or debug-visible output.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_out",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> ALU operands -> execution_unit_0.alu_out -> memory/debug path -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "When the instruction decoder selects R4 as `reg_src` or `reg_dest`, the execution unit presents its value to the ALU operand network. An internal probe of `openMSP430.execution_unit_0.alu_out` during a chosen MOV, logical, add, or shift operation reveals R4 directly or as a known reversible function. `openMSP430.execution_unit_0.alu_out` is an operand, result, or status-producing intermediate reached while the intervening RTL assignments are qualified by `openMSP430.execution_unit_0.src_reg_src_sel`, `openMSP430.execution_unit_0.alu_0.inst_alu`. The observation bypasses direct protection of R4; even a one-bit flag leaks a predicate that can be accumulated over chosen operations. The pertinent register-transfer chain is `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_src -> openMSP430.execution_unit_0.op_src -> openMSP430.execution_unit_0.alu_0.alu_short -> openMSP430.execution_unit_0.alu_out`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.9583333333333334,
+      "uop_observability": 1.0
+    },
+    "Justification": "The canonical ALU result exposes R4-derived computation to writeback and bus/debug paths.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.register_file_0.reg_incr_val",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.register_file_0.reg_incr_val -> register/readback path -> debug output",
+    "Attack Mechanisms": [
+      "The RTL path supporting this case is `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_src -> openMSP430.execution_unit_0.register_file_0.reg_incr_val`. `openMSP430.execution_unit_0.register_file_0.reg_incr_val` is an operand, result, or status-producing intermediate reached while the RTL realizes the route without an additional named guard. When the instruction decoder selects R4 as `reg_src` or `reg_dest`, the execution unit presents its value to the ALU operand network. An internal probe of `openMSP430.execution_unit_0.register_file_0.reg_incr_val` during a chosen MOV, logical, add, or shift operation reveals R4 directly or as a known reversible function. The observation bypasses direct protection of R4; even a one-bit flag leaks a predicate that can be accumulated over chosen operations."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "Auto-increment forms a predictable transformation of R4 and preserves its information in the register datapath.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.mdb_out_nxt",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> execution_unit_0.mdb_out_nxt -> dbg_mem_dout -> dbg_0.mem_data -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "`openMSP430.execution_unit_0.mdb_out_nxt` carries the resulting address, data word, or bus-selected derivative when the intervening RTL assignments are qualified by `openMSP430.execution_unit_0.src_reg_src_sel`, `openMSP430.execution_unit_0.alu_0.inst_alu`. An instruction that uses R4 as a source operand, store datum, or address base transfers its contents from the register file into the memory address/data backbone. The implemented dependency runs through `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_src -> openMSP430.execution_unit_0.op_src -> openMSP430.execution_unit_0.alu_0.alu_short -> openMSP430.execution_unit_0.alu_0.alu_out_nxt -> openMSP430.execution_unit_0.mdb_out_nxt`. Probing `openMSP430.execution_unit_0.mdb_out_nxt` during that transaction exposes R4 directly for a move/store or reveals a deterministic address/data function of R4. The observation discloses all or part of the confidential R4 value and repeated chosen instructions can resolve otherwise masked bits."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "Store/debug operations place R4-derived data on the outgoing memory-data path.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_mem_dout",
+    "threat": "information_leakage",
+    "Structural Path": "r4-derived memory data -> dbg_mem_dout -> dbg_0.mem_data -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "When the debug register-access command selects architectural R4, the register-file read value is routed through `dbg_reg_din` and the debug memory/output muxes. An adversary with debug-port or internal-probe access can sample `openMSP430.dbg_mem_dout` while the R4 read command is active. `openMSP430.dbg_mem_dout` is a selected stage of that readback chain; the state and data choices on this path depend on `openMSP430.dbg_0.dbg_reg_rd`, `openMSP430.dbg_0.dbg_rst`, `openMSP430.dbg_0.mem_data_wr`, `openMSP430.dbg_0.mem_bw`. The sampled word reveals the complete R4 contents, rather than only a predicate or indirect effect of the register value. The causal signal chain is `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_dest -> openMSP430.dbg_0.mem_data -> openMSP430.dbg_mem_dout`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "This debug-facing data signal receives R4-derived values and lies immediately upstream of an untrusted observable interface.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_0.mem_data",
+    "threat": "information_leakage",
+    "Structural Path": "r4-derived debug data -> dbg_0.mem_data -> debug UART serialization -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "`openMSP430.dbg_0.mem_data` is a selected stage of that readback chain; the transfer is guarded in the RTL by `openMSP430.dbg_0.dbg_reg_rd`, `openMSP430.dbg_0.dbg_rst`, `openMSP430.dbg_0.mem_data_wr`. The relevant dataflow is `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_dest -> openMSP430.dbg_0.mem_data`. When the debug register-access command selects architectural R4, the register-file read value is routed through `dbg_reg_din` and the debug memory/output muxes. An adversary with debug-port or internal-probe access can sample `openMSP430.dbg_0.mem_data` while the R4 read command is active. The sampled word reveals the complete R4 contents, rather than only a predicate or indirect effect of the register value."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The debug data register can hold R4-derived content for serialization through the debug UART.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_din",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> register-file read mux/reg_dest -> dbg_reg_din -> dbg_0.mem_data -> dbg_0.mem_data_rd -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "When the debug register-access command selects architectural R4, the register-file read value is routed through `dbg_reg_din` and the debug memory/output muxes. An adversary with debug-port or internal-probe access can sample `openMSP430.dbg_reg_din` while the R4 read command is active. `openMSP430.dbg_reg_din` is a selected stage of that readback chain; the route is implemented by the corresponding combinational or registered assignment. The sampled word reveals the complete R4 contents, rather than only a predicate or indirect effect of the register value. The causal signal chain is `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.dbg_reg_din`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The incremental-MI evidence is weak (0.0) because correlated downstream debug candidates already represent the payload. SecID retains dbg_reg_din because its UOP observability is 1.0 and the RTL gives it a direct R4-derived debug-read path.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_0.mem_data_rd",
+    "threat": "information_leakage",
+    "Structural Path": "r4 -> dbg_reg_din -> dbg_0.mem_data -> dbg_0.mem_data_rd -> dbg_0.dbg_dout -> UART serializer -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "`openMSP430.dbg_0.mem_data_rd` is a selected stage of that readback chain; the transfer is guarded in the RTL by `openMSP430.dbg_0.dbg_reg_rd`, `openMSP430.dbg_0.dbg_rst`, `openMSP430.dbg_0.mem_data_wr`. The relevant dataflow is `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_dest -> openMSP430.dbg_0.mem_data -> openMSP430.dbg_0.mem_data_rd`. When the debug register-access command selects architectural R4, the register-file read value is routed through `dbg_reg_din` and the debug memory/output muxes. An adversary with debug-port or internal-probe access can sample `openMSP430.dbg_0.mem_data_rd` while the R4 read command is active. The sampled word reveals the complete R4 contents, rather than only a predicate or indirect effect of the register value."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The incremental-MI evidence is weak (0.0) because it is redundant with the adjacent mem_data payload representation. SecID retains mem_data_rd because it directly gates that R4-derived payload into dbg_dout and has a valid UART observation witness.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_0.dbg_uart_0.xfer_buf_nxt",
+    "threat": "information_leakage",
+    "Structural Path": "dbg_0.dbg_dout -> dbg_0.dbg_uart_0.xfer_buf load -> dbg_0.dbg_uart_0.xfer_buf_nxt shift state -> dbg_0.dbg_uart_0.xfer_buf -> dbg_uart_txd",
+    "Attack Mechanisms": [
+      "An adversary with debug-port or internal-probe access can sample `openMSP430.dbg_0.dbg_uart_0.xfer_buf_nxt` while the R4 read command is active. When the debug register-access command selects architectural R4, the register-file read value is routed through `dbg_reg_din` and the debug memory/output muxes. `openMSP430.dbg_0.dbg_uart_0.xfer_buf_nxt` is a selected stage of that readback chain; the active mux/state branches are selected by `openMSP430.dbg_0.dbg_reg_rd`, `openMSP430.dbg_0.dbg_rst`, `openMSP430.dbg_0.mem_data_wr`, `openMSP430.dbg_0.dbg_uart_0.dbg_rd_rdy`, and the remaining path guards. Signal propagation follows `openMSP430.execution_unit_0.register_file_0.r4 -> openMSP430.execution_unit_0.register_file_0.reg_dest -> openMSP430.dbg_0.mem_data -> openMSP430.dbg_0.mem_data_rd -> openMSP430.dbg_0.dbg_dout -> openMSP430.dbg_0.dbg_uart_0.xfer_buf_nxt`. The sampled word reveals the complete R4 contents, rather than only a predicate or indirect effect of the register value."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.0,
+      "uop_observability": 0.0
+    },
+    "Justification": "The measured IL feature pair is weak (0.0/0.0), but the candidate passed functional screening and the RTL gives it a direct, cycle-bounded serializer-state path carrying the remaining R4-derived response bits.",
+    "decision": "retain"
+  }
+]

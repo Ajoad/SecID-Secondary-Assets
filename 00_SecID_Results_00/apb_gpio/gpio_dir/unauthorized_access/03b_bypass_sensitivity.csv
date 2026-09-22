@@ -1,0 +1,10 @@
+candidate,evaluated_scope,width,bypass_sensitivity,score_fraction,bit_aggregation,exact_class_trials,semantic_scenarios,semantic_realizations,measurement_status
+r_gpio_dir,r_gpio_dir,32,,,,5805/5805,12,39/39,threat_ineligible
+PENABLE,PENABLE,1,0,0/1,max,5805/5805,12,39/39,resolved
+PSEL,PSEL,1,0,0/1,max,5805/5805,12,39/39,resolved
+PWRITE,PWRITE,1,0.001312336,1/762,max,5805/5805,12,39/39,resolved
+pwdata_l,pwdata_l,32,,,,5805/5805,12,39/39,threat_ineligible
+s_apb_addr,s_apb_addr[4:0],5,0.001312336,1/762,max,5805/5805,12,39/39,resolved
+PADDR,PADDR[6:2],5,0.001312336,1/762,max,5805/5805,12,39/39,resolved
+PWDATA,PWDATA[0],1,0.001312336,1/762,max,5805/5805,12,39/39,resolved
+r_gpio_lock,r_gpio_lock[0],1,0.16666666666666666,6-Jan,max,5805/5805,12,39/39,resolved

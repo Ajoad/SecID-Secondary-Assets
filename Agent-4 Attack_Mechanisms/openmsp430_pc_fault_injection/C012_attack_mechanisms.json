@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "openMSP430.dbg_en_s",
+    "attack_mechanism": "The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. Forcing `openMSP430.dbg_en_s` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. `openMSP430.dbg_en_s` lies on this debug-control route into the PC-update logic; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition. The pertinent register-transfer chain is `openMSP430.dbg_en_s -> openMSP430.dbg_0.halt_rst -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+  },
+  {
+    "candidate": "openMSP430.exec_done",
+    "attack_mechanism": "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. A fault on `openMSP430.exec_done` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. `openMSP430.exec_done` controls that execution sequencing before the frontend selects the next PC update; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase. The pertinent register-transfer chain is `openMSP430.exec_done -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.inst_sz",
+    "attack_mechanism": "With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. Injecting a transient or stuck fault into `openMSP430.frontend_0.inst_sz` before `pc` is enabled can add the wrong increment or prevent the expected increment. `openMSP430.frontend_0.inst_sz` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. The next instruction is skipped, repeated, or fetched from an unintended address. The pertinent register-transfer chain is `openMSP430.frontend_0.inst_sz -> openMSP430.frontend_0.i_state_nxt -> openMSP430.frontend_0.i_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.inst_sz_nxt",
+    "attack_mechanism": "With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. Injecting a transient or stuck fault into `openMSP430.frontend_0.inst_sz_nxt` before `pc` is enabled can add the wrong increment or prevent the expected increment. `openMSP430.frontend_0.inst_sz_nxt` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the intervening RTL assignments are qualified by `openMSP430.frontend_0.irq_detect`, `openMSP430.frontend_0.pc_sw_wr`. The next instruction is skipped, repeated, or fetched from an unintended address. The pertinent register-transfer chain is `openMSP430.frontend_0.inst_sz_nxt -> openMSP430.frontend_0.i_state_nxt -> openMSP430.frontend_0.i_state -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+  },
+  {
+    "candidate": "openMSP430.mem_backbone_0.pmem_dout_bckup",
+    "attack_mechanism": "Instruction words, extension words, and interrupt vectors return through the memory-backbone path before they influence decode or `pc_nxt`. A fault on `openMSP430.mem_backbone_0.pmem_dout_bckup` during a fetch or vector read can substitute a wrong instruction/extension or address the wrong program-memory location. `openMSP430.mem_backbone_0.pmem_dout_bckup` carries an address, returned word, or memory-path qualifier on that route; the intervening RTL assignments are qualified by `openMSP430.mem_backbone_0.pmem_dout_bckup_sel`, `openMSP430.frontend_0.pc_sw_wr`. The resulting decode or vector value drives an incorrect PC transition and breaks control-flow integrity. The pertinent register-transfer chain is `openMSP430.mem_backbone_0.pmem_dout_bckup -> openMSP430.mem_backbone_0.fe_mdb_in -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
+  }
+]

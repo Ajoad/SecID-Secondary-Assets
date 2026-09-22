@@ -1,0 +1,51 @@
+{
+  "candidate": "neorv32_cpu_control.exec.pc",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu_control.exec.pc",
+          "destination": "neorv32_cpu.alu_add",
+          "control_signal": [
+            "neorv32_cpu.ctrl.alu_opa_mux",
+            "neorv32_cpu.ctrl.alu_sub"
+          ]
+        },
+        {
+          "source": "neorv32_cpu.alu_add",
+          "destination": "neorv32_cpu_control.instr_ma",
+          "control_signal": [
+            "neorv32_cpu_control.branch_taken"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.instr_ma",
+          "destination": "neorv32_cpu_control.exc_buf",
+          "control_signal": []
+        },
+        {
+          "source": "neorv32_cpu_control.exc_buf",
+          "destination": "neorv32_cpu_control.ecause",
+          "control_signal": [
+            "neorv32_cpu_control.exc_buf"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.ecause",
+          "destination": "neorv32_cpu_control.csr.mstatus_mpp",
+          "control_signal": [
+            "neorv32_cpu_control.ecause"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mpp",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    }
+  ]
+}

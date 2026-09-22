@@ -1,0 +1,15 @@
+type=EXCLUSION
+case_id=mstatus_mprv_s2
+asset=neorv32_cpu_control.csr.mstatus_mprv
+role=SECID
+scenario=M_MPRV_U_UNMATCHED_DENY
+tag=s2_a0
+blocked_target=dut_a.core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.csr[4]
+bound=900
+stopat_used=0
+block_semantics=relational_equality_constraint_preserving_original_logic_cone
+attack_window=0xA8-0x114
+primary_gate=golden_lsu_priv_U_to_attacked_lsu_priv_M_before_protected_request
+elapsed_ms=68012
+report_rc=0
+

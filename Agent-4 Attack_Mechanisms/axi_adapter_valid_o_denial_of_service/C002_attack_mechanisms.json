@@ -1,0 +1,18 @@
+[
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.aw_ready",
+    "attack_mechanism": "`axi_adapter_valid_o_cone.axi_resp_i.aw_ready` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.axi_resp_i.aw_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.axi_resp_i.aw_ready` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.aw_ready",
+    "attack_mechanism": "`axi_adapter_valid_o_cone.axi_resp_i.aw_ready` controls request acceptance, response recognition, or the state transition into that write-completion arm; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.axi_resp_i.aw_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. Holding `axi_adapter_valid_o_cone.axi_resp_i.aw_ready` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. The requester waits indefinitely for a completion pulse and legitimate write service is denied."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.r.last",
+    "attack_mechanism": "`axi_adapter_valid_o_cone.axi_resp_i.r.last` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.axi_resp_i.r.last -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.axi_resp_i.r.last` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.req_i",
+    "attack_mechanism": "`axi_adapter_valid_o_cone.req_i` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.req_i -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.req_i` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  }
+]

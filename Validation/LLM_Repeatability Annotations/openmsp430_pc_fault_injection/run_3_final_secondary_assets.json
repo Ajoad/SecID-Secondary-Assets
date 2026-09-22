@@ -1,0 +1,268 @@
+[
+  {
+    "Name": "frontend_0.i_state",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.i_state ⇒ fetch/decode sequencing ⇒ PC-update selection ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.i_state during a legal instruction window perturbs frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.958333333333,
+      "fault_masking": 0.0416666666667
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc: changing or observing frontend_0.i_state can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.958333, fault_masking=0.0416667.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.e_state ⇒ execution-state sequencing ⇒ PC-update enable ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.e_state during a legal instruction window perturbs frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.899884259259,
+      "fault_masking": 0.703703703704
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc: changing or observing frontend_0.e_state can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.899884, fault_masking=0.703704.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: execution_unit_0.pc_sw_wr ⇒ software PC-write selection ⇒ next-PC mux ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into execution_unit_0.pc_sw_wr during a legal instruction window perturbs execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc: changing or observing execution_unit_0.pc_sw_wr can affect the protected behavior. Quantitative support is fault_injection_feasibility=1, fault_masking=0.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: dbg_reg_wr ⇒ debug register-write decode ⇒ R0/PC write path ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into dbg_reg_wr during a legal instruction window perturbs dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111111,
+      "fault_masking": 0.0416666666667
+    },
+    "Justification": "Selection follows from the reachable propagation chain through dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc: changing or observing dbg_reg_wr can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.986111, fault_masking=0.0416667.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.exec_src_wr ⇒ execution phase control ⇒ PC-update sequencing ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.exec_src_wr during a legal instruction window perturbs frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.916666666667,
+      "fault_masking": 0.0856481481481
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc: changing or observing frontend_0.exec_src_wr can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.916667, fault_masking=0.0856481.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.exec_dst_wr ⇒ terminal write phase ⇒ PC-update sequencing ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.exec_dst_wr during a legal instruction window perturbs frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.962962962963,
+      "fault_masking": 0.025462962963
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc: changing or observing frontend_0.exec_dst_wr can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.962963, fault_masking=0.025463.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_done",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.exec_done ⇒ instruction completion ⇒ PC progress control ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.exec_done during a legal instruction window perturbs frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111111,
+      "fault_masking": 0.087962962963
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc: changing or observing frontend_0.exec_done can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.986111, fault_masking=0.087963.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.reg_pc_call",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: execution_unit_0.reg_pc_call ⇒ call-target datapath ⇒ next-PC selection ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into execution_unit_0.reg_pc_call during a legal instruction window perturbs execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.00617283950617
+    },
+    "Justification": "Selection follows from the reachable propagation chain through execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc: changing or observing execution_unit_0.reg_pc_call can affect the protected behavior. Quantitative support is fault_injection_feasibility=1, fault_masking=0.00617284.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.fetch ⇒ instruction-fetch qualification ⇒ PC increment/update ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.fetch during a legal instruction window perturbs frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.00231481481481
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc: changing or observing frontend_0.fetch can affect the protected behavior. Quantitative support is fault_injection_feasibility=1, fault_masking=0.00231481.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.pc_incr",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.pc_incr ⇒ incremented-PC datapath ⇒ next-PC mux ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.pc_incr during a legal instruction window perturbs frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.188888888889
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc: changing or observing frontend_0.pc_incr can affect the protected behavior. Quantitative support is fault_injection_feasibility=1, fault_masking=0.188889.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.irq_detect ⇒ interrupt-vector selection ⇒ next-PC mux ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.irq_detect during a legal instruction window perturbs frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.296296296296
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc: changing or observing frontend_0.irq_detect can affect the protected behavior. Quantitative support is fault_injection_feasibility=1, fault_masking=0.296296.",
+    "decision": "retain"
+  },
+  {
+    "Name": "watchdog_0.wdtpw_error",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: watchdog_0.wdtpw_error ⇒ watchdog_0.wdt_reset ⇒ clock_module_0.puc_rst ⇒ frontend PC reset ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into watchdog_0.wdtpw_error during a legal instruction window perturbs watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.0
+    },
+    "Justification": "Selection follows from the reachable propagation chain through watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc: changing or observing watchdog_0.wdtpw_error can affect the protected behavior. Quantitative support is fault_injection_feasibility=1, fault_masking=0.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_type",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.inst_type ⇒ instruction-class control ⇒ PC-update selection ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.inst_type during a legal instruction window perturbs frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.644290123457,
+      "fault_masking": 0.567901234568
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc: changing or observing frontend_0.inst_type can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.64429, fault_masking=0.567901.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.e_first_state ⇒ execution-entry sequencing ⇒ PC-update timing ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.e_first_state during a legal instruction window perturbs frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.863425925926,
+      "fault_masking": 0.326388888889
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc: changing or observing frontend_0.e_first_state can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.863426, fault_masking=0.326389.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: execution_unit_0.pc_sw ⇒ next-PC selection ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into execution_unit_0.pc_sw during a legal instruction window perturbs execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.604938271605,
+      "fault_masking": 0.506172839506
+    },
+    "Justification": "Selection follows from the reachable propagation chain through execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc: changing or observing execution_unit_0.pc_sw can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.604938, fault_masking=0.506173.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.mdb_in",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.mdb_in (frontend_0.mdb_in) ⇒ interrupt-vector load ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.mdb_in during a legal instruction window perturbs frontend_0.mdb_in (frontend_0.mdb_in) -> interrupt-vector load -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.494965277778,
+      "fault_masking": 0.507465277778
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.mdb_in (frontend_0.mdb_in) -> interrupt-vector load -> omsp_frontend.pc: changing or observing frontend_0.mdb_in can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.494965, fault_masking=0.507465.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.inst_jmp ⇒ execution_unit_0.alu_0.jmp_not_taken ⇒ op_src_in_jmp ⇒ ALU branch result ⇒ PC write path ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.inst_jmp during a legal instruction window perturbs frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.497685185185,
+      "fault_masking": 0.844328703704
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc: changing or observing frontend_0.inst_jmp can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.497685, fault_masking=0.844329.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sext",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: frontend_0.inst_sext ⇒ execution_unit_0.op_src/op_dst ⇒ ALU target calculation ⇒ pc_sw/PC write path ⇒ omsp_frontend.pc",
+    "Attack Scenarios": [
+      "Injecting a fault into frontend_0.inst_sext during a legal instruction window perturbs frontend_0.inst_sext -> execution_unit_0.op_src/op_dst -> ALU target calculation -> pc_sw/PC write path -> omsp_frontend.pc and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.25,
+      "fault_masking": 0.736111111111
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.inst_sext -> execution_unit_0.op_src/op_dst -> ALU target calculation -> pc_sw/PC write path -> omsp_frontend.pc: changing or observing frontend_0.inst_sext can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.25, fault_masking=0.736111. The quantitative evidence is weak, but the direct, condition-specific attack mechanism justifies retaining the asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_en_s",
+    "threat": "fault_injection",
+    "Structural Path": "Security propagation chain: cpu_en_s ⇒ CPU execution enable ⇒ fetch/execution gating ⇒ PC update",
+    "Attack Scenarios": [
+      "Injecting a fault into cpu_en_s during a legal instruction window perturbs cpu_en_s -> CPU execution enable -> fetch/execution gating -> PC update and can redirect, suppress, or mistime the protected PC update."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.958333333333,
+      "fault_masking": 0.0902777777778
+    },
+    "Justification": "Selection follows from the reachable propagation chain through cpu_en_s -> CPU execution enable -> fetch/execution gating -> PC update: changing or observing cpu_en_s can affect the protected behavior. Quantitative support is fault_injection_feasibility=0.958333, fault_masking=0.0902778.",
+    "decision": "retain"
+  }
+]

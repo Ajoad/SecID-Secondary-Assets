@@ -1,0 +1,26 @@
+[
+  {
+    "candidate": "aes_cipher_top.sa03",
+    "attack_mechanism": "`aes_cipher_top.sa03` contains the byte at state position (0,3) produced from a `text_in_r` byte XORed with the matching byte of `w[3]`. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa03`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa03` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa03",
+    "attack_mechanism": "`aes_cipher_top.sa03` carries this key-dependent intermediate on each active encryption round. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa03`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa03` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa13",
+    "attack_mechanism": "`aes_cipher_top.sa13` contains the byte at state position (1,3) produced from a `text_in_r` byte XORed with the matching byte of `w[3]`. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa13`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa13` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa13",
+    "attack_mechanism": "`aes_cipher_top.sa13` carries this key-dependent intermediate on each active encryption round. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa13`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa13` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.us03.d",
+    "attack_mechanism": "`aes_cipher_top.us03.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w3 -> aes_cipher_top.us03.a -> aes_cipher_top.us03.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us03.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  },
+  {
+    "candidate": "aes_cipher_top.us13.d",
+    "attack_mechanism": "`aes_cipher_top.us13.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w3 -> aes_cipher_top.us13.a -> aes_cipher_top.us13.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us13.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  }
+]

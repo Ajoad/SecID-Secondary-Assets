@@ -1,0 +1,170 @@
+[
+  {
+    "Name": "e_state",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: e_state -> execution-state decode -> terminal execution phase -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at e_state propagates through e_state -> execution-state decode -> terminal execution phase -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.45427268129474013,
+      "service_rate_degradation": 0.9668537414965986
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, e_state -> execution-state decode -> terminal execution phase -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.454273, service_rate_degradation=0.966854.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.decode propagates through frontend_0.decode -> execution launch -> e_state sequencing -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.decode -> execution launch -> e_state sequencing -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.492817, service_rate_degradation=0.863333.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at decode_noirq propagates through decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.492817, service_rate_degradation=0.863333.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.e_first_state propagates through frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1838293650793651,
+      "service_rate_degradation": 0.6305707962672249
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.183829, service_rate_degradation=0.630571.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.exec_dst_wr propagates through frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.19176915557889823,
+      "service_rate_degradation": 0.578358843537415
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.191769, service_rate_degradation=0.578359.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.exec_src_wr propagates through frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1375,
+      "service_rate_degradation": 0.5
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.1375, service_rate_degradation=0.5.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sext_rdy",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.inst_sext_rdy propagates through inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.2,
+      "service_rate_degradation": 0.4938979591836734
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.2, service_rate_degradation=0.493898.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.e_state_nxt propagates through frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.40387167366946775,
+      "service_rate_degradation": 0.965187074829932
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.403872, service_rate_degradation=0.965187.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_jmp",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.exec_jmp propagates through frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.15874183006535947,
+      "service_rate_degradation": 0.5008333333333334
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.158742, service_rate_degradation=0.500833.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_dext_en",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.inst_dext_en propagates through frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.14285714285714285,
+      "service_rate_degradation": 0.4927113702623906
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.142857, service_rate_degradation=0.492711.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dext_rdy",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.exec_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.exec_dext_rdy propagates through frontend_0.exec_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.0,
+      "service_rate_degradation": 0.1399416909620991
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.exec_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0, service_rate_degradation=0.139942. The quantitative evidence is weak, but the direct, condition-specific attack mechanism justifies retaining the asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "denial_of_service",
+    "Structural Path": "RTL dependency sequence: frontend_0.irq_detect -> interrupt/decode arbitration -> execution launch and state sequencing -> exec_done",
+    "Attack Scenarios": [
+      "A sustained disturbance at frontend_0.irq_detect propagates through frontend_0.irq_detect -> interrupt/decode arbitration -> execution launch and state sequencing -> exec_done and can suppress timely completion events, producing processor-service degradation."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.21424996572055396,
+      "service_rate_degradation": 0.9899913202460471
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, frontend_0.irq_detect -> interrupt/decode arbitration -> execution launch and state sequencing -> exec_done, rather than being merely correlated with the primary asset. The normalized evidence is progress_disruption=0.21425, service_rate_degradation=0.989991.",
+    "decision": "retain"
+  }
+]

@@ -1,0 +1,380 @@
+{
+  "threat feature": "bypass_sensitivity",
+  "design": {
+    "name": "NEORV32",
+    "top": "neorv32_top",
+    "rtl_language": "VHDL"
+  },
+  "primary": {
+    "signal": "ctrl_o.lsu_priv",
+    "security_objective": "integrity"
+  },
+  "threat": "unauthorized_access",
+  "feature": "bypass_sensitivity",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "ctrl_o.lsu_priv"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk_i",
+    "reset": {
+      "signal": "rstn_i",
+      "active_level": "low"
+    },
+    "parameters": {
+      "$candidate_bit": "the selected bit of the bound candidate",
+      "$scenario_security_window": "scenario-defined event or bounded timing parameter"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Measure the candidate-bit fraction of valid perturbation opportunities that converts a baseline-denied protected operation into an effective access or write.",
+    "execution_model": "paired secure-baseline and candidate-perturbed executions from the same legal state",
+    "calculation": "maximum candidate-bit deny-to-accept fraction over applicable legal scenarios",
+    "required_observation_roles": [
+      "candidate perturbation",
+      "baseline denial",
+      "protected operation or authorization decision"
+    ],
+    "validity_policy": [
+      "legal protected-operation context is reached",
+      "baseline denial is witnessed",
+      "paired executions agree before intervention",
+      "candidate and decision observations are known"
+    ],
+    "classification": {
+      "bypass": "candidate mutation changes DENY to an effective protected action",
+      "no_bypass": "valid mutation preserves denial",
+      "not_applicable": "scenario is outside the candidate's declared scope",
+      "invalid": "setup, denial, pairing, activation, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "confirm the requested candidate mutation",
+        "target": "$candidate_bit"
+      },
+      {
+        "purpose": "observe the protected decision",
+        "target": "$primary"
+      },
+      {
+        "purpose": "distinguish secure denial from effective acceptance",
+        "target": "protected_access"
+      }
+    ],
+    "validity": [
+      "scenario-specific legal protected-operation setup and denial anchor are reached"
+    ],
+    "oracle": {
+      "baseline": "DENY",
+      "success": "DENY becomes an effective protected action"
+    },
+    "intervention": {
+      "duration": "one semantic decision window",
+      "operation": "invert_or_semantically_mutate",
+      "protected_operation": {
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "matched_tor_region1",
+        "event": "protected_access",
+        "expected": "DENY"
+      },
+      "target": "$candidate_bit",
+      "when": "$scenario_security_window"
+    }
+  },
+  "scenario_count": 7,
+  "scenarios": [
+    {
+      "id": "U_UNMATCHED_DEFAULT_DENY",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "effective_lsu_priv": "U",
+        "pmp": {
+          "mode": "TOR",
+          "match": "none",
+          "locked": false,
+          "deny": "default_unmatched"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "unmatched_outside_tor"
+      },
+      "overrides": {
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "$scenario_security_window",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "protected_access",
+            "expected": "DENY",
+            "accesses": [
+              "LOAD",
+              "STORE"
+            ],
+            "address_class": "unmatched_outside_tor"
+          }
+        }
+      }
+    },
+    {
+      "id": "U_MATCHED_PERMISSION_DENY",
+      "preconditions": {
+        "priv": "U",
+        "mprv": 0,
+        "effective_lsu_priv": "U",
+        "pmp": {
+          "mode": "TOR",
+          "match": "region1",
+          "locked": false,
+          "deny": "selected_access_permission_cleared"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "matched_tor_region1"
+      }
+    },
+    {
+      "id": "M_MPRV_U_UNMATCHED_DENY",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "pmp": {
+          "mode": "TOR",
+          "match": "none",
+          "locked": false,
+          "deny": "default_unmatched"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "unmatched_outside_tor"
+      },
+      "overrides": {
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "$scenario_security_window",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "protected_access",
+            "expected": "DENY",
+            "accesses": [
+              "LOAD",
+              "STORE"
+            ],
+            "address_class": "unmatched_outside_tor"
+          }
+        }
+      }
+    },
+    {
+      "id": "M_MPRV_U_MATCHED_PERMISSION_DENY",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "U",
+        "effective_lsu_priv": "U",
+        "pmp": {
+          "mode": "TOR",
+          "match": "region1",
+          "locked": false,
+          "deny": "selected_access_permission_cleared"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "matched_tor_region1"
+      }
+    },
+    {
+      "id": "M_LOCKED_MATCHED_PERMISSION_DENY",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 0,
+        "effective_lsu_priv": "M",
+        "pmp": {
+          "mode": "TOR",
+          "match": "region1",
+          "locked": true,
+          "deny": "selected_access_permission_cleared"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "matched_tor_region1"
+      }
+    },
+    {
+      "id": "M_MPRV_M_LOCKED_MATCHED_PERMISSION_DENY",
+      "preconditions": {
+        "priv": "M",
+        "mprv": 1,
+        "mpp": "M",
+        "effective_lsu_priv": "M",
+        "pmp": {
+          "mode": "TOR",
+          "match": "region1",
+          "locked": true,
+          "deny": "selected_access_permission_cleared"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "matched_tor_region1"
+      }
+    },
+    {
+      "id": "M_MRET_MPRV_POSTRETURN_U_MATCHED_DENY",
+      "preconditions": {
+        "initial": {
+          "priv": "M",
+          "mprv": 1,
+          "mpp": "M",
+          "effective_lsu_priv": "M"
+        },
+        "transition": "MRET_to_M",
+        "post": {
+          "priv": "M",
+          "mprv": 1,
+          "mpp": "U",
+          "effective_lsu_priv": "U"
+        },
+        "pmp": {
+          "mode": "TOR",
+          "match": "region1",
+          "locked": false,
+          "deny": "selected_access_permission_cleared"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_access",
+        "expected": "DENY",
+        "accesses": [
+          "LOAD",
+          "STORE"
+        ],
+        "address_class": "matched_tor_region1"
+      }
+    }
+  ]
+}

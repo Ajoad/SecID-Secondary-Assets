@@ -1,0 +1,84 @@
+{
+  "candidate": "openMSP430.frontend_0.e_first_state",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.frontend_0.e_first_state",
+          "destination": "openMSP430.frontend_0.e_state_nxt",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state_nxt",
+          "destination": "openMSP430.frontend_0.fetch",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.fetch",
+          "destination": "openMSP430.frontend_0.pc_incr",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_incr",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.frontend_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "openMSP430.frontend_0.e_first_state",
+          "destination": "openMSP430.frontend_0.e_state_nxt",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state_nxt",
+          "destination": "openMSP430.frontend_0.e_state",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state",
+          "destination": "openMSP430.execution_unit_0.exec_cycle",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.exec_cycle",
+          "destination": "openMSP430.execution_unit_0.reg_pc_call",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.reg_pc_call",
+          "destination": "openMSP430.execution_unit_0.register_file_0.pc_sw_wr",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.pc_sw_wr",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.execution_unit_0.register_file_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

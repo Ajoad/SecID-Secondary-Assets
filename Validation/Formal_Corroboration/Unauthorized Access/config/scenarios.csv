@@ -1,0 +1,3 @@
+scenario_id,access_id,tag,scenario,access,target,expected_arch_u,expected_lsu_u
+0,0,s0_a0,U_UNMATCHED_DEFAULT_DENY,LOAD,0x80000000,1,1
+2,0,s2_a0,M_MPRV_U_UNMATCHED_DENY,LOAD,0x80000000,0,1

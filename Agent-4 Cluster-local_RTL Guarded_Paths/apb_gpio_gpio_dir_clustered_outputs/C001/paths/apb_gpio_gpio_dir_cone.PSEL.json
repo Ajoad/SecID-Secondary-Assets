@@ -1,0 +1,20 @@
+{
+  "candidate": "apb_gpio_gpio_dir_cone.PSEL",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "apb_gpio_gpio_dir_cone.PSEL",
+          "destination": "apb_gpio_gpio_dir_cone.gpio_dir",
+          "control_signal": [
+            "apb_gpio_gpio_dir_cone.HRESETn",
+            "apb_gpio_gpio_dir_cone.PENABLE",
+            "apb_gpio_gpio_dir_cone.PWRITE",
+            "apb_gpio_gpio_dir_cone.s_apb_addr"
+          ]
+        }
+      ]
+    }
+  ]
+}

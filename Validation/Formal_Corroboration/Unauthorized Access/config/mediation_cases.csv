@@ -1,0 +1,6 @@
+case_id,scenario_id,access_id,asset,role,rationale
+prv_level_s0,0,0,neorv32_cpu_control.csr.prv_level,SECID,Direct-U case; prior FPV candidate perturbation produced semantic bypass
+mstatus_mpp_s2,2,0,neorv32_cpu_control.csr.mstatus_mpp,SECID,MPRV-to-U case; prior FPV candidate perturbation produced semantic bypass
+mstatus_mprv_s2,2,0,neorv32_cpu_control.csr.mstatus_mprv,SECID,MPRV-to-U case; included critically even though prior dynamic UCP reachability was zero
+rf_wb_en_s0,0,0,neorv32_cpu.ctrl.rf_wb_en,PILOT_COMPARATOR,Matched zero-bypass pilot comparator for direct-U context
+csr_re_s2,2,0,neorv32_cpu_control.ctrl.csr_re,PILOT_COMPARATOR,Matched zero-bypass pilot comparator for MPRV-to-U context

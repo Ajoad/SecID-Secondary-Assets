@@ -1,0 +1,39 @@
+{
+  "candidate": "openMSP430.mem_backbone_0.fe_pmem_save",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.mem_backbone_0.fe_pmem_save",
+          "destination": "openMSP430.mem_backbone_0.pmem_dout_bckup_sel",
+          "control_signal": [
+            "openMSP430.mem_backbone_0.fe_pmem_save",
+            "openMSP430.mem_backbone_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.mem_backbone_0.pmem_dout_bckup_sel",
+          "destination": "openMSP430.mem_backbone_0.fe_mdb_in",
+          "control_signal": [
+            "openMSP430.mem_backbone_0.pmem_dout_bckup_sel"
+          ]
+        },
+        {
+          "source": "openMSP430.mem_backbone_0.fe_mdb_in",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.frontend_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

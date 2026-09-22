@@ -1,0 +1,34 @@
+[
+  {
+    "candidate": "aes_cipher_top.sa02",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa02`. `aes_cipher_top.sa02` contains the byte at state position (0,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa02` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa02",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa02`. `aes_cipher_top.sa02` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa02` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa12",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa12`. `aes_cipher_top.sa12` contains the byte at state position (1,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa12` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa12",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa12`. `aes_cipher_top.sa12` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa12` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.sa22",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa22`. `aes_cipher_top.sa22` contains the byte at state position (2,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa22` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa22",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa22`. `aes_cipher_top.sa22` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa22` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.us12.d",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w2 -> aes_cipher_top.us12.a -> aes_cipher_top.us12.d`. `aes_cipher_top.us12.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us12.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  },
+  {
+    "candidate": "aes_cipher_top.us22.d",
+    "attack_mechanism": "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w2 -> aes_cipher_top.us22.a -> aes_cipher_top.us22.d`. `aes_cipher_top.us22.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us22.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+  }
+]

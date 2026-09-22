@@ -1,0 +1,87 @@
+{
+  "schema": "secid_openmsp430_zoix_post_report_audit_v1_1_1",
+  "campaign": "G00_balanced_all_workloads__peripheral_mix__seed20260818",
+  "passed": true,
+  "expected_faults": 2608,
+  "required_checks": [
+    "complete_exact_fault_identity",
+    "faultinfo_present_for_every_post_fault",
+    "attempts_available_for_every_post_fault",
+    "tool_faults_simulated_matches_attempts_gt_zero",
+    "no_attempted_unknown_status",
+    "no_zero_attempt_pending_status",
+    "no_no_difference_drop_status_warning"
+  ],
+  "checks": {
+    "complete_exact_fault_identity": true,
+    "faultinfo_present_for_every_post_fault": true,
+    "attempts_available_for_every_post_fault": true,
+    "tool_faults_simulated_matches_attempts_gt_zero": true,
+    "no_attempted_unknown_status": true,
+    "no_zero_attempt_pending_status": true,
+    "no_no_difference_drop_status_warning": true
+  },
+  "report_audit": {
+    "raw_standard_fault_records": 2608,
+    "parsed_rows": 2608,
+    "mapped_unique_faults": 2608,
+    "generated_unmapped_records": 0,
+    "ambiguous_mapping_records": 0,
+    "issue_count": 0,
+    "faultinfo_records": 2608,
+    "attempted_rows": 1405,
+    "attempts_sum": 1405
+  },
+  "parsed_rows": 2608,
+  "mapped_unique_faults": 2608,
+  "faults_attempted_unique": 1405,
+  "attempts_sum": 1405,
+  "faults_simulated_tool_summary": 1405,
+  "attempted_no_pc_detection_status": 1095,
+  "attempted_unknown_status": 0,
+  "zero_attempt_pending_status": 0,
+  "no_difference_drop_status_warning_count": 0,
+  "status_counts": {
+    "NC": 553,
+    "U8": 310,
+    "U1": 1095,
+    "NO": 294,
+    "NS": 356
+  },
+  "status_attempted_counts": {
+    "U8": 310,
+    "U1": 1095
+  },
+  "other_zoix_status_counts": {},
+  "parser_issues": [],
+  "missing_expected_faults": [],
+  "unexpected_mapped_faults": [],
+  "policy": {
+    "fault_identity": "exact normalized target path + polarity",
+    "simulation_indicator": "FaultInfo.Attempts > 0 (authoritative)",
+    "faultinfo_order": [
+      "FubNum",
+      "TestNum",
+      "Attempts",
+      "NumPot"
+    ],
+    "status_vocabulary": "open-ended; status does not control report-record recognition",
+    "explicit_statuses": [
+      "NA",
+      "NC",
+      "NO",
+      "NS",
+      "U1",
+      "U7",
+      "U8",
+      "U9"
+    ],
+    "PC_detection": "U8/U9 only, assigned only when $fs_compare observes PC divergence",
+    "attempted_U1": "valid no-PC-detection outcome when Attempts>0 and no U8/U9 occurred",
+    "legacy_U7": "accepted as no-PC-detection for backward compatibility; v1.1.1 does not emit U7",
+    "zero_attempt_U1_or_U7": "unresolved and fatal in strict runs",
+    "NC": "Not Controlled",
+    "NO": "Not Observed",
+    "NS": "Not Strobed"
+  }
+}

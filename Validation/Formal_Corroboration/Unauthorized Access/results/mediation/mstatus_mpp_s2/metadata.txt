@@ -1,0 +1,13 @@
+type=MEDIATION
+case_id=mstatus_mpp_s2
+asset=neorv32_cpu_control.csr.mstatus_mpp
+role=SECID
+scenario=M_MPRV_U_UNMATCHED_DENY
+tag=s2_a0
+obs_bit=2156
+dynamic_ucp_reachability=0.2611111111111111
+dynamic_bypass_sensitivity=0.26666666666666666
+bound=900
+elapsed_ms=157018
+report_rc=0
+

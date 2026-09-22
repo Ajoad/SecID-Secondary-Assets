@@ -1,0 +1,240 @@
+[
+  {
+    "Name": "frontend_0.i_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc",
+    "Justification": "RTL inspection identifies `frontend_0.i_state` as the element that stores the instruction-fetch and decode phase. Because a state fault can select the wrong PC update or increment behavior, `frontend_0.i_state` is a credible secondary asset for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
+    "Justification": "Although `frontend_0.e_state` is not the protected object, it tracks the current execution phase governing PC enable timing. The dependency matters because corrupted sequencing can advance or hold the PC at the wrong cycle, placing `frontend_0.e_state` inside the security-relevant RTL cone of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw_wr",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
+    "Justification": "The structural analysis retains `execution_unit_0.pc_sw_wr` because it selects the software-directed PC write path; in that position, a false select can substitute an unintended branch or call target. This gives `execution_unit_0.pc_sw_wr` a plausible supporting role in compromise of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_wr",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc",
+    "Justification": "A review of the local logic shows that `dbg_reg_wr` authorizes debugger writes into the architectural register file. Since a faulty R0 write decode can overwrite the program counter, excluding `dbg_reg_wr` would omit a meaningful dependency of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_done",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
+    "Justification": "For `frontend_0.exec_done`, the relevant RTL role is that it signals the boundary at which instruction execution has completed. That role is security-sensitive: a premature or missing boundary changes when the PC progresses, so `frontend_0.exec_done` warrants treatment as a secondary asset around `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.reg_pc_call",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
+    "Justification": "The path through `execution_unit_0.reg_pc_call` is consequential because this signal forms the call-related value entering the PC datapath. In particular, corruption can replace the intended call destination; the relationship of `execution_unit_0.reg_pc_call` to `pc` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Justification": "Within the analyzed cone, `frontend_0.fetch` qualifies instruction fetch and contributes to the sequential PC increment. This behavior can matter to `pc` because a fault can skip, repeat, or suppress an instruction address, which supports retaining `frontend_0.fetch` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.pc_incr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
+    "Justification": "`frontend_0.pc_incr` sits at a functional boundary where it computes the sequential next address. Because `frontend_0.pc_incr` occupies that point, an erroneous increment directly sends execution to the wrong instruction, so the signal can mediate behavior of `pc` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc",
+    "Justification": "Tracing the RTL dependency of `pc` reaches `frontend_0.irq_detect`, which selects interrupt entry and the associated vectoring behavior. The resulting concern is that spurious or missed detection can redirect the PC through the wrong vector, making `frontend_0.irq_detect` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "watchdog_0.wdtpw_error",
+    "threat": "fault_injection",
+    "Structural Path": "watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc",
+    "Justification": "The significance of `watchdog_0.wdtpw_error` follows from its role: it initiates a watchdog error reset that reaches frontend PC reset logic. Consequently, a false error can force an unexpected reset-vector transition, and `watchdog_0.wdtpw_error` remains relevant to protection of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_type",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
+    "Justification": "Structural and functional analysis gives `frontend_0.inst_type` a concrete role because it classifies the instruction for PC and execution control. With misclassification can choose an inappropriate PC-update rule, `frontend_0.inst_type` can influence the security behavior surrounding `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc",
+    "Justification": "Rather than being a passive neighbor of `pc`, `frontend_0.e_first_state` chooses the entry phase for the decoded operation. Because a faulty entry state can misalign PC progression with instruction completion, the RTL evidence supports classifying `frontend_0.e_first_state` as a secondary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc",
+    "Justification": "RTL inspection identifies `execution_unit_0.pc_sw` as the element that carries the software-computed next-PC value. Because a data fault is captured as an unintended control-flow target, `execution_unit_0.pc_sw` is a credible secondary asset for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc",
+    "Justification": "Although `frontend_0.inst_jmp` is not the protected object, it identifies jump instructions and steers branch-result handling. The dependency matters because a flipped jump decision can take or suppress a control transfer, placing `frontend_0.inst_jmp` inside the security-relevant RTL cone of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.i_state_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state_nxt -> PDG fan-in layer 2 -> pc",
+    "Justification": "The structural analysis retains `frontend_0.i_state_nxt` because it computes the next fetch/decode phase; in that position, a bad transition can alter the following PC enable and fetch sequence. This gives `frontend_0.i_state_nxt` a plausible supporting role in compromise of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_state_nxt -> PDG fan-in layer 1 -> pc",
+    "Justification": "A review of the local logic shows that `frontend_0.e_state_nxt` computes the next execution phase. Since faulted next-state logic can shift the cycle in which PC control is released, excluding `frontend_0.e_state_nxt` would omit a meaningful dependency of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_halt_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_halt_cmd -> PDG fan-in layer 1 -> pc",
+    "Justification": "For `cpu_halt_cmd`, the relevant RTL role is that it requests processor halt through the frontend control path. That role is security-sensitive: a spurious halt can freeze PC movement at an attacker-chosen boundary, so `cpu_halt_cmd` warrants treatment as a secondary asset around `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_halt_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_halt_cmd -> PDG fan-in layer 1 -> pc",
+    "Justification": "The path through `dbg_halt_cmd` is consequential because this signal injects a debugger-originated halt request. In particular, a fault can stop or resume execution with the PC at an unintended location; the relationship of `dbg_halt_cmd` to `pc` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.cpu_halt_req",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.cpu_halt_req -> PDG fan-in layer 1 -> pc",
+    "Justification": "Within the analyzed cone, `frontend_0.cpu_halt_req` combines frontend conditions into the effective halt request. This behavior can matter to `pc` because corruption can suppress or assert the gate controlling PC progress, which supports retaining `frontend_0.cpu_halt_req` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpuoff",
+    "threat": "fault_injection",
+    "Structural Path": "cpuoff -> PDG fan-in layer 1 -> pc",
+    "Justification": "`cpuoff` sits at a functional boundary where it indicates the low-power state that inhibits normal instruction activity. Because `cpuoff` occupies that point, a false value can suspend PC updates or release them unexpectedly, so the signal can mediate behavior of `pc` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.alu_inc",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.alu_inc -> PDG fan-in layer 1 -> pc",
+    "Justification": "Tracing the RTL dependency of `pc` reaches `execution_unit_0.alu_0.alu_inc`, which contributes arithmetic increment behavior in the execution datapath. The resulting concern is that a fault can distort address or control-flow arithmetic feeding PC selection, making `execution_unit_0.alu_0.alu_inc` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "mem_backbone_0.fe_mab",
+    "threat": "fault_injection",
+    "Structural Path": "mem_backbone_0.fe_mab -> PDG fan-in layer 1 -> pc",
+    "Justification": "The significance of `mem_backbone_0.fe_mab` follows from its role: it carries the frontend memory address at the memory-backbone boundary. Consequently, corruption can desynchronize fetched instructions from the PC state, and `mem_backbone_0.fe_mab` remains relevant to protection of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "fe_mab",
+    "threat": "fault_injection",
+    "Structural Path": "fe_mab -> PDG fan-in layer 1 -> pc",
+    "Justification": "Structural and functional analysis gives `fe_mab` a concrete role because it exposes the frontend instruction-memory address bus. With a mismatched fetch address can cause execution to diverge from the intended PC, `fe_mab` can influence the security behavior surrounding `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_out",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_out -> PDG fan-in layer 1 -> pc",
+    "Justification": "Rather than being a passive neighbor of `pc`, `execution_unit_0.alu_out` delivers ALU results used by branch and software-PC operations. Because a faulty result can become an incorrect control-flow destination, the RTL evidence supports classifying `execution_unit_0.alu_out` as a secondary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_bw",
+    "threat": "fault_injection",
+    "Structural Path": "inst_bw -> PDG fan-in layer 1 -> pc",
+    "Justification": "RTL inspection identifies `inst_bw` as the element that controls byte-versus-word instruction operand handling. Because an erroneous width decision can perturb PC-related arithmetic and sequencing, `inst_bw` is a credible secondary asset for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_en_s",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_en_s -> PDG fan-in layer 1 -> pc",
+    "Justification": "Although `cpu_en_s` is not the protected object, it synchronizes the effective processor-enable condition. The dependency matters because a fault can gate PC state updates on the wrong cycle, placing `cpu_en_s` inside the security-relevant RTL cone of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_halt_st",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_halt_st -> PDG fan-in layer 1 -> pc",
+    "Justification": "The structural analysis retains `cpu_halt_st` because it records whether the core is halted; in that position, corruption can freeze the PC or release execution without the expected control state. This gives `cpu_halt_st` a plausible supporting role in compromise of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.op_src_inv_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.op_src_inv_cmd -> PDG fan-in layer 1 -> pc",
+    "Justification": "A review of the local logic shows that `execution_unit_0.alu_0.op_src_inv_cmd` controls inversion of an ALU source operand. Since a wrong command can corrupt arithmetic that contributes to a branch target, excluding `execution_unit_0.alu_0.op_src_inv_cmd` would omit a meaningful dependency of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.op_dst_in",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.op_dst_in -> PDG fan-in layer 1 -> pc",
+    "Justification": "For `execution_unit_0.alu_0.op_dst_in`, the relevant RTL role is that it feeds the destination operand into the ALU. That role is security-sensitive: a fault can alter the computed value used by control-flow instructions, so `execution_unit_0.alu_0.op_dst_in` warrants treatment as a secondary asset around `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.op_dst",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.op_dst -> PDG fan-in layer 1 -> pc",
+    "Justification": "The path through `execution_unit_0.op_dst` is consequential because this signal holds the decoded destination operand. In particular, corruption can propagate into software-PC or branch-result computation; the relationship of `execution_unit_0.op_dst` to `pc` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.op_src",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.op_src -> PDG fan-in layer 1 -> pc",
+    "Justification": "Within the analyzed cone, `execution_unit_0.op_src` holds the decoded source operand. This behavior can matter to `pc` because a faulty source value can change an address selected for control transfer, which supports retaining `execution_unit_0.op_src` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.alu_add",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.alu_add -> PDG fan-in layer 1 -> pc",
+    "Justification": "`execution_unit_0.alu_0.alu_add` sits at a functional boundary where it produces ALU addition results used by address and branch operations. Because `execution_unit_0.alu_0.alu_add` occupies that point, an arithmetic fault can generate an unintended PC target, so the signal can mediate behavior of `pc` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.op_src_in_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.op_src_in_jmp -> PDG fan-in layer 1 -> pc",
+    "Justification": "Tracing the RTL dependency of `pc` reaches `execution_unit_0.alu_0.op_src_in_jmp`, which selects the jump-specific source operand. The resulting concern is that a wrong selection changes the value used to resolve a jump, making `execution_unit_0.alu_0.op_src_in_jmp` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.ext_incr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.ext_incr -> PDG fan-in layer 2 -> pc",
+    "Justification": "The significance of `frontend_0.ext_incr` follows from its role: it controls the additional increment for extended instruction words. Consequently, a fault can make the PC skip or refetch an extension word, and `frontend_0.ext_incr` remains relevant to protection of `pc`.",
+    "decision": "retain"
+  }
+]

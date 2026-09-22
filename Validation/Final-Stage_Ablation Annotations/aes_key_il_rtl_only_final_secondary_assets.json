@@ -1,0 +1,254 @@
+[
+  {
+    "Name": "aes_cipher_top.u0.w[0]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Justification": "RTL inspection identifies `aes_cipher_top.u0.w[0]` as the element that holds expanded-key word 0 before its bytes enter AddRoundKey. Because word 0 preserves master-key dependence along the cipher datapath, `aes_cipher_top.u0.w[0]` is a credible secondary asset for `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[1]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[1] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Justification": "Although `aes_cipher_top.u0.w[1]` is not the protected object, it holds expanded-key word 1 before its bytes enter AddRoundKey. The dependency matters because word 1 preserves master-key dependence along the cipher datapath, placing `aes_cipher_top.u0.w[1]` inside the security-relevant RTL cone of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa00",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
+    "Justification": "The structural analysis retains `aes_cipher_top.sa00` because it stores the round-state byte at row 0, column 0; in that position, that state coordinate repeatedly combines transformed data with key-schedule material. This gives `aes_cipher_top.sa00` a plausible supporting role in compromise of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa01",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out",
+    "Justification": "A review of the local logic shows that `aes_cipher_top.sa01` stores the round-state byte at row 0, column 1. Since that state coordinate repeatedly combines transformed data with key-schedule material, excluding `aes_cipher_top.sa01` would omit a meaningful dependency of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa02",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out",
+    "Justification": "For `aes_cipher_top.sa02`, the relevant RTL role is that it stores the round-state byte at row 0, column 2. That role is security-sensitive: that state coordinate repeatedly combines transformed data with key-schedule material, so `aes_cipher_top.sa02` warrants treatment as a secondary asset around `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa03",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out",
+    "Justification": "The path through `aes_cipher_top.sa03` is consequential because this signal stores the round-state byte at row 0, column 3. In particular, that state coordinate repeatedly combines transformed data with key-schedule material; the relationship of `aes_cipher_top.sa03` to `key` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa10",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out",
+    "Justification": "Within the analyzed cone, `aes_cipher_top.sa10` stores the round-state byte at row 1, column 0. This behavior can matter to `key` because that state coordinate repeatedly combines transformed data with key-schedule material, which supports retaining `aes_cipher_top.sa10` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa11",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out",
+    "Justification": "`aes_cipher_top.sa11` sits at a functional boundary where it stores the round-state byte at row 1, column 1. Because `aes_cipher_top.sa11` occupies that point, that state coordinate repeatedly combines transformed data with key-schedule material, so the signal can mediate behavior of `key` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa12",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out",
+    "Justification": "Tracing the RTL dependency of `key` reaches `aes_cipher_top.sa12`, which stores the round-state byte at row 1, column 2. The resulting concern is that that state coordinate repeatedly combines transformed data with key-schedule material, making `aes_cipher_top.sa12` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa13",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
+    "Justification": "The significance of `aes_cipher_top.sa13` follows from its role: it stores the round-state byte at row 1, column 3. Consequently, that state coordinate repeatedly combines transformed data with key-schedule material, and `aes_cipher_top.sa13` remains relevant to protection of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa20",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
+    "Justification": "Structural and functional analysis gives `aes_cipher_top.sa20` a concrete role because it stores the round-state byte at row 2, column 0. With that state coordinate repeatedly combines transformed data with key-schedule material, `aes_cipher_top.sa20` can influence the security behavior surrounding `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa21",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out",
+    "Justification": "Rather than being a passive neighbor of `key`, `aes_cipher_top.sa21` stores the round-state byte at row 2, column 1. Because that state coordinate repeatedly combines transformed data with key-schedule material, the RTL evidence supports classifying `aes_cipher_top.sa21` as a secondary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa22",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out",
+    "Justification": "RTL inspection identifies `aes_cipher_top.sa22` as the element that stores the round-state byte at row 2, column 2. Because that state coordinate repeatedly combines transformed data with key-schedule material, `aes_cipher_top.sa22` is a credible secondary asset for `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa23",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out",
+    "Justification": "Although `aes_cipher_top.sa23` is not the protected object, it stores the round-state byte at row 2, column 3. The dependency matters because that state coordinate repeatedly combines transformed data with key-schedule material, placing `aes_cipher_top.sa23` inside the security-relevant RTL cone of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa30",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out",
+    "Justification": "The structural analysis retains `aes_cipher_top.sa30` because it stores the round-state byte at row 3, column 0; in that position, that state coordinate repeatedly combines transformed data with key-schedule material. This gives `aes_cipher_top.sa30` a plausible supporting role in compromise of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa31",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out",
+    "Justification": "A review of the local logic shows that `aes_cipher_top.sa31` stores the round-state byte at row 3, column 1. Since that state coordinate repeatedly combines transformed data with key-schedule material, excluding `aes_cipher_top.sa31` would omit a meaningful dependency of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa32",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out",
+    "Justification": "For `aes_cipher_top.sa32`, the relevant RTL role is that it stores the round-state byte at row 3, column 2. That role is security-sensitive: that state coordinate repeatedly combines transformed data with key-schedule material, so `aes_cipher_top.sa32` warrants treatment as a secondary asset around `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa33",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out",
+    "Justification": "The path through `aes_cipher_top.sa33` is consequential because this signal stores the round-state byte at row 3, column 3. In particular, that state coordinate repeatedly combines transformed data with key-schedule material; the relationship of `aes_cipher_top.sa33` to `key` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us00.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us00.d",
+    "Justification": "Within the analyzed cone, `aes_cipher_top.us00.d` emits the substitution result for state position (0,0). This behavior can matter to `key` because the nonlinear byte remains dependent on the key-influenced round state before later rounds, which supports retaining `aes_cipher_top.us00.d` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us01.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us01.d",
+    "Justification": "`aes_cipher_top.us01.d` sits at a functional boundary where it emits the substitution result for state position (0,1). Because `aes_cipher_top.us01.d` occupies that point, the nonlinear byte remains dependent on the key-influenced round state before later rounds, so the signal can mediate behavior of `key` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us02.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us02.d",
+    "Justification": "Tracing the RTL dependency of `key` reaches `aes_cipher_top.us02.d`, which emits the substitution result for state position (0,2). The resulting concern is that the nonlinear byte remains dependent on the key-influenced round state before later rounds, making `aes_cipher_top.us02.d` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us03.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us03.d",
+    "Justification": "The significance of `aes_cipher_top.us03.d` follows from its role: it emits the substitution result for state position (0,3). Consequently, the nonlinear byte remains dependent on the key-influenced round state before later rounds, and `aes_cipher_top.us03.d` remains relevant to protection of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us10.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us10.d",
+    "Justification": "Structural and functional analysis gives `aes_cipher_top.us10.d` a concrete role because it emits the substitution result for state position (1,0). With the nonlinear byte remains dependent on the key-influenced round state before later rounds, `aes_cipher_top.us10.d` can influence the security behavior surrounding `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us11.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us11.d",
+    "Justification": "Rather than being a passive neighbor of `key`, `aes_cipher_top.us11.d` emits the substitution result for state position (1,1). Because the nonlinear byte remains dependent on the key-influenced round state before later rounds, the RTL evidence supports classifying `aes_cipher_top.us11.d` as a secondary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us12.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us12.d",
+    "Justification": "RTL inspection identifies `aes_cipher_top.us12.d` as the element that emits the substitution result for state position (1,2). Because the nonlinear byte remains dependent on the key-influenced round state before later rounds, `aes_cipher_top.us12.d` is a credible secondary asset for `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us13.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us13.d",
+    "Justification": "Although `aes_cipher_top.us13.d` is not the protected object, it emits the substitution result for state position (1,3). The dependency matters because the nonlinear byte remains dependent on the key-influenced round state before later rounds, placing `aes_cipher_top.us13.d` inside the security-relevant RTL cone of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us20.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us20.d",
+    "Justification": "The structural analysis retains `aes_cipher_top.us20.d` because it emits the substitution result for state position (2,0); in that position, the nonlinear byte remains dependent on the key-influenced round state before later rounds. This gives `aes_cipher_top.us20.d` a plausible supporting role in compromise of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us21.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us21.d",
+    "Justification": "A review of the local logic shows that `aes_cipher_top.us21.d` emits the substitution result for state position (2,1). Since the nonlinear byte remains dependent on the key-influenced round state before later rounds, excluding `aes_cipher_top.us21.d` would omit a meaningful dependency of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us22.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us22.d",
+    "Justification": "For `aes_cipher_top.us22.d`, the relevant RTL role is that it emits the substitution result for state position (2,2). That role is security-sensitive: the nonlinear byte remains dependent on the key-influenced round state before later rounds, so `aes_cipher_top.us22.d` warrants treatment as a secondary asset around `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us23.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us23.d",
+    "Justification": "The path through `aes_cipher_top.us23.d` is consequential because this signal emits the substitution result for state position (2,3). In particular, the nonlinear byte remains dependent on the key-influenced round state before later rounds; the relationship of `aes_cipher_top.us23.d` to `key` is therefore more than incidental connectivity.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us30.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us30.d",
+    "Justification": "Within the analyzed cone, `aes_cipher_top.us30.d` emits the substitution result for state position (3,0). This behavior can matter to `key` because the nonlinear byte remains dependent on the key-influenced round state before later rounds, which supports retaining `aes_cipher_top.us30.d` on structural and functional grounds.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us31.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us31.d",
+    "Justification": "`aes_cipher_top.us31.d` sits at a functional boundary where it emits the substitution result for state position (3,1). Because `aes_cipher_top.us31.d` occupies that point, the nonlinear byte remains dependent on the key-influenced round state before later rounds, so the signal can mediate behavior of `key` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us32.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us32.d",
+    "Justification": "Tracing the RTL dependency of `key` reaches `aes_cipher_top.us32.d`, which emits the substitution result for state position (3,2). The resulting concern is that the nonlinear byte remains dependent on the key-influenced round state before later rounds, making `aes_cipher_top.us32.d` a defensible secondary-asset candidate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us33.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us33.d",
+    "Justification": "The significance of `aes_cipher_top.us33.d` follows from its role: it emits the substitution result for state position (3,3). Consequently, the nonlinear byte remains dependent on the key-influenced round state before later rounds, and `aes_cipher_top.us33.d` remains relevant to protection of `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.text_out",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 5 -> aes_cipher_top.text_out",
+    "Justification": "Structural and functional analysis gives `aes_cipher_top.text_out` a concrete role because it is the ciphertext boundary observable outside the cipher core. With its value aggregates key-dependent transformations from every AES round, `aes_cipher_top.text_out` can influence the security behavior surrounding `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.subword",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 6 -> aes_cipher_top.u0.subword",
+    "Justification": "Rather than being a passive neighbor of `key`, `aes_cipher_top.u0.subword` carries the nonlinear SubWord result inside key expansion. Because this intermediate is derived directly from the evolving secret-key schedule, the RTL evidence supports classifying `aes_cipher_top.u0.subword` as a secondary asset.",
+    "decision": "retain"
+  }
+]

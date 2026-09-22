@@ -1,0 +1,288 @@
+[
+  {
+    "Name": "frontend_0.i_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.958333333,
+      "fault_masking": 0.041666667
+    },
+    "Justification": "For `frontend_0.i_state`, the measured profile shows very strong injection feasibility (0.958333333) and very strong fault survival (0.958333), derived from masking 0.041666667. Because the signal stores the instruction-fetch and decode phase, this quantitative behavior supports relevance to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.899884259,
+      "fault_masking": 0.703703704
+    },
+    "Justification": "`frontend_0.e_state` is selected from its feature evidence: strong injection feasibility (0.899884259) and limited fault survival (0.296296), derived from masking 0.703703704. Its RTL role, where it tracks the current execution phase governing PC enable timing, gives those measurements a meaningful connection to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw_wr",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0
+    },
+    "Justification": "The quantitative case for `execution_unit_0.pc_sw_wr` combines very strong injection feasibility (1) and very strong fault survival (1.000000), derived from masking 0. As `execution_unit_0.pc_sw_wr` selects the software-directed PC write path, the score pattern is consistent with a secondary asset influencing `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_wr",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111,
+      "fault_masking": 0.041666667
+    },
+    "Justification": "Measurements for `dbg_reg_wr` indicate very strong injection feasibility (0.986111111) and very strong fault survival (0.958333), derived from masking 0.041666667. This is significant because it authorizes debugger writes into the architectural register file; consequently, the feature response supports retaining the candidate around `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_done",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111,
+      "fault_masking": 0.087962963
+    },
+    "Justification": "A feature-based review of `frontend_0.exec_done` finds very strong injection feasibility (0.986111111) and very strong fault survival (0.912037), derived from masking 0.087962963. Coupled with the fact that the signal signals the boundary at which instruction execution has completed, the observed values make it pertinent to protection of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.reg_pc_call",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.00617284
+    },
+    "Justification": "The evidence pair for `execution_unit_0.reg_pc_call` reflects very strong injection feasibility (1) and very strong fault survival (0.993827), derived from masking 0.00617284. Since `execution_unit_0.reg_pc_call` forms the call-related value entering the PC datapath, the quantitative response is not incidental and favors its inclusion for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.002314815
+    },
+    "Justification": "Retention of `frontend_0.fetch` follows from very strong injection feasibility (1) and very strong fault survival (0.997685), derived from masking 0.002314815. The candidate qualifies instruction fetch and contributes to the sequential PC increment, so this score combination points to measurable influence on the behavior surrounding `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.pc_incr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.188888889
+    },
+    "Justification": "For the `pc` case, `frontend_0.pc_incr` exhibits very strong injection feasibility (1) and strong fault survival (0.811111), derived from masking 0.188888889. Given its function—where it computes the sequential next address—the feature values provide sufficient quantitative support for selection.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.296296296
+    },
+    "Justification": "`frontend_0.irq_detect` receives quantitative support through very strong injection feasibility (1) and moderate fault survival (0.703704), derived from masking 0.296296296. That profile matters in context because the signal selects interrupt entry and the associated vectoring behavior, linking the measurements to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "watchdog_0.wdtpw_error",
+    "threat": "fault_injection",
+    "Structural Path": "watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0
+    },
+    "Justification": "The normalized results distinguish `watchdog_0.wdtpw_error` through very strong injection feasibility (1) and very strong fault survival (1.000000), derived from masking 0. Its RTL role is that it initiates a watchdog error reset that reaches frontend PC reset logic; therefore, the feature evidence favors treating it as secondary to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_type",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.644290123,
+      "fault_masking": 0.567901235
+    },
+    "Justification": "Feature analysis assigns `frontend_0.inst_type` a profile of moderate injection feasibility (0.644290123) and limited fault survival (0.432099), derived from masking 0.567901235. Because `frontend_0.inst_type` classifies the instruction for PC and execution control, these values substantiate a measurable relationship with `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.863425926,
+      "fault_masking": 0.326388889
+    },
+    "Justification": "What supports `frontend_0.e_first_state` quantitatively is strong injection feasibility (0.863425926) and moderate fault survival (0.673611), derived from masking 0.326388889. The signal chooses the entry phase for the decoded operation, and that functional position makes the measured response relevant to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.604938272,
+      "fault_masking": 0.50617284
+    },
+    "Justification": "For `execution_unit_0.pc_sw`, the measured profile shows moderate injection feasibility (0.604938272) and moderate fault survival (0.493827), derived from masking 0.50617284. Because the signal carries the software-computed next-PC value, this quantitative behavior supports relevance to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.497685185,
+      "fault_masking": 0.844328704
+    },
+    "Justification": "`frontend_0.inst_jmp` is selected from its feature evidence: moderate injection feasibility (0.497685185) and limited fault survival (0.155671), derived from masking 0.844328704. Its RTL role, where it identifies jump instructions and steers branch-result handling, gives those measurements a meaningful connection to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.916666667,
+      "fault_masking": 0.085648148
+    },
+    "Justification": "The quantitative case for `frontend_0.exec_src_wr` combines very strong injection feasibility (0.916666667) and very strong fault survival (0.914352), derived from masking 0.085648148. As `frontend_0.exec_src_wr` marks the source-write execution phase, the score pattern is consistent with a secondary asset influencing `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.962962963,
+      "fault_masking": 0.025462963
+    },
+    "Justification": "Measurements for `frontend_0.exec_dst_wr` indicate very strong injection feasibility (0.962962963) and very strong fault survival (0.974537), derived from masking 0.025462963. This is significant because it marks the destination-write terminal phase; consequently, the feature response supports retaining the candidate around `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sz_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.inst_sz_nxt -> instruction-length control -> PC increment -> omsp_frontend.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.8,
+      "fault_masking": 0.694444444
+    },
+    "Justification": "A feature-based review of `frontend_0.inst_sz_nxt` finds strong injection feasibility (0.8) and limited fault survival (0.305556), derived from masking 0.694444444. Coupled with the fact that the signal computes the next instruction-length classification, the observed values make it pertinent to protection of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.mdb_in",
+    "threat": "fault_injection",
+    "Structural Path": "fe_mdb_in (connected to frontend_0.mdb_in) -> frontend_0.pc_nxt -> frontend_0.pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.494965278,
+      "fault_masking": 0.507465278
+    },
+    "Justification": "The evidence pair for `frontend_0.mdb_in` reflects moderate injection feasibility (0.494965278) and moderate fault survival (0.492535), derived from masking 0.507465278. Since `frontend_0.mdb_in` brings memory data into the frontend for instruction and next-PC decisions, the quantitative response is not incidental and favors its inclusion for `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.i_state_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.i_state_nxt -> PDG fan-in layer 2 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.027777778
+    },
+    "Justification": "Retention of `frontend_0.i_state_nxt` follows from very strong injection feasibility (1) and very strong fault survival (0.972222), derived from masking 0.027777778. The candidate computes the next fetch/decode phase, so this score combination points to measurable influence on the behavior surrounding `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.e_state_nxt -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.956018519,
+      "fault_masking": 0.005787037
+    },
+    "Justification": "For the `pc` case, `frontend_0.e_state_nxt` exhibits very strong injection feasibility (0.956018519) and very strong fault survival (0.994213), derived from masking 0.005787037. Given its function—where it computes the next execution phase—the feature values provide sufficient quantitative support for selection.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_halt_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_halt_cmd -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.258333333
+    },
+    "Justification": "`cpu_halt_cmd` receives quantitative support through very strong injection feasibility (1) and moderate fault survival (0.741667), derived from masking 0.258333333. That profile matters in context because the signal requests processor halt through the frontend control path, linking the measurements to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_halt_cmd",
+    "threat": "fault_injection",
+    "Structural Path": "dbg_halt_cmd -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.319444444
+    },
+    "Justification": "The normalized results distinguish `dbg_halt_cmd` through very strong injection feasibility (1) and moderate fault survival (0.680556), derived from masking 0.319444444. Its RTL role is that it injects a debugger-originated halt request; therefore, the feature evidence favors treating it as secondary to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.cpu_halt_req",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.cpu_halt_req -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.322222222
+    },
+    "Justification": "Feature analysis assigns `frontend_0.cpu_halt_req` a profile of very strong injection feasibility (1) and moderate fault survival (0.677778), derived from masking 0.322222222. Because `frontend_0.cpu_halt_req` combines frontend conditions into the effective halt request, these values substantiate a measurable relationship with `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpuoff",
+    "threat": "fault_injection",
+    "Structural Path": "cpuoff -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.347222222
+    },
+    "Justification": "What supports `cpuoff` quantitatively is very strong injection feasibility (1) and moderate fault survival (0.652778), derived from masking 0.347222222. The signal indicates the low-power state that inhibits normal instruction activity, and that functional position makes the measured response relevant to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.alu_0.alu_inc",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.alu_0.alu_inc -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1,
+      "fault_masking": 0.351851852
+    },
+    "Justification": "For `execution_unit_0.alu_0.alu_inc`, the measured profile shows very strong injection feasibility (1) and moderate fault survival (0.648148), derived from masking 0.351851852. Because the signal contributes arithmetic increment behavior in the execution datapath, this quantitative behavior supports relevance to `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cpu_en_s",
+    "threat": "fault_injection",
+    "Structural Path": "cpu_en_s -> PDG fan-in layer 1 -> pc",
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.958333333,
+      "fault_masking": 0.090277778
+    },
+    "Justification": "`cpu_en_s` is selected from its feature evidence: very strong injection feasibility (0.958333333) and very strong fault survival (0.909722), derived from masking 0.090277778. Its RTL role, where it synchronizes the effective processor-enable condition, gives those measurements a meaningful connection to `pc`.",
+    "decision": "retain"
+  }
+]

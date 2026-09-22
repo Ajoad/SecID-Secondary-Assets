@@ -1,0 +1,87 @@
+[
+  {
+    "Name": "PENABLE",
+    "threat": "fault_injection",
+    "Structural Path": "PENABLE -> APB access qualification -> PADDIR/GPIOLOCK write enable -> gpio_dir",
+    "Attack Mechanisms": [
+      "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PENABLE` is one term of the three-way APB write qualification guarding the PADDIR case. A stuck-at or transient assertion of `apb_gpio_gpio_dir_cone.PENABLE` can turn a non-write or wrong-phase transfer into a PADDIR update. The supporting RTL chain is `apb_gpio_gpio_dir_cone.PENABLE -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.885467493296,
+      "fault_masking": 2.32830643654E-10
+    },
+    "Justification": "A protocol-phase fault converts or suppresses the access cycle that updates the direction register.",
+    "decision": "retain"
+  },
+  {
+    "Name": "r_gpio_lock",
+    "threat": "fault_injection",
+    "Structural Path": "r_gpio_lock -> PADDIR write authorization -> r_gpio_dir -> gpio_dir",
+    "Attack Mechanisms": [
+      "`apb_gpio_gpio_dir_cone.r_gpio_lock[0]` selects whether `PWDATA` or zero is assigned to `pwdata_l` in the PADDIR case. The relevant dataflow is `apb_gpio_gpio_dir_cone.r_gpio_lock -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. A fault that clears `apb_gpio_gpio_dir_cone.r_gpio_lock[0]` admits an otherwise blocked direction write, while a fault that sets it during a legitimate write forces the captured direction word to zero. The lock policy no longer preserves the authorized pad-direction configuration.",
+      "A fault that sets `r_gpio_lock[0]` selects the `pwdata_l = '0` branch, yet the following nonblocking assignment to `r_gpio_dir` still executes. The relevant dataflow is `apb_gpio_gpio_dir_cone.r_gpio_lock -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. During a legitimate PADDIR write with `PSEL`, `PENABLE`, and `PWRITE` asserted, software expects an unlocked register to capture `PWDATA`. The injected lock-bit fault therefore replaces the requested direction bitmap with all zeros at the active `HCLK` edge. Every affected pad is forced toward input mode, corrupting the primary asset even though the bus transaction itself is legal."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.885467493296,
+      "fault_masking": 2.32830643654E-10
+    },
+    "Justification": "A one-bit lock fault removes write protection and was highly feasible with essentially no masking.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWDATA",
+    "threat": "fault_injection",
+    "Structural Path": "PWDATA -> write-data path -> r_gpio_dir update -> gpio_dir",
+    "Attack Mechanisms": [
+      "`apb_gpio_gpio_dir_cone.PWDATA` carries the direction bitmap selected by the lock check immediately before `r_gpio_dir <= pwdata_l`. The relevant dataflow is `apb_gpio_gpio_dir_cone.PWDATA -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Flipping bits of `apb_gpio_gpio_dir_cone.PWDATA` in the admitted write cycle changes the bitmap captured by `r_gpio_dir`. Pins are configured as outputs or inputs contrary to the authorized software value."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.835958802078,
+      "fault_masking": 0.0
+    },
+    "Justification": "A data-line fault directly corrupts the value captured into the direction state.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PADDR",
+    "threat": "fault_injection",
+    "Structural Path": "PADDR -> s_apb_addr -> register decode -> PADDIR write enable -> gpio_dir",
+    "Attack Mechanisms": [
+      "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PADDR` supplies the address decode that distinguishes `REG_PADDIR` from the other GPIO registers. A transient address fault on `apb_gpio_gpio_dir_cone.PADDR` during an APB write can redirect that write into `REG_PADDIR`. The supporting RTL chain is `apb_gpio_gpio_dir_cone.PADDR -> apb_gpio_gpio_dir_cone.gpio_dir`. The presented `PWDATA` is captured into `r_gpio_dir`, changing pad directions without the intended direction-register access."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.835958802078,
+      "fault_masking": 2.32830643654E-10
+    },
+    "Justification": "An address fault redirects a legal APB write into the direction-register decode.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PSEL",
+    "threat": "fault_injection",
+    "Structural Path": "PSEL -> APB transaction qualification -> PADDIR write enable -> gpio_dir",
+    "Attack Mechanisms": [
+      "A stuck-at or transient assertion of `apb_gpio_gpio_dir_cone.PSEL` can turn a non-write or wrong-phase transfer into a PADDIR update. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PSEL` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PSEL -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.835958802078,
+      "fault_masking": 2.32830643654E-10
+    },
+    "Justification": "A select fault creates or removes a qualifying peripheral transaction and changes the direction update.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWRITE",
+    "threat": "fault_injection",
+    "Structural Path": "PWRITE -> read/write qualification -> PADDIR write enable -> gpio_dir",
+    "Attack Mechanisms": [
+      "A stuck-at or transient assertion of `apb_gpio_gpio_dir_cone.PWRITE` can turn a non-write or wrong-phase transfer into a PADDIR update. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PWRITE` is one term of the three-way APB write qualification guarding the PADDIR case. Signal propagation follows `apb_gpio_gpio_dir_cone.PWRITE -> apb_gpio_gpio_dir_cone.gpio_dir`. The GPIO direction register accepts data on a cycle that should not perform a protected write."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.835958802078,
+      "fault_masking": 2.32830643654E-10
+    },
+    "Justification": "A read/write-control fault turns a non-writing access into a direction-register write.",
+    "decision": "retain"
+  }
+]

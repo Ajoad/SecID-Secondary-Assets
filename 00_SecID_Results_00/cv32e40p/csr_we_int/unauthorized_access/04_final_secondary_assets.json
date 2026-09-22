@@ -1,0 +1,58 @@
+[
+  {
+    "Name": "core_i.id_stage_i.deassert_we",
+    "threat": "unauthorized_access",
+    "Structural Path": "id_stage_i.deassert_we -> CSR-operation suppression -> id_stage_i.csr_op -> core_i.csr_op -> csr_we_int",
+    "Attack Mechanisms": [
+      "The corresponding control/data route is `cv32e40p_top.core_i.id_stage_i.deassert_we -> cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. `cv32e40p_top.core_i.id_stage_i.deassert_we` participates in that valid/ready or write-deassert decision before the CSR operation reaches `csr_we_int`; the implementation qualifies this propagation with `cv32e40p_top.core_i.id_stage_i.deassert_we`, `cv32e40p_top.core_i.id_stage_i.id_valid_o`. CSR operation and write controls are transferred from ID only on a valid, advancing pipeline cycle; halt and deassert-write logic suppress side effects on killed instructions. Forcing `cv32e40p_top.core_i.id_stage_i.deassert_we` to preserve the write controls of a killed or halted CSR instruction allows its operation code to reach the CSR block. The squashed instruction can assert `csr_we_int` and modify a protected CSR without an architecturally authorized retirement."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.927273,
+      "bypass_sensitivity": 0.161255411
+    },
+    "Justification": "This control forces invalid or stalled CSR operations to READ; perturbing it can release an otherwise suppressed write.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.id_stage_i.decoder_i.csr_op",
+    "threat": "unauthorized_access",
+    "Structural Path": "decoder_i.csr_op -> deassert_we gate -> id_stage_i.csr_op -> core_i.csr_op -> csr_we_int",
+    "Attack Mechanisms": [
+      "Manipulating `cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op` so that a decoded READ appears as WRITE, SET, or CLEAR leaves `csr_we_int` asserted for the selected CSR address. In the CSR combinational block, `csr_we_int` defaults to one and is cleared only when `csr_op_i == CSR_OP_READ`; WRITE, SET, and CLEAR therefore retain the write enable. `cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op` generates, transports, or selects `csr_op_i` on this decode path; the active mux/state branches are selected by `cv32e40p_top.core_i.id_stage_i.decoder_i.deassert_we_i`, `cv32e40p_top.core_i.id_stage_i.id_valid_o`. Signal propagation follows `cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op -> cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. A CSR that should only have been read is modified, enabling unauthorized changes to privilege, interrupt, debug, or counter state."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.546753,
+      "bypass_sensitivity": 0.017316017
+    },
+    "Justification": "The raw decoder operation classifies CSR reads and writes before suppression, so its corruption can create a protected write request.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.id_stage_i.csr_op",
+    "threat": "unauthorized_access",
+    "Structural Path": "id_stage_i.csr_op -> ID/EX transfer -> core_i.csr_op -> csr_we_int",
+    "Attack Mechanisms": [
+      "The corresponding control/data route is `cv32e40p_top.core_i.id_stage_i.csr_op -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. `cv32e40p_top.core_i.id_stage_i.csr_op` generates, transports, or selects `csr_op_i` on this decode path; the implementation qualifies this propagation with `cv32e40p_top.core_i.id_stage_i.id_valid_o`. In the CSR combinational block, `csr_we_int` defaults to one and is cleared only when `csr_op_i == CSR_OP_READ`; WRITE, SET, and CLEAR therefore retain the write enable. Manipulating `cv32e40p_top.core_i.id_stage_i.csr_op` so that a decoded READ appears as WRITE, SET, or CLEAR leaves `csr_we_int` asserted for the selected CSR address. A CSR that should only have been read is modified, enabling unauthorized changes to privilege, interrupt, debug, or counter state."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.49026,
+      "bypass_sensitivity": 0.008658009
+    },
+    "Justification": "This post-suppression CSR operation is transferred toward execution and can carry an unauthorized write classification.",
+    "decision": "retain"
+  },
+  {
+    "Name": "core_i.csr_op",
+    "threat": "unauthorized_access",
+    "Structural Path": "core_i.csr_op -> CSR operation decode -> core_i.cs_registers_i.csr_we_int",
+    "Attack Mechanisms": [
+      "In the CSR combinational block, `csr_we_int` defaults to one and is cleared only when `csr_op_i == CSR_OP_READ`; WRITE, SET, and CLEAR therefore retain the write enable. Manipulating `cv32e40p_top.core_i.csr_op` so that a decoded READ appears as WRITE, SET, or CLEAR leaves `csr_we_int` asserted for the selected CSR address. `cv32e40p_top.core_i.csr_op` generates, transports, or selects `csr_op_i` on this decode path; the route is implemented by the corresponding combinational or registered assignment. A CSR that should only have been read is modified, enabling unauthorized changes to privilege, interrupt, debug, or counter state. The causal signal chain is `cv32e40p_top.core_i.csr_op -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.54026,
+      "bypass_sensitivity": 0.004329004
+    },
+    "Justification": "The execution-stage CSR operation directly determines whether csr_we_int remains asserted.",
+    "decision": "retain"
+  }
+]

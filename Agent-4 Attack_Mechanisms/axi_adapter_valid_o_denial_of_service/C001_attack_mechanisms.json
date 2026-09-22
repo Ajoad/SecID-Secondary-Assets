@@ -1,0 +1,18 @@
+[
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.ar_ready",
+    "attack_mechanism": "Forcing `axi_adapter_valid_o_cone.axi_resp_i.ar_ready` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.ar_ready` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the RTL realizes the route without an additional named guard. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.ar_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.r_valid",
+    "attack_mechanism": "Forcing `axi_adapter_valid_o_cone.axi_resp_i.r_valid` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.r_valid` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the active mux/state branches are selected by `axi_adapter_valid_o_cone.axi_resp_i.r_valid`. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.r_valid -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.w_ready",
+    "attack_mechanism": "Forcing `axi_adapter_valid_o_cone.axi_resp_i.w_ready` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.w_ready` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the RTL realizes the route without an additional named guard. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.w_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+  },
+  {
+    "candidate": "axi_adapter_valid_o_cone.axi_resp_i.w_ready",
+    "attack_mechanism": "Holding `axi_adapter_valid_o_cone.axi_resp_i.w_ready` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. `axi_adapter_valid_o_cone.axi_resp_i.w_ready` controls request acceptance, response recognition, or the state transition into that write-completion arm; the RTL realizes the route without an additional named guard. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.w_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. The requester waits indefinitely for a completion pulse and legitimate write service is denied."
+  }
+]

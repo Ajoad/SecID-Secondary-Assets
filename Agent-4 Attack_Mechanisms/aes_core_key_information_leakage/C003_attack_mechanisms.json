@@ -1,0 +1,38 @@
+[
+  {
+    "candidate": "aes_cipher_top.sa21",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa21`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa21` contains the byte at state position (2,1) produced from a `text_in_r` byte XORed with the matching byte of `w[1]`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa21` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization."
+  },
+  {
+    "candidate": "aes_cipher_top.sa21",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa21`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa21` carries this key-dependent intermediate on each active encryption round. Cycle-aligned observations of `aes_cipher_top.sa21` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.subword",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.tmp_w -> aes_cipher_top.u0.u0.d -> aes_cipher_top.u0.subword`. With `kld = 0`, `w[3]` drives `tmp_w`; four byte S-boxes rotate/substitute its bytes to form `subword`, which is XORed into every next key word. `aes_cipher_top.u0.subword` concatenates the four substituted/rotated bytes derived from `w[3]`. Observing `aes_cipher_top.u0.subword` reveals the complete SubWord result, from which inverse S-box operations recover the rotated bytes of `w[3]`. The candidate leaks key-schedule bytes that can be combined with other word observations to recover the AES-128 master key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.w[0]",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0]`. Top-level `ld` drives the key expander's `kld` input high at the rising `clk` edge used for key loading. The key-expansion register `aes_cipher_top.u0.w[0]` executes its load arm and captures `key[127:96]` without transformation. A scan read or internal probe of `aes_cipher_top.u0.w[0]` during or after this load obtains that 32-bit portion of the primary key directly. One quarter of the 128-bit AES key is disclosed from a single observation, and the four word registers together reveal the complete key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.w[0]",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0]`. On later rising edges with `kld = 0`, the key schedule updates its word registers using XORs of prior words, `subword`, and `rcon`. `aes_cipher_top.u0.w[0]` then holds a deterministic expanded-key word and drives the corresponding `wo_0` round-key output. Observing `aes_cipher_top.u0.w[0]` over one or more expansion cycles yields round-key material; a complete round key can be inverted through the AES-128 key schedule. The original key can be reconstructed from the collected expanded words even after the direct key-load window has passed."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.w[1]",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1]`. Top-level `ld` drives the key expander's `kld` input high at the rising `clk` edge used for key loading. The key-expansion register `aes_cipher_top.u0.w[1]` executes its load arm and captures `key[95:64]` without transformation. A scan read or internal probe of `aes_cipher_top.u0.w[1]` during or after this load obtains that 32-bit portion of the primary key directly. One quarter of the 128-bit AES key is disclosed from a single observation, and the four word registers together reveal the complete key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.w[1]",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1]`. On later rising edges with `kld = 0`, the key schedule updates its word registers using XORs of prior words, `subword`, and `rcon`. `aes_cipher_top.u0.w[1]` then holds a deterministic expanded-key word and drives the corresponding `wo_1` round-key output. Observing `aes_cipher_top.u0.w[1]` over one or more expansion cycles yields round-key material; a complete round key can be inverted through the AES-128 key schedule. The original key can be reconstructed from the collected expanded words even after the direct key-load window has passed."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.w[2]",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2]`. Top-level `ld` drives the key expander's `kld` input high at the rising `clk` edge used for key loading. The key-expansion register `aes_cipher_top.u0.w[2]` executes its load arm and captures `key[63:32]` without transformation. A scan read or internal probe of `aes_cipher_top.u0.w[2]` during or after this load obtains that 32-bit portion of the primary key directly. One quarter of the 128-bit AES key is disclosed from a single observation, and the four word registers together reveal the complete key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.w[2]",
+    "attack_mechanism": "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2]`. On later rising edges with `kld = 0`, the key schedule updates its word registers using XORs of prior words, `subword`, and `rcon`. `aes_cipher_top.u0.w[2]` then holds a deterministic expanded-key word and drives the corresponding `wo_2` round-key output. Observing `aes_cipher_top.u0.w[2]` over one or more expansion cycles yields round-key material; a complete round key can be inverted through the AES-128 key schedule. The original key can be reconstructed from the collected expanded words even after the direct key-load window has passed."
+  }
+]

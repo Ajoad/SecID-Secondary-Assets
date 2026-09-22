@@ -1,0 +1,87 @@
+{
+  "schema": "secid_neorv32_bypass_scenarios_v4_semantic5",
+  "scenario_count": 5,
+  "accesses": [
+    "LOAD",
+    "STORE"
+  ],
+  "windows": [
+    "PRE_CONTEXT",
+    "CONTEXT_ACTIVE",
+    "ADDR_SETUP",
+    "PRE_TARGET",
+    "TARGET_EXEC",
+    "PMP_DENY"
+  ],
+  "windows_count": 6,
+  "scenarios": [
+    {
+      "scenario_id": 0,
+      "name": "U_UNMATCHED_DEFAULT_DENY",
+      "mechanism": "PMP_DEFAULT_UNMATCHED_DENY",
+      "arch_context": "U",
+      "effective_lsu_priv": "U",
+      "pmp_match": "NO_MATCH",
+      "pmp_locked": false,
+      "target_load": "0x80000000",
+      "target_store": "0x80000004",
+      "canonical_v22": true,
+      "description": "Architectural U mode; target lies outside every TOR region, so PMP default-deny applies because d_priv_i!=M."
+    },
+    {
+      "scenario_id": 1,
+      "name": "U_MATCHED_PERMISSION_DENY",
+      "mechanism": "PMP_MATCHED_PERMISSION_DENY",
+      "arch_context": "U",
+      "effective_lsu_priv": "U",
+      "pmp_match": "REGION1_TOR",
+      "pmp_locked": false,
+      "target_load": "0x00001800",
+      "target_store": "0x00001804",
+      "canonical_v22": false,
+      "description": "Architectural U mode; target matches TOR region 1, whose R/W permission for the selected access is deliberately cleared."
+    },
+    {
+      "scenario_id": 2,
+      "name": "M_MPRV_U_UNMATCHED_DENY",
+      "mechanism": "MPRV_EFFECTIVE_U_DEFAULT_DENY",
+      "arch_context": "M",
+      "effective_lsu_priv": "U",
+      "pmp_match": "NO_MATCH",
+      "pmp_locked": false,
+      "target_load": "0x80000000",
+      "target_store": "0x80000004",
+      "canonical_v22": false,
+      "description": "Architectural M mode with mstatus.MPRV=1 and MPP=U; lsu_priv is U, so an unmatched target is default-denied."
+    },
+    {
+      "scenario_id": 3,
+      "name": "M_MPRV_U_MATCHED_PERMISSION_DENY",
+      "mechanism": "MPRV_EFFECTIVE_U_MATCHED_DENY",
+      "arch_context": "M",
+      "effective_lsu_priv": "U",
+      "pmp_match": "REGION1_TOR",
+      "pmp_locked": false,
+      "target_load": "0x00001800",
+      "target_store": "0x00001804",
+      "canonical_v22": false,
+      "description": "Architectural M mode with MPRV=1/MPP=U; target matches TOR region 1 and the selected permission is cleared."
+    },
+    {
+      "scenario_id": 4,
+      "name": "M_LOCKED_MATCHED_PERMISSION_DENY",
+      "mechanism": "LOCKED_PMP_M_DENY",
+      "arch_context": "M",
+      "effective_lsu_priv": "M",
+      "pmp_match": "REGION1_TOR",
+      "pmp_locked": true,
+      "target_load": "0x00001800",
+      "target_store": "0x00001804",
+      "canonical_v22": false,
+      "description": "Architectural/effective M mode; locked TOR region 1 forces M-mode to obey the selected denied permission."
+    }
+  ],
+  "equivalence_argument": "Under this profile (2 regions, TOR enabled, NAP disabled), PMP data denial is determined by effective privilege, match/no-match, lock, and selected R/W permission. These five contexts cover the distinct denied authorization mechanisms reachable without changing the elaborated feature set; debug mode is excluded because PMP explicitly ignores rules in debug mode and therefore cannot provide a DENY baseline.",
+  "width_argument": "LB/LBU/LH/LHU/LW share the same PMP read authorization predicate; SB/SH/SW share the same PMP write predicate. Transfer width is therefore not a distinct PMP authorization mechanism and is not duplicated in the primary denominator.",
+  "trial_count_formula": "869 bits * 5 scenarios * 2 accesses * 6 windows = 52,140 mutant trials"
+}

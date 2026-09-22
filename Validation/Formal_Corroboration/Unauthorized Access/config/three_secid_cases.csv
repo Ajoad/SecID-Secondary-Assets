@@ -1,0 +1,5 @@
+case_id,scenario_id,access_id,asset,role,obs_bit,local_target,full_target,dynamic_ucp_reachability,dynamic_bypass_sensitivity,rationale
+prv_level_s0,0,0,neorv32_cpu_control.csr.prv_level,SECID,2223,neorv32_cpu_control_inst.csr[0],core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.csr[0],0.5222222222222223,0.26666666666666666,Direct-U case; prior FPV candidate perturbation produced semantic bypass
+mstatus_mpp_s2,2,0,neorv32_cpu_control.csr.mstatus_mpp,SECID,2156,neorv32_cpu_control_inst.csr[3],core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.csr[3],0.2611111111111111,0.26666666666666666,MPRV-to-U case; prior FPV candidate perturbation produced semantic bypass
+mstatus_mprv_s2,2,0,neorv32_cpu_control.csr.mstatus_mprv,SECID,2157,neorv32_cpu_control_inst.csr[4],core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.csr[4],0.0,0.26666666666666666,MPRV-to-U case; included critically even though prior dynamic UCP reachability was zero
+

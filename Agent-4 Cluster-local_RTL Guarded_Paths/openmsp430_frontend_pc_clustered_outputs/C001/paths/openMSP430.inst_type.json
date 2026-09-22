@@ -1,0 +1,65 @@
+{
+  "candidate": "openMSP430.inst_type",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.inst_type",
+          "destination": "openMSP430.frontend_0.inst_dest",
+          "control_signal": [
+            "openMSP430.frontend_0.cpu_halt_st",
+            "openMSP430.inst_type"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.inst_dest",
+          "destination": "openMSP430.execution_unit_0.register_file_0.pc_sw_wr",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.pc_sw_wr",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.execution_unit_0.register_file_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "openMSP430.inst_type",
+          "destination": "openMSP430.execution_unit_0.reg_dest_wr",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.reg_dest_wr",
+          "destination": "openMSP430.execution_unit_0.register_file_0.pc_sw_wr",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.pc_sw_wr",
+          "destination": "openMSP430.frontend_0.pc_nxt",
+          "control_signal": [
+            "openMSP430.execution_unit_0.register_file_0.pc_sw_wr"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.pc_nxt",
+          "destination": "openMSP430.frontend_0.pc",
+          "control_signal": [
+            "openMSP430.frontend_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+*.zdb
+*.db
+*.daidir/
+zoix.sim*
+__fmsh__/
+__fubs__/
+__globfiles__/

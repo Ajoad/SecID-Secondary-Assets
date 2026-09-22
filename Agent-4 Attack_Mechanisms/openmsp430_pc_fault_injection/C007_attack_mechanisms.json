@@ -1,0 +1,6 @@
+[
+  {
+    "candidate": "openMSP430.dbg_0.dbg_uart_0.xfer_buf",
+    "attack_mechanism": "Forcing `openMSP430.dbg_0.dbg_uart_0.xfer_buf` while halt or resume is being synchronized can create an extra fetch, suppress the expected fetch, or resume with stale PC-selection state. This behavior is connected through `openMSP430.dbg_0.dbg_uart_0.xfer_buf -> openMSP430.dbg_0.dbg_uart_0.dbg_din -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.dbg_0.dbg_uart_0.xfer_buf` lies on this debug-control route into the PC-update logic; the active mux/state branches are selected by `openMSP430.dbg_0.dbg_uart_0.dbg_din_bw`, `openMSP430.frontend_0.pc_sw_wr`. The frontend admits a halt only through `cpu_halt_req`/`cpu_halt_st`, which changes fetch and instruction-state progression around a safe boundary. The architectural PC can advance, repeat, or resume at a location inconsistent with the requested debug transition."
+  }
+]

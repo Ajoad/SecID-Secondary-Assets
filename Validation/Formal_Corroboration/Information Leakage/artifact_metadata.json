@@ -1,0 +1,13 @@
+{
+  "artifact": "information-leakage-single-exclusion-effort",
+  "release": "v1.0",
+  "source_logical_version": "openmsp430_r4_il_jasper_single_exclusion_effort_v1_3_1_reuse10",
+  "jasper_version": "2024.09p001",
+  "assets": 10,
+  "repeats": 5,
+  "baseline_runs": 5,
+  "exclusion_runs": 50,
+  "total_runs": 55,
+  "result": "55/55 FLOW_FOUND",
+  "sanitized": true
+}

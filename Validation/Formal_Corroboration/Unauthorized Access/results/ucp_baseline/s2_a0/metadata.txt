@@ -1,0 +1,12 @@
+type=UCP_BASELINE
+scenario=M_MPRV_U_UNMATCHED_DENY
+tag=s2_a0
+bound=900
+attack_space=XBUS_DATA_1BIT|XBUS_ACK_DROP|XBUS_ERR|IRQ_MEI|IRQ_MSI|IRQ_MTI
+attack_window=0xA8-0x114
+pmp_setup_corruption_excluded=1
+primary_gate=golden_lsu_priv_U_to_attacked_lsu_priv_M_before_protected_request
+jtag_included=0
+elapsed_ms=148019
+report_rc=0
+

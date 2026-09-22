@@ -1,0 +1,447 @@
+{
+  "schema": "secid_openmsp430_balanced_zoix_ranking_v1_1_1",
+  "candidate_count": 148,
+  "workloads": [
+    "core_mix",
+    "branch_mix",
+    "call_return",
+    "memory_mix",
+    "peripheral_mix",
+    "interrupt_mix",
+    "dma_contention",
+    "debug_uart"
+  ],
+  "seeds": [
+    20260818,
+    20260819,
+    20260820
+  ],
+  "workload_seed_cells_per_candidate": 24,
+  "baseline_fingerprint_audit": {
+    "passed": true,
+    "raw_seed_label_excluded_from_hashed_sources": true,
+    "workloads": [
+      {
+        "workload": "core_mix",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      },
+      {
+        "workload": "branch_mix",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      },
+      {
+        "workload": "call_return",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      },
+      {
+        "workload": "memory_mix",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      },
+      {
+        "workload": "peripheral_mix",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      },
+      {
+        "workload": "interrupt_mix",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      },
+      {
+        "workload": "dma_contention",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 3,
+        "classification": "DISTINCT_STIMULUS_AND_PC_TRACE"
+      },
+      {
+        "workload": "debug_uart",
+        "stimulus_unique_hash_count": 3,
+        "pc_trace_unique_hash_count": 1,
+        "classification": "DISTINCT_STIMULUS_SAME_PC_TRACE"
+      }
+    ]
+  },
+  "fault_model": "SA0/SA1 on each of 1304 selected candidate bits",
+  "primary_ranking": {
+    "metric": "balanced_matrix_overall_pc_impact_rate",
+    "definition": "PC-detected fault executions / all requested fault executions over equal 8-workload x 3-seed matrix",
+    "reason": "width-normalized and gives every candidate identical workload/seed exposure"
+  },
+  "secondary_metrics": {
+    "balanced_matrix_attempt_rate": "testability/activation coverage over matrix",
+    "balanced_matrix_pc_impact_given_attempted_rate": "PC impact conditional on actual Z01X attempt",
+    "peak_workload_overall_pc_impact_rate": "best observed workload susceptibility, averaged over seeds",
+    "workload_detection_breadth_rate": "fraction of workload classes with at least one detected PC-impact fault",
+    "mean_within_workload_seed_std_overall_pc_impact_rate": "seed sensitivity/stability diagnostic"
+  },
+  "bottom_candidate_policy": {
+    "all_bottom_file": "zoix_bottom_candidates.csv",
+    "high_coverage_bottom_file": "zoix_bottom_candidates_high_coverage.csv",
+    "minimum_attempt_rate": 0.75,
+    "interpretation": "A low score with low attempt rate is weak evidence of intrinsic low impact; high-coverage bottom candidates are more defensible low-impact examples."
+  },
+  "top_k": [
+    {
+      "rank": 1,
+      "candidate": "frontend_0.fetch",
+      "score": 0.9375,
+      "attempt_rate": 1.0,
+      "peak": 1.0
+    },
+    {
+      "rank": 2,
+      "candidate": "exec_done",
+      "score": 0.9375,
+      "attempt_rate": 1.0,
+      "peak": 1.0
+    },
+    {
+      "rank": 3,
+      "candidate": "frontend_0.i_state",
+      "score": 0.9166666666666666,
+      "attempt_rate": 0.9166666666666666,
+      "peak": 1.0
+    },
+    {
+      "rank": 4,
+      "candidate": "frontend_0.i_state_nxt",
+      "score": 0.9166666666666666,
+      "attempt_rate": 0.9166666666666666,
+      "peak": 1.0
+    },
+    {
+      "rank": 5,
+      "candidate": "frontend_0.e_state_nxt",
+      "score": 0.859375,
+      "attempt_rate": 1.0,
+      "peak": 1.0
+    },
+    {
+      "rank": 6,
+      "candidate": "frontend_0.e_first_state",
+      "score": 0.8177083333333334,
+      "attempt_rate": 0.90625,
+      "peak": 1.0
+    },
+    {
+      "rank": 7,
+      "candidate": "mem_backbone_0.fe_mab",
+      "score": 0.7013888888888888,
+      "attempt_rate": 0.8666666666666667,
+      "peak": 0.8666666666666667
+    },
+    {
+      "rank": 8,
+      "candidate": "mem_backbone_0.pmem_dout",
+      "score": 0.6875,
+      "attempt_rate": 0.9127604166666666,
+      "peak": 0.875
+    },
+    {
+      "rank": 9,
+      "candidate": "frontend_0.decode",
+      "score": 0.6875,
+      "attempt_rate": 1.0,
+      "peak": 1.0
+    },
+    {
+      "rank": 10,
+      "candidate": "decode_noirq",
+      "score": 0.6875,
+      "attempt_rate": 1.0,
+      "peak": 1.0
+    },
+    {
+      "rank": 11,
+      "candidate": "fe_mab",
+      "score": 0.6575520833333334,
+      "attempt_rate": 0.84375,
+      "peak": 0.8125
+    },
+    {
+      "rank": 12,
+      "candidate": "frontend_0.pc_incr",
+      "score": 0.65234375,
+      "attempt_rate": 0.84375,
+      "peak": 0.78125
+    },
+    {
+      "rank": 13,
+      "candidate": "execution_unit_0.reg_dest_wr",
+      "score": 0.625,
+      "attempt_rate": 0.9375,
+      "peak": 1.0
+    },
+    {
+      "rank": 14,
+      "candidate": "pc_sw_wr",
+      "score": 0.625,
+      "attempt_rate": 0.625,
+      "peak": 1.0
+    },
+    {
+      "rank": 15,
+      "candidate": "frontend_0.exec_dst_wr",
+      "score": 0.625,
+      "attempt_rate": 0.6875,
+      "peak": 1.0
+    },
+    {
+      "rank": 16,
+      "candidate": "frontend_0.inst_sz_nxt",
+      "score": 0.6041666666666666,
+      "attempt_rate": 0.8125,
+      "peak": 1.0
+    },
+    {
+      "rank": 17,
+      "candidate": "execution_unit_0.reg_pc_call",
+      "score": 0.5625,
+      "attempt_rate": 0.5625,
+      "peak": 1.0
+    },
+    {
+      "rank": 18,
+      "candidate": "frontend_0.cpu_halt_req",
+      "score": 0.5625,
+      "attempt_rate": 0.5625,
+      "peak": 1.0
+    },
+    {
+      "rank": 19,
+      "candidate": "cpu_halt_cmd",
+      "score": 0.5625,
+      "attempt_rate": 0.5625,
+      "peak": 1.0
+    },
+    {
+      "rank": 20,
+      "candidate": "mem_backbone_0.pmem_dout_bckup_sel",
+      "score": 0.5,
+      "attempt_rate": 1.0,
+      "peak": 0.5
+    }
+  ],
+  "bottom_k_all": [
+    {
+      "candidate": "frontend_0.sconst_nxt",
+      "score": 0.0,
+      "attempt_rate": 1.0
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_sxt",
+      "score": 0.0,
+      "attempt_rate": 0.9375
+    },
+    {
+      "candidate": "frontend_0.dest_reg",
+      "score": 0.0,
+      "attempt_rate": 0.9375
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_shift",
+      "score": 0.0,
+      "attempt_rate": 0.9010416666666666
+    },
+    {
+      "candidate": "dbg_0.cpu_stat_set",
+      "score": 0.0,
+      "attempt_rate": 0.75
+    },
+    {
+      "candidate": "multiplier_0.reg_dec",
+      "score": 0.0,
+      "attempt_rate": 0.71484375
+    },
+    {
+      "candidate": "dbg_0.dbg_din",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.cpu_stat_full",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_uart_0.xfer_buf_nxt",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_uart_0.xfer_buf",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_uart_0.cmd_valid",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_uart_0.xfer_bit_inc",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_uart_0.xfer_done",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_rd_rdy",
+      "score": 0.0,
+      "attempt_rate": 0.5625
+    },
+    {
+      "candidate": "dbg_0.dbg_dout",
+      "score": 0.0,
+      "attempt_rate": 0.54296875
+    },
+    {
+      "candidate": "dbg_0.dbg_addr_in",
+      "score": 0.0,
+      "attempt_rate": 0.53125
+    },
+    {
+      "candidate": "dbg_0.cpu_id_lo_rd",
+      "score": 0.0,
+      "attempt_rate": 0.515625
+    },
+    {
+      "candidate": "multiplier_0.reg_wr",
+      "score": 0.0,
+      "attempt_rate": 0.5078125
+    },
+    {
+      "candidate": "dbg_0.mem_bw",
+      "score": 0.0,
+      "attempt_rate": 0.5
+    },
+    {
+      "candidate": "dbg_0.mem_ctl",
+      "score": 0.0,
+      "attempt_rate": 0.5
+    }
+  ],
+  "bottom_k_high_coverage": [
+    {
+      "candidate": "frontend_0.sconst_nxt",
+      "score": 0.0,
+      "attempt_rate": 1.0
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_sxt",
+      "score": 0.0,
+      "attempt_rate": 0.9375
+    },
+    {
+      "candidate": "frontend_0.dest_reg",
+      "score": 0.0,
+      "attempt_rate": 0.9375
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_shift",
+      "score": 0.0,
+      "attempt_rate": 0.9010416666666666
+    },
+    {
+      "candidate": "dbg_0.cpu_stat_set",
+      "score": 0.0,
+      "attempt_rate": 0.75
+    },
+    {
+      "candidate": "eu_mab",
+      "score": 0.02734375,
+      "attempt_rate": 0.99609375
+    },
+    {
+      "candidate": "mem_backbone_0.eu_mab",
+      "score": 0.034722222222222224,
+      "attempt_rate": 1.0
+    },
+    {
+      "candidate": "execution_unit_0.reg_src",
+      "score": 0.05859375,
+      "attempt_rate": 0.8580729166666666
+    },
+    {
+      "candidate": "execution_unit_0.exec_cycle",
+      "score": 0.0625,
+      "attempt_rate": 0.75
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_add_inc",
+      "score": 0.10661764705882353,
+      "attempt_rate": 0.8639705882352942
+    },
+    {
+      "candidate": "frontend_0.ext_nxt",
+      "score": 0.10807291666666667,
+      "attempt_rate": 0.9127604166666666
+    },
+    {
+      "candidate": "frontend_0.inst_sext_rdy",
+      "score": 0.125,
+      "attempt_rate": 0.9375
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_add",
+      "score": 0.13357843137254902,
+      "attempt_rate": 0.9889705882352942
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.op_src_in_jmp",
+      "score": 0.17279411764705882,
+      "attempt_rate": 0.8848039215686274
+    },
+    {
+      "candidate": "execution_unit_0.src_reg_src_sel",
+      "score": 0.1875,
+      "attempt_rate": 1.0
+    },
+    {
+      "candidate": "execution_unit_0.src_reg_dest_sel",
+      "score": 0.1875,
+      "attempt_rate": 1.0
+    },
+    {
+      "candidate": "e_state",
+      "score": 0.1875,
+      "attempt_rate": 1.0
+    },
+    {
+      "candidate": "frontend_0.alu_add",
+      "score": 0.1875,
+      "attempt_rate": 0.9375
+    },
+    {
+      "candidate": "execution_unit_0.alu_0.alu_short",
+      "score": 0.19362745098039216,
+      "attempt_rate": 0.8774509803921569
+    },
+    {
+      "candidate": "execution_unit_0.op_src",
+      "score": 0.19921875,
+      "attempt_rate": 0.8971354166666666
+    }
+  ],
+  "outputs": {
+    "ranking": "zoix_candidate_ranking.csv",
+    "cell_stats": "zoix_candidate_workload_seed_stats.csv",
+    "workload_stats": "zoix_candidate_workload_stats.csv",
+    "top": "zoix_top_candidates.csv",
+    "bottom": "zoix_bottom_candidates.csv",
+    "bottom_high_coverage": "zoix_bottom_candidates_high_coverage.csv"
+  }
+}

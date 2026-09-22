@@ -1,0 +1,13 @@
+type=MEDIATION
+case_id=prv_level_s0
+asset=neorv32_cpu_control.csr.prv_level
+role=SECID
+scenario=U_UNMATCHED_DEFAULT_DENY
+tag=s0_a0
+obs_bit=2223
+dynamic_ucp_reachability=0.5222222222222223
+dynamic_bypass_sensitivity=0.26666666666666666
+bound=900
+elapsed_ms=219022
+report_rc=0
+

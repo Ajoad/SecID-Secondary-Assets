@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "openMSP430.dbg_0.cpu_stat_full",
+    "attack_mechanism": "The corresponding control/data route is `openMSP430.dbg_0.cpu_stat_full -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. `openMSP430.dbg_0.cpu_stat_full` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. Holding or toggling `openMSP430.dbg_0.cpu_stat_full` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  },
+  {
+    "candidate": "openMSP430.dbg_0.dbg_din",
+    "attack_mechanism": "The corresponding control/data route is `openMSP430.dbg_0.dbg_din -> openMSP430.dbg_0.halt_cpu -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. `openMSP430.dbg_0.dbg_din` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. Holding or toggling `openMSP430.dbg_0.dbg_din` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  },
+  {
+    "candidate": "openMSP430.dbg_0.reg_wr",
+    "attack_mechanism": "The corresponding control/data route is `openMSP430.dbg_0.reg_wr -> openMSP430.dbg_0.halt_cpu -> openMSP430.frontend_0.cpu_halt_req -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. `openMSP430.dbg_0.reg_wr` controls that halt/resume path before `exec_done` is consumed by decode and fetch; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. Debug halt and low-power controls can hold the frontend in `I_IDLE`/`E_IDLE` or delay the boundary at which a running instruction completes. Holding or toggling `openMSP430.dbg_0.reg_wr` at a completion boundary can repeatedly withdraw the condition that releases the instruction state machine. Legitimate instructions cease retiring and the processor remains halted or repeatedly re-enters an incomplete execution phase."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.exec_jmp",
+    "attack_mechanism": "The corresponding control/data route is `openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_jmp` sets the selected completion class, execution state, or transition into the required terminal state; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. An attacker who forces `openMSP430.frontend_0.exec_jmp` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.src_acalc_pre",
+    "attack_mechanism": "The corresponding control/data route is `openMSP430.frontend_0.src_acalc_pre -> openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.src_acalc_pre` sets the selected completion class, execution state, or transition into the required terminal state; the implementation qualifies this propagation with `openMSP430.frontend_0.cpuoff`, `openMSP430.frontend_0.src_acalc_pre`, `openMSP430.frontend_0.exec_jmp`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.src_acalc_pre` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "candidate": "openMSP430.execution_unit_0.mdb_in_buf",
+  "relation": "fan-out",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.r4",
+          "destination": "openMSP430.execution_unit_0.register_file_0.reg_src",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.reg_src",
+          "destination": "openMSP430.execution_unit_0.op_src",
+          "control_signal": [
+            "openMSP430.execution_unit_0.src_reg_src_sel"
+          ]
+        },
+        {
+          "source": "openMSP430.execution_unit_0.op_src",
+          "destination": "openMSP430.execution_unit_0.alu_0.op_src_inv",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.alu_0.op_src_inv",
+          "destination": "openMSP430.execution_unit_0.alu_0.op_src_in_jmp",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.alu_0.op_src_in_jmp",
+          "destination": "openMSP430.execution_unit_0.alu_0.alu_add",
+          "control_signal": []
+        },
+        {
+          "source": "openMSP430.execution_unit_0.alu_0.alu_add",
+          "destination": "openMSP430.execution_unit_0.mab_lsb",
+          "control_signal": [
+            "openMSP430.execution_unit_0.mb_en",
+            "openMSP430.execution_unit_0.puc_rst"
+          ]
+        },
+        {
+          "source": "openMSP430.execution_unit_0.mab_lsb",
+          "destination": "openMSP430.execution_unit_0.mdb_in_bw",
+          "control_signal": [
+            "openMSP430.execution_unit_0.inst_bw",
+            "openMSP430.execution_unit_0.mab_lsb"
+          ]
+        },
+        {
+          "source": "openMSP430.execution_unit_0.mdb_in_bw",
+          "destination": "openMSP430.execution_unit_0.mdb_in_buf",
+          "control_signal": [
+            "openMSP430.execution_unit_0.puc_rst"
+          ]
+        }
+      ]
+    }
+  ]
+}

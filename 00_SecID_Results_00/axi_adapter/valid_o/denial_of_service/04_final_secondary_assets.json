@@ -1,0 +1,136 @@
+[
+  {
+    "Name": "axi_resp_i.ar_ready",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.ar_ready -> read-address handshake -> adapter FSM progress -> valid_o",
+    "Attack Mechanisms": [
+      "Forcing `axi_adapter_valid_o_cone.axi_resp_i.ar_ready` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.ar_ready` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the RTL realizes the route without an additional named guard. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.ar_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "Holding read-address readiness in the wrong state prevents request progress and caused complete service failure.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.aw_ready",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.aw_ready -> write-address handshake -> adapter FSM progress -> valid_o",
+    "Attack Mechanisms": [
+      "`axi_adapter_valid_o_cone.axi_resp_i.aw_ready` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.axi_resp_i.aw_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.axi_resp_i.aw_ready` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall.",
+      "`axi_adapter_valid_o_cone.axi_resp_i.aw_ready` controls request acceptance, response recognition, or the state transition into that write-completion arm; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.axi_resp_i.aw_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. Holding `axi_adapter_valid_o_cone.axi_resp_i.aw_ready` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. The requester waits indefinitely for a completion pulse and legitimate write service is denied."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "Corruption prevents write-address acceptance across applicable write/AMO paths and fully suppresses service.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.w_ready",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.w_ready -> write-data handshake -> response progression -> valid_o",
+    "Attack Mechanisms": [
+      "Forcing `axi_adapter_valid_o_cone.axi_resp_i.w_ready` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.w_ready` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the RTL realizes the route without an additional named guard. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.w_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall.",
+      "Holding `axi_adapter_valid_o_cone.axi_resp_i.w_ready` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. `axi_adapter_valid_o_cone.axi_resp_i.w_ready` controls request acceptance, response recognition, or the state transition into that write-completion arm; the RTL realizes the route without an additional named guard. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.w_ready -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. The requester waits indefinitely for a completion pulse and legitimate write service is denied."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "Corruption prevents write-data acceptance and caused complete progress and rate loss.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.r.last",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.r.last -> burst termination -> state_q transition -> valid_o",
+    "Attack Mechanisms": [
+      "`axi_adapter_valid_o_cone.axi_resp_i.r.last` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the corresponding assignment directly implements this connection. The relevant dataflow is `axi_adapter_valid_o_cone.axi_resp_i.r.last -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.axi_resp_i.r.last` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.75,
+      "service_rate_degradation": 0.75
+    },
+    "Justification": "A false final-beat indication traps or prematurely terminates a burst, strongly disrupting completion.",
+    "decision": "retain"
+  },
+  {
+    "Name": "state_q",
+    "threat": "denial_of_service",
+    "Structural Path": "state_q -> response/transaction state decode -> valid_o",
+    "Attack Mechanisms": [
+      "A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. Holding `axi_adapter_valid_o_cone.state_q` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. `axi_adapter_valid_o_cone.state_q` controls request acceptance, response recognition, or the state transition into that write-completion arm; the route is implemented by the corresponding combinational or registered assignment. The requester waits indefinitely for a completion pulse and legitimate write service is denied. The causal signal chain is `axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`.",
+      "For an AMO that returns data, accepting `b_valid` is insufficient: the adapter waits for `r_valid` either in `WAIT_B_VALID` or `WAIT_AMO_R_VALID` before asserting `valid_o`. Corrupting `axi_adapter_valid_o_cone.state_q` can falsely classify a request as data-returning or prevent the required read response from being recognized. `axi_adapter_valid_o_cone.state_q` determines the AMO classification, preserved AMO state, or one of these two response handshakes; the route is implemented by the corresponding combinational or registered assignment. The atomic transaction remains pending and blocks subsequent traffic from receiving service. The causal signal chain is `axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`.",
+      "A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. Forcing `axi_adapter_valid_o_cone.state_q` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. `axi_adapter_valid_o_cone.state_q` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the route is implemented by the corresponding combinational or registered assignment. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall. The causal signal chain is `axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.67008229677137,
+      "service_rate_degradation": 0.782608695652174
+    },
+    "Justification": "The persistent FSM state controls all valid_o paths; corruption produced broad, often unrecovered stalls.",
+    "decision": "retain"
+  },
+  {
+    "Name": "cnt_q",
+    "threat": "denial_of_service",
+    "Structural Path": "cnt_q -> burst-completion decision -> state_q transition -> valid_o",
+    "Attack Mechanisms": [
+      "RTL connectivity realizes this dependence as `axi_adapter_valid_o_cone.cnt_q -> axi_adapter_valid_o_cone.state_q -> axi_adapter_valid_o_cone.valid_o`. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.cnt_q` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; no separate named control guard is recorded on the direct assignment. Forcing `axi_adapter_valid_o_cone.cnt_q` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 1.0,
+      "service_rate_degradation": 1.0
+    },
+    "Justification": "The persistent beat counter determines burst completion; corruption nearly eliminated service rate.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.r_valid",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.r_valid -> read-response acceptance -> adapter completion -> valid_o",
+    "Attack Mechanisms": [
+      "Forcing `axi_adapter_valid_o_cone.axi_resp_i.r_valid` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.r_valid` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the active mux/state branches are selected by `axi_adapter_valid_o_cone.axi_resp_i.r_valid`. Signal propagation follows `axi_adapter_valid_o_cone.axi_resp_i.r_valid -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.17592854115581388,
+      "service_rate_degradation": 0.6336482471776589
+    },
+    "Justification": "Suppressing or fabricating read responses prevents the FSM from reaching valid_o.",
+    "decision": "retain"
+  },
+  {
+    "Name": "axi_resp_i.b_valid",
+    "threat": "denial_of_service",
+    "Structural Path": "axi_resp_i.b_valid -> write-response acceptance -> adapter completion -> valid_o",
+    "Attack Mechanisms": [
+      "A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. `axi_adapter_valid_o_cone.axi_resp_i.b_valid` controls request acceptance, response recognition, or the state transition into that write-completion arm; the intervening RTL assignments are qualified by `axi_adapter_valid_o_cone.axi_resp_i.b_valid`. Holding `axi_adapter_valid_o_cone.axi_resp_i.b_valid` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. The supporting RTL chain is `axi_adapter_valid_o_cone.axi_resp_i.b_valid -> axi_adapter_valid_o_cone.valid_o`. The requester waits indefinitely for a completion pulse and legitimate write service is denied.",
+      "For an AMO that returns data, accepting `b_valid` is insufficient: the adapter waits for `r_valid` either in `WAIT_B_VALID` or `WAIT_AMO_R_VALID` before asserting `valid_o`. `axi_adapter_valid_o_cone.axi_resp_i.b_valid` determines the AMO classification, preserved AMO state, or one of these two response handshakes; the intervening RTL assignments are qualified by `axi_adapter_valid_o_cone.axi_resp_i.b_valid`. Corrupting `axi_adapter_valid_o_cone.axi_resp_i.b_valid` can falsely classify a request as data-returning or prevent the required read response from being recognized. The supporting RTL chain is `axi_adapter_valid_o_cone.axi_resp_i.b_valid -> axi_adapter_valid_o_cone.valid_o`. The atomic transaction remains pending and blocks subsequent traffic from receiving service.",
+      "A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.axi_resp_i.b_valid` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the intervening RTL assignments are qualified by `axi_adapter_valid_o_cone.axi_resp_i.b_valid`. Forcing `axi_adapter_valid_o_cone.axi_resp_i.b_valid` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. The supporting RTL chain is `axi_adapter_valid_o_cone.axi_resp_i.b_valid -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.3191778480500285,
+      "service_rate_degradation": 0.9943977591036415
+    },
+    "Justification": "Suppressing the write response leaves write/AMO transactions incomplete and severely degrades service.",
+    "decision": "retain"
+  },
+  {
+    "Name": "amo_q",
+    "threat": "denial_of_service",
+    "Structural Path": "amo_q -> atomic response sequencing -> completion-state transition -> valid_o",
+    "Attack Mechanisms": [
+      "A normal write completes in `WAIT_B_VALID` only after `axi_resp_i.b_valid`; the RTL then asserts `valid_o` and returns to `IDLE` unless the atomic operation also returns data. `axi_adapter_valid_o_cone.amo_q` controls request acceptance, response recognition, or the state transition into that write-completion arm; the intervening RTL assignments are qualified by `axi_adapter_valid_o_cone.axi_resp_i_b_valid`. Holding `axi_adapter_valid_o_cone.amo_q` at a value that prevents the `WAIT_B_VALID` condition or corrupts `state_d/state_q` can keep the adapter from reaching the `valid_o = 1` assignment. The supporting RTL chain is `axi_adapter_valid_o_cone.amo_q -> axi_adapter_valid_o_cone.valid_o`. The requester waits indefinitely for a completion pulse and legitimate write service is denied.",
+      "For an AMO that returns data, accepting `b_valid` is insufficient: the adapter waits for `r_valid` either in `WAIT_B_VALID` or `WAIT_AMO_R_VALID` before asserting `valid_o`. `axi_adapter_valid_o_cone.amo_q` determines the AMO classification, preserved AMO state, or one of these two response handshakes; the intervening RTL assignments are qualified by `axi_adapter_valid_o_cone.axi_resp_i_b_valid`. Corrupting `axi_adapter_valid_o_cone.amo_q` can falsely classify a request as data-returning or prevent the required read response from being recognized. The supporting RTL chain is `axi_adapter_valid_o_cone.amo_q -> axi_adapter_valid_o_cone.valid_o`. The atomic transaction remains pending and blocks subsequent traffic from receiving service.",
+      "A read response advances while `axi_resp_i.r_valid` is accepted; only an asserted `r.last` moves the FSM to `COMPLETE_READ`, where `valid_o` is raised. `axi_adapter_valid_o_cone.amo_q` affects read admission, beat counting, last-beat recognition, or the `COMPLETE_READ` transition; the intervening RTL assignments are qualified by `axi_adapter_valid_o_cone.axi_resp_i_b_valid`. Forcing `axi_adapter_valid_o_cone.amo_q` to lose a beat, miscount the burst, or miss the terminal transition prevents the completion state from being entered. The supporting RTL chain is `axi_adapter_valid_o_cone.amo_q -> axi_adapter_valid_o_cone.valid_o`. No `valid_o` pulse is delivered for the legitimate read, producing an unbounded requester stall."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.25,
+      "service_rate_degradation": 0.25
+    },
+    "Justification": "The measured DoS evidence is weak (0.25 for both normalized features). SecID retains amo_q because it directly selects whether the transaction must traverse the atomic read-response phase; corruption can make the FSM wait indefinitely for the wrong response class.",
+    "decision": "retain"
+  }
+]

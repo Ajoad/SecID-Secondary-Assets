@@ -1,0 +1,6 @@
+[
+  {
+    "candidate": "cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op",
+    "attack_mechanism": "Manipulating `cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op` so that a decoded READ appears as WRITE, SET, or CLEAR leaves `csr_we_int` asserted for the selected CSR address. In the CSR combinational block, `csr_we_int` defaults to one and is cleared only when `csr_op_i == CSR_OP_READ`; WRITE, SET, and CLEAR therefore retain the write enable. `cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op` generates, transports, or selects `csr_op_i` on this decode path; the active mux/state branches are selected by `cv32e40p_top.core_i.id_stage_i.decoder_i.deassert_we_i`, `cv32e40p_top.core_i.id_stage_i.id_valid_o`. Signal propagation follows `cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op -> cv32e40p_top.core_i.id_stage_i.decoder_i.csr_op_o -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`. A CSR that should only have been read is modified, enabling unauthorized changes to privilege, interrupt, debug, or counter state."
+  }
+]

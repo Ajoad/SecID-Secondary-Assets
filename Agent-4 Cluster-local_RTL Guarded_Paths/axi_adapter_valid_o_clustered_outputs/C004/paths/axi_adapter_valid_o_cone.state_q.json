@@ -1,0 +1,15 @@
+{
+  "candidate": "axi_adapter_valid_o_cone.state_q",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "axi_adapter_valid_o_cone.state_q",
+          "destination": "axi_adapter_valid_o_cone.valid_o",
+          "control_signal": []
+        }
+      ]
+    }
+  ]
+}

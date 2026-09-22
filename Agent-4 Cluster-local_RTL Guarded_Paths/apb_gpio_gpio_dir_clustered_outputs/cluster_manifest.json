@@ -1,0 +1,38 @@
+[
+  {
+    "cluster_id": "C000",
+    "candidate_count": 3,
+    "candidates": [
+      "apb_gpio_gpio_dir_cone.PADDR",
+      "apb_gpio_gpio_dir_cone.PENABLE",
+      "apb_gpio_gpio_dir_cone.s_apb_addr"
+    ],
+    "representative_path_count": 3,
+    "rtl_file": "C000/cluster_local_rtl.sv",
+    "paths_dir": "C000/paths"
+  },
+  {
+    "cluster_id": "C001",
+    "candidate_count": 3,
+    "candidates": [
+      "apb_gpio_gpio_dir_cone.PSEL",
+      "apb_gpio_gpio_dir_cone.PWRITE",
+      "apb_gpio_gpio_dir_cone.r_gpio_dir"
+    ],
+    "representative_path_count": 3,
+    "rtl_file": "C001/cluster_local_rtl.sv",
+    "paths_dir": "C001/paths"
+  },
+  {
+    "cluster_id": "C002",
+    "candidate_count": 3,
+    "candidates": [
+      "apb_gpio_gpio_dir_cone.PWDATA",
+      "apb_gpio_gpio_dir_cone.pwdata_l",
+      "apb_gpio_gpio_dir_cone.r_gpio_lock"
+    ],
+    "representative_path_count": 3,
+    "rtl_file": "C002/cluster_local_rtl.sv",
+    "paths_dir": "C002/paths"
+  }
+]

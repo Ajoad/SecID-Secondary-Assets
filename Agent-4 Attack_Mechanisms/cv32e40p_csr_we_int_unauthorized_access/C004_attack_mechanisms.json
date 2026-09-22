@@ -1,0 +1,14 @@
+[
+  {
+    "candidate": "cv32e40p_top.core_i.csr_op",
+    "attack_mechanism": "In the CSR combinational block, `csr_we_int` defaults to one and is cleared only when `csr_op_i == CSR_OP_READ`; WRITE, SET, and CLEAR therefore retain the write enable. Manipulating `cv32e40p_top.core_i.csr_op` so that a decoded READ appears as WRITE, SET, or CLEAR leaves `csr_we_int` asserted for the selected CSR address. `cv32e40p_top.core_i.csr_op` generates, transports, or selects `csr_op_i` on this decode path; the route is implemented by the corresponding combinational or registered assignment. A CSR that should only have been read is modified, enabling unauthorized changes to privilege, interrupt, debug, or counter state. The causal signal chain is `cv32e40p_top.core_i.csr_op -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`."
+  },
+  {
+    "candidate": "cv32e40p_top.core_i.data_misaligned",
+    "attack_mechanism": "Execution-result and register-file controls feed instruction operands and decode feedback used when the CSR operation is advanced. A fault on `cv32e40p_top.core_i.data_misaligned` during the affected instruction can corrupt the decoded/advanced CSR operation or keep stale write controls alive. `cv32e40p_top.core_i.data_misaligned` is an RTL-supported element of that indirect path; the route is implemented by the corresponding combinational or registered assignment. The CSR block asserts or suppresses `csr_we_int` in the wrong cycle, producing an unintended CSR state transition. The causal signal chain is `cv32e40p_top.core_i.data_misaligned -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`."
+  },
+  {
+    "candidate": "cv32e40p_top.core_i.load_store_unit_i.data_addr_int",
+    "attack_mechanism": "Execution-result and register-file controls feed instruction operands and decode feedback used when the CSR operation is advanced. A fault on `cv32e40p_top.core_i.load_store_unit_i.data_addr_int` during the affected instruction can corrupt the decoded/advanced CSR operation or keep stale write controls alive. `cv32e40p_top.core_i.load_store_unit_i.data_addr_int` is an RTL-supported element of that indirect path; the route is implemented by the corresponding combinational or registered assignment. The CSR block asserts or suppresses `csr_we_int` in the wrong cycle, producing an unintended CSR state transition. The causal signal chain is `cv32e40p_top.core_i.load_store_unit_i.data_addr_int -> cv32e40p_top.core_i.load_store_unit_i.data_misaligned_o -> cv32e40p_top.core_i.id_stage_i.csr_op_ex_o -> cv32e40p_top.core_i.cs_registers_i.csr_we_int`."
+  }
+]

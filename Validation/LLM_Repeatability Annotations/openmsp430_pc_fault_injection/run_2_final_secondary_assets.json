@@ -1,0 +1,240 @@
+[
+  {
+    "Name": "frontend_0.i_state",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.i_state can propagate through frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.958333333333,
+      "fault_masking": 0.0416666666667
+    },
+    "Justification": "frontend_0.i_state is retained because the explicit RTL route (frontend_0.i_state -> fetch/decode sequencing -> PC-update selection -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.958333, fault_masking=0.0416667.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.e_state can propagate through frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.899884259259,
+      "fault_masking": 0.703703703704
+    },
+    "Justification": "frontend_0.e_state is retained because the explicit RTL route (frontend_0.e_state -> execution-state sequencing -> PC-update enable -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.899884, fault_masking=0.703704.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on execution_unit_0.pc_sw_wr can propagate through execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.0
+    },
+    "Justification": "execution_unit_0.pc_sw_wr is retained because the explicit RTL route (execution_unit_0.pc_sw_wr -> software PC-write selection -> next-PC mux -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=1, fault_masking=0.",
+    "decision": "retain"
+  },
+  {
+    "Name": "dbg_reg_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on dbg_reg_wr can propagate through dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111111,
+      "fault_masking": 0.0416666666667
+    },
+    "Justification": "dbg_reg_wr is retained because the explicit RTL route (dbg_reg_wr -> debug register-write decode -> R0/PC write path -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.986111, fault_masking=0.0416667.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.exec_src_wr can propagate through frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.916666666667,
+      "fault_masking": 0.0856481481481
+    },
+    "Justification": "frontend_0.exec_src_wr is retained because the explicit RTL route (frontend_0.exec_src_wr -> execution phase control -> PC-update sequencing -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.916667, fault_masking=0.0856481.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.exec_dst_wr can propagate through frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.962962962963,
+      "fault_masking": 0.025462962963
+    },
+    "Justification": "frontend_0.exec_dst_wr is retained because the explicit RTL route (frontend_0.exec_dst_wr -> terminal write phase -> PC-update sequencing -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.962963, fault_masking=0.025463.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_done",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.exec_done can propagate through frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.986111111111,
+      "fault_masking": 0.087962962963
+    },
+    "Justification": "frontend_0.exec_done is retained because the explicit RTL route (frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.986111, fault_masking=0.087963.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.reg_pc_call",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on execution_unit_0.reg_pc_call can propagate through execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.00617283950617
+    },
+    "Justification": "execution_unit_0.reg_pc_call is retained because the explicit RTL route (execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=1, fault_masking=0.00617284.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.fetch can propagate through frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.00231481481481
+    },
+    "Justification": "frontend_0.fetch is retained because the explicit RTL route (frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=1, fault_masking=0.00231481.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.pc_incr",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.pc_incr can propagate through frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.188888888889
+    },
+    "Justification": "frontend_0.pc_incr is retained because the explicit RTL route (frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=1, fault_masking=0.188889.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.irq_detect can propagate through frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.296296296296
+    },
+    "Justification": "frontend_0.irq_detect is retained because the explicit RTL route (frontend_0.irq_detect -> interrupt-vector selection -> next-PC mux -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=1, fault_masking=0.296296.",
+    "decision": "retain"
+  },
+  {
+    "Name": "watchdog_0.wdtpw_error",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on watchdog_0.wdtpw_error can propagate through watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 1.0,
+      "fault_masking": 0.0
+    },
+    "Justification": "watchdog_0.wdtpw_error is retained because the explicit RTL route (watchdog_0.wdtpw_error -> watchdog_0.wdt_reset -> clock_module_0.puc_rst -> frontend PC reset -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=1, fault_masking=0.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_type",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.inst_type can propagate through frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.644290123457,
+      "fault_masking": 0.567901234568
+    },
+    "Justification": "frontend_0.inst_type is retained because the explicit RTL route (frontend_0.inst_type -> instruction-class control -> PC-update selection -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.64429, fault_masking=0.567901.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sz_nxt",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.inst_sz_nxt -> instruction-length control -> PC increment -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.inst_sz_nxt can propagate through frontend_0.inst_sz_nxt -> instruction-length control -> PC increment -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.8,
+      "fault_masking": 0.694444444444
+    },
+    "Justification": "frontend_0.inst_sz_nxt is retained because the explicit RTL route (frontend_0.inst_sz_nxt -> instruction-length control -> PC increment -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.8, fault_masking=0.694444.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.e_first_state can propagate through frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.863425925926,
+      "fault_masking": 0.326388888889
+    },
+    "Justification": "frontend_0.e_first_state is retained because the explicit RTL route (frontend_0.e_first_state -> execution-entry sequencing -> PC-update timing -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.863426, fault_masking=0.326389.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.pc_sw",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on execution_unit_0.pc_sw can propagate through execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.604938271605,
+      "fault_masking": 0.506172839506
+    },
+    "Justification": "execution_unit_0.pc_sw is retained because the explicit RTL route (execution_unit_0.pc_sw -> next-PC selection -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.604938, fault_masking=0.506173.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_jmp",
+    "threat": "fault_injection",
+    "Structural Path": "Causal influence route: frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "A transient or stuck-at fault on frontend_0.inst_jmp can propagate through frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc, causing an incorrect PC value, update enable, or control-flow transition."
+    ],
+    "Normalized Evidence": {
+      "fault_injection_feasibility": 0.497685185185,
+      "fault_masking": 0.844328703704
+    },
+    "Justification": "frontend_0.inst_jmp is retained because the explicit RTL route (frontend_0.inst_jmp -> execution_unit_0.alu_0.jmp_not_taken -> op_src_in_jmp -> ALU branch result -> PC write path -> omsp_frontend.pc) gives it a causal way to realize the stated threat; its normalized measurements are fault_injection_feasibility=0.497685, fault_masking=0.844329.",
+    "decision": "retain"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "candidate": "openMSP430.dbg_reg_din",
+  "relation": "fan-out",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.execution_unit_0.register_file_0.r4",
+          "destination": "openMSP430.dbg_reg_din",
+          "control_signal": []
+        }
+      ]
+    }
+  ]
+}

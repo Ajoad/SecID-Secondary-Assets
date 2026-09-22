@@ -1,0 +1,923 @@
+Jasper Apps 2024.09p001 64 bits 2024.10.22 13:22:13 UTC
+
+Any disclosure about the Cadence Design Systems software or its use
+model to any third party violates the written Non-Disclosure Agreement
+between Cadence Design Systems, Inc. and the customer.
+
+THIS SOFTWARE CONTAINS CONFIDENTIAL INFORMATION AND TRADE SECRETS OF
+CADENCE DESIGN SYSTEMS, INC. USE, DISCLOSURE, OR REPRODUCTION IS
+PROHIBITED WITHOUT THE PRIOR EXPRESS WRITTEN PERMISSION OF CADENCE
+DESIGN SYSTEMS, INC.
+
+Copyright (C) 2000-2024 Cadence Design Systems, Inc. All Rights
+Reserved.  Unpublished -- rights reserved under the copyright laws of
+the United States.
+
+This product includes software developed by others and redistributed
+according to license agreement. See doc/third_party_readme.txt for
+further details.
+
+RESTRICTED RIGHTS LEGEND
+
+Use, duplication, or disclosure by the Government is subject to
+restrictions as set forth in subparagraph (c) (1) (ii) of the Rights in
+Technical Data and Computer Software clause at DFARS 252.227-7013 or
+subparagraphs (c) (1) and (2) of Commercial Computer Software -- Restricted
+Rights at 48 CFR 52.227-19, as applicable.
+
+
+                          Cadence Design Systems, Inc.
+                          2655 Seely Avenue
+                          San Jose, CA 95134
+                          Phone: 408.943.1234
+
+For technical assistance visit http://support.cadence.com.
+
+Jasper Apps Analysis Session - <SOURCE_ROOT>/jgproject/sessionLogs/session_0
+
+INFO: successfully checked out license "jasper_fao".
+INFO: reading configuration file "<USER_HOME>/.config/cadence/jasper.conf".
+% if {[info exists ::env(SECID_UA_MED_ROOT)] && $::env(SECID_UA_MED_ROOT) ne ""} {
+  set ROOT [file normalize $::env(SECID_UA_MED_ROOT)]
+} else {
+  error "SECID_UA_MED_ROOT is not set. Run through package run_*.sh scripts."
+}
+<SOURCE_ROOT>
+% if {[info exists ::env(SECID_UA_MED_RESULT_DIR)] && $::env(SECID_UA_MED_RESULT_DIR) ne ""} {
+  set RESULT_DIR [file normalize $::env(SECID_UA_MED_RESULT_DIR)]
+} else {
+  set RESULT_DIR [file join $ROOT results mediation/mstatus_mpp_s2]
+}
+<SOURCE_ROOT>/results/mediation/mstatus_mpp_s2
+% file mkdir $RESULT_DIR
+% analyze -sv +incdir+[file join $ROOT input] [file join $ROOT input secid_neorv32_top_source_observed.v] [file join $ROOT generated mediation_mstatus_mpp_s2.sv]
+[-- (VERI-1482)] Analyzing Verilog file '/apps/cds/jasper/2024.09/lib/verilog/packages/std/std.sv' into library 'std'
+[-- (VERI-1482)] Analyzing Verilog file '<SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v'
+[-- (VERI-1482)] Analyzing Verilog file '<SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv'
+[INFO (VERI-1328)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(3): analyzing included file '<SOURCE_ROOT>/input/program_mem_semantic.svh'
+% elaborate -top ua_mediation_mstatus_mpp_s2
+INFO (ISW003): Top module name is "ua_mediation_mstatus_mpp_s2".
+[INFO (HIER-8002)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(130): Disabling old hierarchical reference handler
+[WARN (VERI-1927)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(78): port 'rstn_ocd_o' remains unconnected for this instance
+[WARN (VERI-1927)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(93): port 'rstn_ocd_o' remains unconnected for this instance
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22166): compiling module 'neorv32_sys_reset'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22097): compiling module 'neorv32_sys_clock'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(440): compiling module 'neorv32_cpu_frontend_ipb'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(13519): compiling module 'neorv32_cpu_frontend_secid_0_29e2dcfbb16f63bb0254df7585a15bb6fb5e927d'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(4900): compiling module 'neorv32_cpu_control_secid_0_8fdee6cc13df465b0eced7bb052df942a608ec46'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(3834): compiling module 'neorv32_cpu_regfile_secid_5_0'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(1): compiling module 'neorv32_cpu_alu_shifter_secid_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(3217): compiling module 'neorv32_cpu_alu_secid_1_6768033e216468247bd031a0a2d9876d79818f8f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(2323): compiling module 'neorv32_cpu_lsu_secid_0_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(799): compiling module 'neorv32_cpu_pmp_secid_2_4_0e356ba505631fbf715758bed27d503f8b260e3a'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(20715): compiling module 'neorv32_cpu_secid_0_1_0_2_4_0_64_0_27585044c0528f90935fcb0dc7da2821d4f834ca'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(20192): compiling module 'neorv32_bus_switch_2547cc736e951fa4919853c43ae890861a3b3264'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(19435): compiling module 'neorv32_bus_gateway_16384_16_8192_16_268435456_2048_2097152_16_128_c8974f61549fe43ee6f4571932edd0d63f8d6bec'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(710): compiling module 'neorv32_bus_reg_1489f923c4dca729178b3e3233458550d8dddf29'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(19159): compiling module 'neorv32_xbus_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(546): compiling module 'neorv32_bus_reg_9159cb8bcee7fcb95582f140960cdae72788d326'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(17373): compiling module 'neorv32_bus_io_switch_65536_27e753c6d972ad22050a6dc7f272a82e27bd674b'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(17111): compiling module 'neorv32_sysinfo_16_128_1_0_1_16384_8192_4_4_64_10976d00261ceae9db6c817817835e8e5c35be1b'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16472): compiling module 'neorv32_debug_dtm_46d1c9a201904415cbd5c7cc672d1649ed497f22'
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(14203): compiling module 'neorv32_debug_dm_1_5ba93c9db0cff93f52b521d7420e43f6eda2784f'
+[WARN (VERI-1060)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16449): 'initial' construct is ignored
+[WARN (VDB-1002)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(16431): net 'n3714[15][31]' does not have a driver
+[INFO (VERI-1018)] <SOURCE_ROOT>/input/secid_neorv32_top_source_observed.v(22307): compiling module 'secid_neorv32_top'
+[INFO (VERI-1018)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(2): compiling module 'ua_mediation_mstatus_mpp_s2'
+[WARN (VERI-8028)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(64): missing/open ports on instance dut_g of module secid_neorv32_top
+[WARN (VERI-8028)] <SOURCE_ROOT>/generated/mediation_mstatus_mpp_s2.sv(79): missing/open ports on instance dut_a of module secid_neorv32_top
+INFO (INL208): Elaboration synthesis summary:
+  Number of synthesized netlists          22 (0 packages)
+  Single run mode                         On
+  Pipeline                                On (22 pipelined netlists)
+  Late hierarchical reference connection  On
+  Number of analyzed Verilog modules      22 (22 synthesized)
+  Number of analyzed VHDL entities        0 (0 synthesized)
+INFO (INL003): Clearing all state information (assumes, stopats, and so forth).
+INFO (IMDS005): Number of multiple-driven bits in design: 29006. Use "get_design_info -list multiple_driven" for more information.
+ua_mediation_mstatus_mpp_s2
+[<embedded>] % 
+[<embedded>] % clock clk
+[<embedded>] % reset -expression {!rstn}
+INFO (IPM031): Clearing proof results of all properties.
+INFO (IRS006): Current reset condition is "rstn".
+[<embedded>] % set T0 [::tcl::clock::milliseconds]
+1789353225224
+[<embedded>] % prove -all
+Bcustom1: Custom engine code is hT3Nm7hPr1Vp3Di1Ra2USNIGL4JypRnLKLAdF6JAyuavO2JfGCiY9OZJhcAcOUnLx5xwNdhILGrAWX9s+z2WDkKwNR7tAfClBEjRFVQeq6DU54boFgEA
+Mpcustom2: Custom engine code is hT3NZbhP9fmY2AbBQnsjfOxn6c+6e6yL+/e8fZFmaQrnlgEA
+Ncustom3: Custom engine code is hT3Ng7hPPfiYQOTDZ3qhYOwGAM51eA+J/FjkM5shLioAsqhgLR4Ft+O1BuKG6ilQ83B9tLXSl+CwjiTMAQA
+AMcustom4: Custom engine code is hT3Ng7hP/feYQOTDZ3qhYOwGAM51eA+J/FjkM5shLioAsqhgLR4Ft+O1BuKG6ilQ83B9tLXSmmqwm7g9AQA
+INFO (IPF036): Starting proof on task: "<embedded>", 12 properties to prove with 0 already proven/unreachable
+INFO (IRS029): Starting reset analysis: phase 1 of 4.
+INFO (IRS030): Running reset analysis: phase 2 of 4.
+INFO (IRS031): Running reset analysis: phase 3 of 4.
+INFO (IRS020): Starting the reset analysis simulation with a limit of 100 iterations (phase 4 of 4).
+INFO (IRS024): Reset iterations 0 to 5 analyzed.
+INFO (IRS018): Reset analysis simulation executed for 4 iterations. Assigned values for 3107 of 5493 design flops, 0 of 0 design latches, 17 of 17 internal elements.
+INFO (IRS039): Reset analysis complete.
+INFO (IPF031): Settings used for proof thread 2:
+    orchestration                      = on
+    time_limit                         = 86400s
+    per_property_time_limit            = 1s * 10 ^ scan
+    engine_mode                        = auto
+    proofgrid_per_engine_max_jobs      = 1
+    max engine jobs                    = auto
+    proofgrid_mode                     = local
+    proofgrid_restarts                 = 10
+AMcustom5: Custom engine code is hT3N1rhP11/52HrFRS21ROp2LOjVTgPvT8L8BGXHgLhaIuqtT4nARFjUqrBL+7pLmaTOzBepZW/Jm8SSrHDybSQtoNiO3y43wk+dEoWlsZizu97Fih6O6lPVG/LpWP5SsUPwlGagLNa1FKEFvwVXyX7//8prySbvSxIHXr5er+z4RAEA
+2: Using multistage preprocessing
+Ncustom6: Custom engine code is hT3OXrhPByJp3TrFSTLhUmMH4KVtJgmTCnNDF46yMXOKY48m4LS5nE7yBzFjA7kDuwO/GhGUpEPiky3p3wmPn3dJZHxFMsafSoObRzSC+tn7sEY0WbTdZ/FV4hL3MYH/b1CIUvXSWR4wqEoVLsmMOD4xIPT4lI1LO6ZCO7PnnWQuLwetnvKlrXx6wCW/A+x+enqslg1YPobi4wEF/EvbzOvcTYdJvl2s4H2yZg2b2ofAVN5WvhWk1HoBAA
+2: Starting reduce
+ADcustom7: Custom engine code is hT3Nv7hPv1752HrFRa2kROx2f/ECJeZB2AZsLdlO8VwmIuqtT4nIDFXclhg+O+o+DMmQCekbheGk0kK28laA9gaOFDXsQp29J3X615HY1IPHJWd6FUFvCHjO+p1k652b5JJvZlShNpGlGSXAiQe/mEAj6tEBAA
+Tricustom8: Custom engine code is hT3Nu7hPt1752DvFRa0kNDiyIV97VyejwM9C/jCLJjdPvusZONHY42VYUy0Q1ZotnhcVtNc56tJ5wbxv6V2+XpdsaSlHck5vfnbYjdwj1OECy9U+7oSQ0SZE3g5ayD+Phuh4odCJTjeKa2k4elM9ldQfkAEA
+Gcustom9: Custom engine code is hT3NibhPDfeYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInncipMGcUXqAadachREE9F2PwhBUZUNw5kHnd4JdXkamORRgEA
+C2custom10: Custom engine code is hT3NirhPjfWYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInncgkrYMMXCYbdK0dUjZIF9d4cJ0rHoBDjwVLBKuG86XYVV00BAA
+AGcustom11: Custom engine code is hT3NirhP/fmYQADBZnYcglOvK9Pfd7EOeniIqP8jNsyIqInnckcwYMMXCYbdK0dUjZIF9d4cJ0rHoBDjwVLBKuHEZnZByh0BAA
+Bcustom12: Custom engine code is hT3NjrhPDfiYQADBZnYcglOvK9PfWxFtenjIyBqfrgr7if/jL/yPOuK1BAflEcW0DxNH2eDIoezN2gxlQFg81RZtiWXh7aiTAidvAQA
+Ncustom13: Custom engine code is hT3NR7hPByFp3TrFSTLhUmMH4KWtJglTyV/c51BHEeZWamnJv767nE6PCak26bd3gf3XGN3rIRheufhDieCJQVISo+gNYUKhiUedBKGtsP/a18svAnlMJZudHxDFwK5ufsyoxsIyiAeSY2oi3tEuoDHr5gw42DFKAG3PqO3CEsl8Azzdt3pl5nGA1Ifv2H02eYsFzWb/nfp8PMb3F0krE/EgBcm8TD9Div8BAA
+Tricustom14: Custom engine code is hT3Nu7hP3fiYQADBZnYcglNHp9bfd7EOeniIqP/ji8sGLQu8yhsFO+wxJ+O+R0bU8g/IewXFomyos+viQnWc2xYNYmMqpo3i40O7DaZR7qfp4YqNx26KRvQ/qx0BAA
+2: Finished reduce in 0.071s
+2.0.PRE: Performing Proof Simplification...
+2.0.Hp: clocks: 2, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 1, bothedge: 0
+2.0.Hp: Clocks that will never have a posedge: dut_a.core_complex_gen_n1_neorv32_cpu_inst.neorv32_cpu_control_inst.n6535_o[0] [vTrue], 
+2.0.Hp: Proof Simplification Iteration 1	[0.00 s]
+2.0.Hp: Proof Simplification Iteration 2	[0.03 s]
+2.0.Hp: Proof Simplification Iteration 3	[0.05 s]
+2.0.Hp: Proof Simplification Iteration 4	[0.07 s]
+2.0.Hp: Proof Simplification Iteration 5	[0.08 s]
+2.0.Hp: Proof Simplification Iteration 6	[0.10 s]
+2.0.Hp: Proof Simplification Iteration 7	[0.12 s]
+2.0.Hp: Proof Simplification Iteration 8	[0.14 s]
+2.0.Hp: Proof Simplification Iteration 9	[0.15 s]
+2.0.Hp: Proof Simplification Iteration 10	[0.17 s]
+2.0.PRE: Proof Simplification completed in 0.24 s
+2.0.Hp: Identified and disabled 4 duplicated targets.
+2: About to start ProofGrid in its own thread with a limit of 10000 pending notifications and a limit of 10 traces.
+2: ============================= ProofGrid (v3) start =============================
+2: ProofGrid usable level: 8
+2: Initial ProofGrid level: 1
+2: ProofGrid is starting event handling
+2.0.Hp: Proofgrid shell started at 727219@<HOST>(local) jg_727074_<HOST>_1
+2: ProofGrid usable level: 8
+2: ProofGrid usable level: 8
+2.0.Hp: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2: ProofGrid usable level: 8
+2: ProofGrid usable level: 8
+2: ProofGrid usable level: 8
+2.0.Hp: Trace Attempt  1	[0.08 s]
+2.0.Ht: Proofgrid shell started at 727235@<HOST>(local) jg_727074_<HOST>_1
+2.0.Oh: Proofgrid shell started at 727238@<HOST>(local) jg_727074_<HOST>_1
+2.0.Bm: Proofgrid shell started at 727236@<HOST>(local) jg_727074_<HOST>_1
+2.0.Mpcustom2: Proofgrid shell started at 727237@<HOST>(local) jg_727074_<HOST>_1
+2.0.Ht: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Oh: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bm: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Mpcustom2: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.L: Proofgrid shell started at 727239@<HOST>(local) jg_727074_<HOST>_1
+2.0.L: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Bm: Trace Attempt  1	[0.03 s]
+2.0.Bm: Trace Attempt  2	[0.03 s]
+2.0.Bm: Trace Attempt  3	[0.03 s]
+2.0.Bm: Trace Attempt  4	[0.03 s]
+2.0.Bm: Trace Attempt  5	[0.03 s]
+2.0.L: Using trace diversification with seed 1 (0.05)
+2.0.L: Using LRU state removal heuristic
+2.0.L: Using states from traces to { (reset) }
+2.0.N: Proofgrid shell started at 727243@<HOST>(local) jg_727074_<HOST>_1
+2.0.AM: Proofgrid shell started at 727245@<HOST>(local) jg_727074_<HOST>_1
+2.0.B: Proofgrid shell started at 727244@<HOST>(local) jg_727074_<HOST>_1
+2.0.Ht: Trace Attempt  1	[0.06 s]
+2.0.Ht: Trace Attempt  2	[0.06 s]
+2.0.Mpcustom2: Trace Attempt  1	[0.05 s]
+2.0.Ht: Trace Attempt  3	[0.06 s]
+2.0.Ht: Trace Attempt  4	[0.06 s]
+2.0.AM: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.N: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.Ht: Trace Attempt  5	[0.06 s]
+2.0.B: clocks: 1, declared: 1, looping: 0, posedge: 1, negedge: 0, noedge: 0, bothedge: 0
+2.0.AM: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.N: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.B: Next scan (0) will use per property time limit: 1s * 10 ^ 0 = 1s
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.00 s].
+2.0.Mpcustom2: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.L: Trace Attempt  3	[0.07 s]
+2.0.Bm: Trace Attempt 42	[0.08 s]
+2.0.Bm: A trace with 42 cycles was found. [0.09 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1" was covered in 42 cycles in 0.20 s.
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1" was covered in 42 cycles in 0.20 s.
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK" was covered in 42 cycles in 0.20 s.
+2.0.B: Trace Attempt 21	[0.03 s]
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.17 s].
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.17 s].
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.17 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  8	[0.04 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.17 s].
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.17 s].
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.17 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.00 s].
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.Bm: A trace with 42 cycles was found. [0.11 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_DATA_ATTACK_ONE_BIT:precondition1" was covered in 42 cycles in 0.23 s.
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.Bm: Trace Attempt 43	[0.12 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.N: Trace Attempt  3	[0.06 s]
+2.0.Bm: A trace with 43 cycles was found. [0.13 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1" was covered in 43 cycles in 0.26 s.
+2.0.L: Trace Attempt  4	[0.12 s]
+2.0.B: Trace Attempt 21	[0.03 s]
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Trace Attempt  7	[0.02 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1"	[0.06 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: A max_length bound was found. The shortest trace is no longer than 65536 cycles. [0.00 s]
+INFO (IPF008): 2.0.B: A max_length bound of 65536 was found for the property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1" in 0.00 s.
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  3	[0.00 s]
+2.0.B: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.N: Trace Attempt  4	[0.08 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1"	[0.23 s].
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONLY_ELIGIBLE:precondition1"	[0.23 s].
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_COVER_ATTACK"	[0.23 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.N: Trace Attempt  4	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  3	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.02 s]
+2.0.N: Trace Attempt  1	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.L: Trace Attempt  5	[0.14 s]
+2.0.N: Trace Attempt  5	[0.01 s]
+2.0.Bm: Trace Attempt 50	[0.35 s]
+2.0.Bm: A trace with 50 cycles was found. [0.42 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_COVER_SA_DIVERGENCE_AFTER_UCP" was covered in 50 cycles in 0.43 s.
+2.0.Bm: Trace Attempt 51	[0.44 s]
+2.0.Bm: Trace Attempt 54	[0.65 s]
+2.0.Bm: A trace with 54 cycles was found. [0.71 s]
+INFO (IPF047): 2.0.Bm: The cover property "ua_mediation_mstatus_mpp_s2.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP" was covered in 54 cycles in 0.73 s.
+2.0.Bm: Trace Attempt 55	[0.74 s]
+2: ProofGrid usable level: 3
+2.0.Mpcustom2: Trace Attempt  3	[0.80 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.85 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.92 s]
+2.0.Mpcustom2: Trace Attempt  3	[0.97 s]
+2.0.Mpcustom2: Trace Attempt  4	[0.98 s]
+2.0.Mpcustom2: Trace Attempt  5	[0.98 s]
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [1.00 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" in 0.99 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [1.00 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND" in 0.99 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [1.00 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND" in 0.99 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [1.00 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" in 0.99 s.
+2.0.Oh: A max_length bound was found. The shortest trace is no longer than 901 cycles. [1.00 s]
+INFO (IPF008): 2.0.Oh: A max_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1" in 0.99 s.
+INFO (IPF054): 2.0.Oh: A min_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND" in 0.99 s.
+2.0.Oh: bwd trail(1): 1 0.988958s
+2.0.Oh: All properties either determined or skipped. [1.01 s]
+2.0.Oh: Exited with Success (@ 1.15 s)
+2.0.AM: Trace Attempt 102	[1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.84 s].
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.84 s].
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.84 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.N: Trace Attempt 102	[0.98 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.84 s].
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.84 s].
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.84 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.N: Trace Attempt  4	[0.05 s]
+2.0.N: Trace Attempt  5	[0.05 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.N: Trace Attempt  5	[0.12 s]
+2.0.N: Trace Attempt  1	[0.15 s]
+2.0.N: Trace Attempt  2	[0.15 s]
+2.0.N: Trace Attempt  3	[0.15 s]
+2.0.N: Trace Attempt  5	[0.15 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[1.40 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[1.45 s]
+2.0.L: Trace Attempt  4	[1.47 s]
+2.0.L: Trace Attempt  5	[1.48 s]
+2.0.N: Trace Attempt  1	[0.44 s]
+2.0.N: Trace Attempt  2	[0.44 s]
+2.0.N: Trace Attempt  3	[0.44 s]
+2.0.N: Trace Attempt  5	[0.44 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP (53) }
+2.0.L: Trace Attempt  3	[1.65 s]
+2.0.L: Trace Attempt  4	[1.66 s]
+2.0.L: Trace Attempt  5	[1.67 s]
+2.0.N: Trace Attempt 73	[0.83 s]
+2.0.N: Per property time limit expired (1.00 s) [1.00 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[1.00 s].
+2.0.AM: Trace Attempt 71	[0.97 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[1.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.N: Trace Attempt  2	[0.01 s]
+2.0.N: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.02 s]
+2.0.AM: Trace Attempt  3	[0.02 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.N: Trace Attempt  3	[0.04 s]
+2.0.AM: Trace Attempt  1	[0.05 s]
+2.0.AM: Trace Attempt  2	[0.05 s]
+2.0.AM: Trace Attempt  3	[0.05 s]
+2.0.AM: Trace Attempt  5	[0.05 s]
+2.0.N: Trace Attempt  4	[0.05 s]
+2.0.N: Trace Attempt  5	[0.05 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_COVER_SA_DIVERGENCE_AFTER_UCP (81) }
+2.0.L: Trace Attempt  3	[2.21 s]
+2.0.L: Trace Attempt  4	[2.23 s]
+2.0.N: Trace Attempt  5	[0.11 s]
+2.0.L: Trace Attempt  5	[2.24 s]
+2.0.N: Trace Attempt  1	[0.14 s]
+2.0.N: Trace Attempt  2	[0.14 s]
+2.0.N: Trace Attempt  3	[0.14 s]
+2.0.N: Trace Attempt  5	[0.14 s]
+2.0.N: Trace Attempt  1	[0.41 s]
+2.0.N: Trace Attempt  2	[0.41 s]
+2.0.N: Trace Attempt  3	[0.41 s]
+2.0.N: Trace Attempt  5	[0.41 s]
+2.0.N: Trace Attempt 83	[0.99 s]
+2.0.N: Per property time limit expired (1.00 s) [1.00 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[1.00 s].
+2.0.AM: Trace Attempt 146	[0.99 s]
+2.0.AM: Per property time limit expired (1.00 s) [1.00 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[1.00 s].
+2.0.Ht: Trace Attempt 241	[4.06 s]
+2.0.Bm: Trace Attempt 108	[4.76 s]
+2.0.Mpcustom2: Trace Attempt 19	[5.46 s]
+2.0.L: Trace Attempt 110	[6.24 s]
+2.0.Ht: Trace Attempt 458	[8.07 s]
+2.0.Bm: Trace Attempt 157	[8.77 s]
+2.0.Mpcustom2: Trace Attempt 26	[10.03 s]
+2.0.L: Trace Attempt 164	[10.26 s]
+2.0.Ht: Trace Attempt 653	[12.07 s]
+2.0.Bm: Trace Attempt 198	[12.81 s]
+2.0.Mpcustom2: Trace Attempt 31	[14.23 s]
+2.0.L: Trace Attempt 206	[14.30 s]
+2.0.Ht: Trace Attempt 895	[16.22 s]
+INFO (IPF054): 2.0.Ht: A min_length bound of 901 was found for the property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND" in 16.27 s.
+2.0.Bm: Trace Attempt 237	[16.85 s]
+2.0.L: Trace Attempt 242	[18.40 s]
+2.0.Mpcustom2: Trace Attempt 36	[18.82 s]
+2.0.Bm: Trace Attempt 274	[21.10 s]
+2.0.L: Trace Attempt 274	[22.50 s]
+2.0.Mpcustom2: Trace Attempt 40	[24.09 s]
+2.0.B: Trace Attempt 901	[0.06 s]
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[24.45 s].
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[24.45 s].
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[24.45 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[0.00 s].
+2.0.N: Trace Attempt 12	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.00 s]
+2.0.AM: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  1	[0.00 s]
+2.0.B: Trace Attempt  2	[0.00 s]
+2.0.B: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  5	[0.00 s]
+2.0.B: Trace Attempt  4	[0.00 s]
+2.0.B: Trace Attempt  5	[0.00 s]
+2.0.N: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  2	[0.00 s]
+2.0.N: Trace Attempt  3	[0.00 s]
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.N: Trace Attempt  5	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.Bm: Trace Attempt 311	[25.21 s]
+2.0.L: Trace Attempt 302	[26.56 s]
+2.0.AM: Trace Attempt 307	[4.31 s]
+2.0.N: Trace Attempt 307	[4.45 s]
+2.0.Bm: Trace Attempt 339	[29.24 s]
+2.0.Mpcustom2: Trace Attempt 45	[29.71 s]
+2.0.Ht: Trace Attempt 901	[30.61 s]
+2.0.L: Trace Attempt 328	[30.62 s]
+2.0.AM: Trace Attempt 607	[8.51 s]
+2.0.Bm: Trace Attempt 371	[33.27 s]
+2.0.N: Trace Attempt 607	[8.59 s]
+2.0.L: Trace Attempt 352	[34.66 s]
+2.0.N: Trace Attempt 619	[9.99 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Per property time limit expired (10.00 s) [10.02 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[10.02 s].
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[10.02 s].
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[10.02 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt 618	[10.00 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.02 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[10.02 s].
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[10.02 s].
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[10.02 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.03 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.07 s]
+2.0.AM: Trace Attempt  2	[0.07 s]
+2.0.AM: Trace Attempt  3	[0.07 s]
+2.0.AM: Trace Attempt  5	[0.07 s]
+2.0.N: Trace Attempt 12	[0.19 s]
+2.0.N: Trace Attempt  1	[0.27 s]
+2.0.N: Trace Attempt  2	[0.27 s]
+2.0.N: Trace Attempt  3	[0.27 s]
+2.0.N: Trace Attempt  5	[0.27 s]
+2.0.Mpcustom2: Trace Attempt 46	[35.37 s]
+2.0.Bm: Trace Attempt 399	[37.76 s]
+2.0.L: Trace Attempt 375	[38.77 s]
+2.0.AM: Trace Attempt 167	[4.10 s]
+2.0.N: Trace Attempt 345	[4.28 s]
+2.0.Ht: A trace with 901 cycles was found. [38.67 s]
+INFO (IPF047): 2.0.Ht: The cover property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1" was covered in 901 cycles in 39.70 s.
+INFO (IPF047): 2.0.Ht: The cover property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1" was covered in 901 cycles in 39.70 s.
+INFO (IPF047): 2.0.Ht: The cover property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1" was covered in 901 cycles in 39.70 s.
+2.0.Ht: A proof was found: No trace exists. [39.55 s]
+INFO (IPF057): 2.0.Ht: The property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND" was proven in 39.73 s.
+2.0.N: Trace Attempt 393	[4.66 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[4.97 s].
+2.0.AM: Trace Attempt 215	[4.76 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND"	[4.97 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.05 s]
+2.0.AM: Trace Attempt  2	[0.05 s]
+2.0.AM: Trace Attempt  3	[0.05 s]
+2.0.AM: Trace Attempt  5	[0.05 s]
+2.0.N: Trace Attempt 12	[0.19 s]
+2.0.N: Trace Attempt  1	[0.27 s]
+2.0.N: Trace Attempt  2	[0.27 s]
+2.0.N: Trace Attempt  3	[0.27 s]
+2.0.N: Trace Attempt  5	[0.27 s]
+2.0.Mpcustom2: Trace Attempt 51	[39.96 s]
+2: ProofGrid usable level: 1
+2.0.Bm: Trace Attempt 428	[41.78 s]
+2.0.L: Trace Attempt 397	[42.91 s]
+2.0.AM: Trace Attempt 343	[4.12 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_COVER_PRIMARY_COMPROMISE_AFTER_UCP (53) }
+2.0.L: Trace Attempt  3	[43.82 s]
+2.0.L: Trace Attempt  4	[43.83 s]
+2.0.N: Trace Attempt 349	[4.28 s]
+2.0.L: Trace Attempt  5	[43.84 s]
+2.0.Mpcustom2: Trace Attempt 56	[44.32 s]
+2.0.Bm: Trace Attempt 456	[45.83 s]
+2.0.AM: Trace Attempt 648	[8.23 s]
+2.0.N: Trace Attempt 650	[8.32 s]
+2.0.L: Trace Attempt 111	[47.88 s]
+2.0.Mpcustom2: Trace Attempt 60	[48.67 s]
+2.0.B: Trace Attempt 901	[0.09 s]
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_ATTACK_MUST_OCCUR_BY_BOUND:precondition1"	[24.07 s].
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1"	[24.07 s].
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND:precondition1"	[24.07 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.N: Trace Attempt 677	[9.97 s]
+2.0.N: Per property time limit expired (10.00 s) [10.03 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[9.86 s].
+2.0.AM: Trace Attempt 677	[9.97 s]
+2.0.AM: Per property time limit expired (10.00 s) [10.03 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[9.86 s].
+2.0.B: Trace Attempt 58	[0.80 s]
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.84 s].
+2.0.AM: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.B: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.N: Starting proof for property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[0.00 s].
+2.0.AM: Trace Attempt  1	[0.00 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  4	[0.01 s]
+2.0.B: Trace Attempt  1	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.B: Trace Attempt  2	[0.01 s]
+2.0.B: Trace Attempt  3	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.01 s]
+2.0.B: Trace Attempt  4	[0.01 s]
+2.0.AM: Trace Attempt  2	[0.01 s]
+2.0.AM: Trace Attempt  3	[0.01 s]
+2.0.B: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  5	[0.01 s]
+2.0.AM: Trace Attempt  1	[0.02 s]
+2.0.AM: Trace Attempt  2	[0.03 s]
+2.0.AM: Trace Attempt  3	[0.03 s]
+2.0.AM: Trace Attempt  5	[0.03 s]
+2.0.AM: Trace Attempt  1	[0.05 s]
+2.0.AM: Trace Attempt  2	[0.05 s]
+2.0.AM: Trace Attempt  3	[0.05 s]
+2.0.AM: Trace Attempt  5	[0.05 s]
+2.0.N: Trace Attempt 12	[0.18 s]
+2.0.N: Trace Attempt  1	[0.26 s]
+2.0.N: Trace Attempt  2	[0.26 s]
+2.0.N: Trace Attempt  3	[0.26 s]
+2.0.N: Trace Attempt  5	[0.26 s]
+2.0.Bm: Trace Attempt 483	[49.93 s]
+2.0.L: Trace Attempt 165	[51.96 s]
+2.0.Mpcustom2: Trace Attempt 61	[52.80 s]
+2.0.B: Trace Attempt 101	[4.05 s]
+2.0.AM: Trace Attempt 345	[4.08 s]
+2.0.N: Trace Attempt 345	[4.30 s]
+2.0.Bm: Trace Attempt 503	[54.08 s]
+2.0.L: Trace Attempt 207	[56.03 s]
+2.0.Mpcustom2: Trace Attempt 61	[57.61 s]
+2.0.B: Trace Attempt 146	[8.05 s]
+2.0.AM: Trace Attempt 648	[8.12 s]
+2.0.N: Trace Attempt 648	[8.30 s]
+2.0.Bm: Trace Attempt 528	[58.23 s]
+2.0.L: Trace Attempt 242	[60.11 s]
+2.0.B: Trace Attempt 189	[12.10 s]
+2.0.AM: Trace Attempt 698	[12.16 s]
+2.0.N: Trace Attempt 698	[12.32 s]
+2.0.Bm: Trace Attempt 552	[62.29 s]
+2.0.Mpcustom2: Trace Attempt 62	[63.25 s]
+2.0.L: Trace Attempt 273	[64.17 s]
+2.0.B: Trace Attempt 227	[16.14 s]
+2.0.AM: Trace Attempt 723	[16.25 s]
+2.0.N: Trace Attempt 723	[16.49 s]
+2.0.Bm: Trace Attempt 576	[66.44 s]
+2.0.L: Trace Attempt 301	[68.24 s]
+2.0.Mpcustom2: Trace Attempt 62	[69.44 s]
+2.0.B: Trace Attempt 261	[20.19 s]
+2.0.AM: Trace Attempt 746	[20.31 s]
+2.0.N: Trace Attempt 746	[20.53 s]
+2.0.Bm: Trace Attempt 592	[70.50 s]
+2.0.L: Trace Attempt 327	[72.33 s]
+2.0.B: Trace Attempt 292	[24.24 s]
+2.0.AM: Trace Attempt 765	[24.36 s]
+2.0.N: Trace Attempt 767	[24.53 s]
+2.0.Bm: Trace Attempt 614	[74.56 s]
+2.0.Mpcustom2: Trace Attempt 62	[76.36 s]
+2.0.L: Trace Attempt 351	[76.43 s]
+2.0.B: Trace Attempt 324	[28.25 s]
+2.0.AM: Trace Attempt 685	[28.37 s]
+2.0.Bm: Trace Attempt 635	[78.58 s]
+2.0.Mpcustom2: Trace Attempt 62	[80.44 s]
+2.0.L: Trace Attempt 374	[80.61 s]
+2.0.B: Trace Attempt 350	[32.36 s]
+2.0.Bm: Trace Attempt 656	[82.73 s]
+2.0.L: Trace Attempt 395	[84.61 s]
+2.0.B: Trace Attempt 379	[36.46 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_ATTACK_ONE_CYCLE:precondition1 (42) }
+2.0.L: Trace Attempt  3	[86.13 s]
+2.0.L: Trace Attempt  4	[86.14 s]
+2.0.L: Trace Attempt  5	[86.16 s]
+2.0.Bm: Trace Attempt 676	[86.83 s]
+2.0.Mpcustom2: Trace Attempt 73	[87.89 s]
+2.0.B: Trace Attempt 401	[40.52 s]
+2.0.L: Trace Attempt 110	[90.20 s]
+2.0.Bm: Trace Attempt 696	[91.00 s]
+2.0.Mpcustom2: Trace Attempt 80	[91.92 s]
+2.0.N: Trace Attempt 768	[43.28 s]
+2.0.L: Trace Attempt 163	[94.24 s]
+2.0.B: Trace Attempt 427	[44.63 s]
+2.0.Bm: Trace Attempt 716	[95.21 s]
+2.0.Mpcustom2: Trace Attempt 82	[98.17 s]
+2.0.L: Trace Attempt 204	[98.25 s]
+2.0.B: Trace Attempt 452	[48.76 s]
+2.0.N: Trace Attempt 769	[49.04 s]
+2.0.N: Trace Attempt  1	[49.05 s]
+2.0.N: Trace Attempt  2	[49.05 s]
+2.0.N: Trace Attempt  3	[49.05 s]
+2.0.N: Trace Attempt  5	[49.05 s]
+2.0.Bm: Trace Attempt 728	[99.37 s]
+2.0.L: Trace Attempt 239	[102.29 s]
+2.0.B: Trace Attempt 477	[52.78 s]
+2.0.N: Trace Attempt 342	[53.08 s]
+2.0.Mpcustom2: Trace Attempt 84	[102.75 s]
+2.0.Bm: Trace Attempt 747	[103.49 s]
+2.0.L: Trace Attempt 270	[106.31 s]
+2.0.B: Trace Attempt 495	[56.86 s]
+2.0.N: Trace Attempt 647	[57.12 s]
+2.0.Mpcustom2: Trace Attempt 86	[107.52 s]
+2.0.Bm: Trace Attempt 765	[107.55 s]
+2.0.L: Trace Attempt 298	[110.37 s]
+2.0.B: Trace Attempt 518	[60.94 s]
+2.0.N: Trace Attempt 697	[61.23 s]
+2.0.Bm: Trace Attempt 783	[111.72 s]
+2.0.Mpcustom2: Trace Attempt 86	[112.14 s]
+2.0.L: Trace Attempt 324	[114.47 s]
+2.0.B: Trace Attempt 540	[64.99 s]
+2.0.N: Trace Attempt 723	[65.68 s]
+2.0.Bm: Trace Attempt 801	[115.90 s]
+2.0.Mpcustom2: Trace Attempt 87	[118.15 s]
+2.0.L: Trace Attempt 348	[118.53 s]
+2.0.B: Trace Attempt 562	[69.01 s]
+2.0.N: Trace Attempt 746	[69.77 s]
+2.0.Bm: Trace Attempt 818	[119.91 s]
+2.0.L: Trace Attempt 371	[122.68 s]
+2.0.B: Trace Attempt 584	[73.13 s]
+2.0.Mpcustom2: Trace Attempt 87	[123.25 s]
+2.0.N: Trace Attempt 767	[73.80 s]
+2.0.Bm: Trace Attempt 835	[123.98 s]
+2.0.L: Trace Attempt 393	[126.82 s]
+2.0.B: Trace Attempt 599	[77.31 s]
+2.0.Mpcustom2: Trace Attempt 92	[127.57 s]
+2.0.Bm: Trace Attempt 852	[128.14 s]
+2.0.L: Using states from traces to { ua_mediation_mstatus_mpp_s2.UA_ATTACK_KIND_VALID:precondition1 (41) }
+2.0.L: Trace Attempt  3	[128.74 s]
+2.0.L: Trace Attempt  4	[128.76 s]
+2.0.L: Trace Attempt  5	[128.77 s]
+2.0.B: Trace Attempt 620	[81.48 s]
+2.0.Bm: Trace Attempt 869	[132.25 s]
+2.0.L: Trace Attempt 53	[132.82 s]
+2.0.Mpcustom2: Trace Attempt 94	[134.83 s]
+2.0.B: Trace Attempt 640	[85.55 s]
+2.0.Bm: Trace Attempt 886	[136.50 s]
+2.0.L: Trace Attempt 93	[136.87 s]
+2.0.B: Trace Attempt 659	[89.57 s]
+2.0.Mpcustom2: Trace Attempt 94	[140.14 s]
+2.0.Bm: Trace Attempt 894	[140.50 s]
+2.0.L: Trace Attempt 128	[140.91 s]
+2.0.N: Trace Attempt 769	[92.10 s]
+2.0.B: Trace Attempt 678	[93.79 s]
+2.0.Mpcustom2: Trace Attempt 100	[144.19 s]
+2.0.L: Trace Attempt 158	[145.01 s]
+2.0.N: Trace Attempt 770	[97.77 s]
+2.0.N: Trace Attempt  1	[97.77 s]
+2.0.N: Trace Attempt  2	[97.77 s]
+2.0.N: Trace Attempt  3	[97.77 s]
+2.0.N: Trace Attempt  5	[97.77 s]
+2.0.B: Trace Attempt 697	[97.90 s]
+2.0.Mpcustom2: Trace Attempt 101	[149.01 s]
+2.0.L: Trace Attempt 188	[149.13 s]
+2.0.N: Trace Attempt 244	[99.90 s]
+2.0.N: Per property time limit expired (100.00 s) [100.01 s]
+2.0.N: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[100.01 s].
+2.0.Bm: Trace Attempt 901	[142.34 s]
+2.0.Bm: A trace with 901 cycles was found. [149.75 s]
+INFO (IPF055): 2.0.Bm: A counterexample (cex) with 901 cycles was found for the property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND" in 149.99 s.
+2: ProofGrid usable level: 0
+2.0.Hp: Interrupted (multi)
+2.0.AM: Trace Attempt 901	[31.34 s]
+2.0.AM: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[101.27 s].
+INFO (IPF144): 2: Initiating shutdown of proof [151.05 s]
+2.0.Mpcustom2: Trace Attempt 104	[149.17 s]
+2.0.Mpcustom2: All properties determined. [0.63 s]
+2.0.Hp: All properties determined. [0.72 s]
+2.0.AM: Interrupted. [101.27 s]
+2.0.N: Interrupted. [101.27 s]
+2.0.AM: Exited with Success (@ 151.23 s)
+2: ProofGrid usable level: 0
+2.0.Hp: Exited with Success (@ 151.42 s)
+2.0.Mpcustom2: Exited with Success (@ 151.42 s)
+2.0.N: Exited with Success (@ 151.42 s)
+2.0.L: Trace Attempt 201	[150.80 s]
+2.0.L: All properties determined. [151.48 s]
+2.0.L: Exited with Success (@ 151.65 s)
+2.0.B: Trace Attempt 707	[100.02 s]
+2.0.B: Stopped processing property "ua_mediation_mstatus_mpp_s2.UA_UCP_SA_NO_MEDIATED_BYPASS_BY_BOUND"	[101.93 s].
+2.0.B: Interrupted. [101.94 s]
+2.0.B: Exited with Success (@ 152.01 s)
+2.0.Bm: All properties determined. [0.00 s]
+2.0.Bm: Exited with Success (@ 152.18 s)
+2.0.Ht: Sending SIGKILL
+2.0.Ht: Terminated by signal SIGKILL (@ 153.61 s)
+2: --------------------------------------------------------------
+ProofGrid Summary (utilization 99.92 %)
+--------------------------------------------------------------
+     engines started                               :     9
+     engine jobs started                           :     9
+
+    Time in state (seconds)
+    --------------------------------------------
+               Pending     Running        Dead
+    --------------------------------------------
+    min           0.00        0.00        0.00
+    mean          0.11      133.92        0.00
+    median        0.11      149.96        0.00
+    max           0.12      151.54        0.00
+    sum           1.02     1205.29        0.00
+
+    Data read    : 17.04 MiB
+    Data written : 31.54 kiB
+
+2: ProofGrid usable level: 0
+2: All pending notifications were processed.
+INFO (IPF059): 2: Completed proof on task: "<embedded>"
+
+==============================================================
+SUMMARY
+==============================================================
+           Properties Considered              : 12
+                 assertions                   : 2
+                  - proven                    : 1 (50%)
+                  - bounded_proven (user)     : 0 (0%)
+                  - bounded_proven (auto)     : 0 (0%)
+                  - marked_proven             : 0 (0%)
+                  - cex                       : 1 (50%)
+                  - ar_cex                    : 0 (0%)
+                  - undetermined              : 0 (0%)
+                  - unknown                   : 0 (0%)
+                  - error                     : 0 (0%)
+                 covers                       : 10
+                  - unreachable               : 0 (0%)
+                  - bounded_unreachable (user): 0 (0%)
+                  - covered                   : 10 (100%)
+                  - ar_covered                : 0 (0%)
+                  - undetermined              : 0 (0%)
+                  - unknown                   : 0 (0%)
+                  - error                     : 0 (0%)
+determined
+[<embedded>] % set T1 [::tcl::clock::milliseconds]
+1789353382242
+[<embedded>] % set ELAPSED_MS [expr {$T1-$T0}]
+157018
+[<embedded>] % set stf [open [file join $RESULT_DIR status.tsv] w]
+file45
+[<embedded>] % puts $stf "property	status"
+[<embedded>] % if {[llength [info commands get_property_list]]>0 && ![catch {set ALLP [get_property_list]}]} {
+  foreach p $ALLP {
+    if {[string match "*UA_*" $p]} {
+      set st "UNKNOWN"
+      # Jasper 2024.09 accepts two get_property_info forms depending on app/context.
+      # Try the keyword form first, then the positional property form used by
+      # the previously validated UA package.  Do not silently leave UNKNOWN
+      # just because one syntax is unsupported.
+      if {[catch {set st [get_property_info -property $p -list status]}]} {
+        catch {set st [get_property_info $p -list status]}
+      }
+      puts $stf "$p	$st"
+    }
+  }
+}
+[<embedded>] % close $stf
+[<embedded>] % set rrc [catch {report -summary -force -result -file [file join $RESULT_DIR report.rpt]} rmsg]
+0
+[<embedded>] % set mf [open [file join $RESULT_DIR metadata.txt] w]
+file45
+[<embedded>] % puts $mf {type=MEDIATION}
+[<embedded>] % puts $mf {case_id=mstatus_mpp_s2}
+[<embedded>] % puts $mf {asset=neorv32_cpu_control.csr.mstatus_mpp}
+[<embedded>] % puts $mf {role=SECID}
+[<embedded>] % puts $mf {scenario=M_MPRV_U_UNMATCHED_DENY}
+[<embedded>] % puts $mf {tag=s2_a0}
+[<embedded>] % puts $mf {obs_bit=2156}
+[<embedded>] % puts $mf {dynamic_ucp_reachability=0.2611111111111111}
+[<embedded>] % puts $mf {dynamic_bypass_sensitivity=0.26666666666666666}
+[<embedded>] % puts $mf {bound=900}
+[<embedded>] % puts $mf "elapsed_ms=$ELAPSED_MS"
+[<embedded>] % puts $mf "report_rc=$rrc"
+[<embedded>] % puts $mf $rmsg
+[<embedded>] % close $mf
+[<embedded>] % puts "SECID_UA_MEDIATION_COMPLETE case=mstatus_mpp_s2"
+SECID_UA_MEDIATION_COMPLETE case=mstatus_mpp_s2
+[<embedded>] % exit -force
+[<embedded>] % INFO (IPL005): Received request to exit from the console.
+INFO (IPL014): Waiting for the Tcl-thread to exit.
+INFO: Waiting for proof threads to stop...
+INFO: Proof threads stopped.
+INFO (IPL018): The peak resident set memory use for this session was 27.698 GB.
+INFO (IPL015): The Tcl-thread exited with status 0.
+INFO (IPL016): Exiting the analysis session with status 0.

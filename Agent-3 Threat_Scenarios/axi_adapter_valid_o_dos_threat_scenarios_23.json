@@ -1,0 +1,1816 @@
+{
+  "threat feature": "dos_features",
+  "design": {
+    "name": "AXI adapter",
+    "top": "axi_adapter",
+    "rtl_language": "SystemVerilog"
+  },
+  "primary": {
+    "signal": "valid_o",
+    "security_objective": "availability"
+  },
+  "threat": "denial_of_service",
+  "feature": "progress_disruption_and_service_rate_degradation",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "valid_o"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk_i",
+    "reset": {
+      "signal": "rst_ni",
+      "active_level": "low"
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor",
+      "$attack_window": "trial parameter inferred and recorded before simulation",
+      "$candidate_activation_event": "trial parameter inferred and recorded before simulation",
+      "$candidate_activation_phase": "trial parameter inferred and recorded before simulation",
+      "$derived_bounded_post_release_window": "bounded campaign parameter inferred from the feature definition and RTL, then frozen before simulation"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Measure bounded progress disruption and sustained legitimate service-rate loss under candidate blocking.",
+    "execution_model": "matched legal workloads in baseline and bounded SA0/SA1 candidate-blocking runs followed by release",
+    "calculation": {
+      "progress_disruption": "normalized added delay, finite stall, timeout/recovery, or failure to recover within the post-release bound",
+      "service_rate_degradation": "max(0, 1 - N_fault/N_base) using legitimate completed services"
+    },
+    "required_observation_roles": [
+      "legitimate completion",
+      "completion latency and recovery",
+      "baseline and blocked completed-service counts"
+    ],
+    "validity_policy": [
+      "baseline legal workload completes",
+      "candidate is applicable and activated",
+      "candidate is known during blocking",
+      "no unrelated reset or illegal environment behavior occurs"
+    ],
+    "classification": {
+      "no_disruption": "no measurable loss",
+      "finite_stall": "bounded added delay",
+      "stall_timeout_recovery": "timeout followed by bounded recovery",
+      "recovery_failure": "no recovery within the bound",
+      "not_applicable": "candidate lacks the required service role",
+      "invalid": "legal workload, activation, release, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "candidate with a legal RTL path for this scenario",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "progress",
+        "target": "valid_o assertion associated with completion of the burst write"
+      },
+      {
+        "purpose": "service",
+        "target": "legitimate completed four-beat burst-write transaction"
+      }
+    ],
+    "oracle": {
+      "baseline": {
+        "record": [
+          "completion_latency",
+          "max_progress_gap",
+          "completed_service_count"
+        ],
+        "require": [
+          "four-beat non-returning burst write completes normally",
+          "primary valid_o corresponds to legitimate backend completion"
+        ]
+      },
+      "fault": {
+        "PD": {
+          "classify": [
+            "FINITE_STALL",
+            "STALL_TIMEOUT_RECOVERY",
+            "RECOVERY_FAILURE"
+          ],
+          "record": [
+            "completion_latency",
+            "timeout",
+            "recovery_latency"
+          ]
+        },
+        "SRD": {
+          "record": [
+            "baseline_service_count",
+            "fault_service_count"
+          ],
+          "workload": "repeat_same_legal_workload"
+        }
+      },
+      "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+    },
+    "blocking": {
+      "attack_window": "$attack_window",
+      "faults": [
+        "SA0",
+        "SA1"
+      ],
+      "recovery_window": "$derived_bounded_post_release_window",
+      "release": true,
+      "target": "$candidate",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 23,
+  "scenarios": [
+    {
+      "id": "AXI_DOS_01_READ_SINGLE",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "read",
+        "request_type": "single",
+        "amo": "NONE",
+        "backend_behavior": "legal AXI read response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one single-beat read request"
+        },
+        {
+          "action": "complete the AR handshake after a legal bounded wait"
+        },
+        {
+          "action": "return one legal R beat with RLAST asserted"
+        },
+        {
+          "action": "hold RVALID until the adapter accepts the response"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "single-read workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion for the read completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate completed single-read transaction",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "baseline AR handshake occurs",
+          "baseline final R handshake occurs with RLAST asserted",
+          "baseline read request is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "single-read transaction completes normally",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_02_READ_BURST",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "read",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "backend_behavior": "legal ordered AXI read burst"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst read request"
+        },
+        {
+          "action": "complete the AR handshake after a legal bounded wait"
+        },
+        {
+          "action": "return four ordered R beats with legal bounded inter-beat gaps"
+        },
+        {
+          "action": "assert RLAST only on the fourth and final R beat"
+        },
+        {
+          "action": "hold each RVALID until the adapter accepts that beat"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-read workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion after the final read beat",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate completed four-beat read burst",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "baseline AR handshake occurs",
+          "all four baseline R handshakes occur in order",
+          "RLAST is asserted only on the final beat",
+          "baseline burst read is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "four-beat burst-read transaction completes normally",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_03_WRITE_SINGLE_AW_W_TOGETHER",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "single",
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one single non-returning write request"
+        },
+        {
+          "action": "complete AW and W handshakes in the same transaction phase"
+        },
+        {
+          "action": "provide one legal B response after request acceptance"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "single-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion associated with the accepted B response",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate completed single-write transaction",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW and W are both accepted for the same single write",
+          "baseline AW and W handshakes both occur",
+          "baseline B handshake occurs",
+          "baseline write request is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "single non-returning write completes normally",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_04_WRITE_SINGLE_W_BEFORE_AW",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "single",
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one single non-returning write request"
+        },
+        {
+          "action": "complete the W handshake before the AW handshake"
+        },
+        {
+          "action": "complete the AW handshake later"
+        },
+        {
+          "action": "provide one legal B response after both request channels are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "single-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion associated with the accepted B response",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate completed single-write transaction",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "W is accepted before AW for the same single write",
+          "baseline AW and W handshakes both occur",
+          "baseline B handshake occurs",
+          "baseline write request is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "single non-returning write completes normally",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_05_WRITE_SINGLE_AW_BEFORE_W",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "single",
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one single non-returning write request"
+        },
+        {
+          "action": "complete the AW handshake before the W handshake"
+        },
+        {
+          "action": "complete the W handshake later"
+        },
+        {
+          "action": "provide one legal B response after both request channels are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "single-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion associated with the accepted B response",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate completed single-write transaction",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW is accepted before W for the same single write",
+          "baseline AW and W handshakes both occur",
+          "baseline B handshake occurs",
+          "baseline write request is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "single non-returning write completes normally",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_06_WRITE_BURST_AW_BEFORE_W1",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete the AW handshake before any W beat"
+        },
+        {
+          "action": "complete W1, W2, W3, and W4 handshakes in order"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "AW is accepted before W1",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_07_WRITE_BURST_AW_WITH_W1",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete AW and W1 handshakes together"
+        },
+        {
+          "action": "complete W2, W3, and W4 handshakes in order"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "AW is accepted together with W1",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_08_WRITE_BURST_W1_AW_BEFORE_W2",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete the W1 handshake before AW"
+        },
+        {
+          "action": "complete the AW handshake on a separate transaction phase before W2"
+        },
+        {
+          "action": "complete W2, W3, and W4 handshakes in order"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "W1 is accepted, then AW is accepted separately before W2",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_09_WRITE_BURST_W1_AW_WITH_W2",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete the W1 handshake before AW"
+        },
+        {
+          "action": "complete AW and W2 handshakes together"
+        },
+        {
+          "action": "complete W3 and W4 handshakes in order"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "W1 is accepted, then AW is accepted together with W2",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_10_WRITE_BURST_W1_W2_AW_BEFORE_W3",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete W1 and W2 handshakes in order before AW"
+        },
+        {
+          "action": "complete the AW handshake on a separate transaction phase before W3"
+        },
+        {
+          "action": "complete W3 and W4 handshakes in order"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "W1 and W2 are accepted, then AW is accepted separately before W3",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_11_WRITE_BURST_W1_W2_AW_WITH_W3",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete W1 and W2 handshakes in order before AW"
+        },
+        {
+          "action": "complete AW and W3 handshakes together"
+        },
+        {
+          "action": "complete the final W4 handshake"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "W1 and W2 are accepted, then AW is accepted together with W3",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_12_WRITE_BURST_W1_W2_W3_AW_BEFORE_W4",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete W1, W2, and W3 handshakes in order before AW"
+        },
+        {
+          "action": "complete the AW handshake on a separate transaction phase before W4"
+        },
+        {
+          "action": "complete the final W4 handshake"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "W1 through W3 are accepted, then AW is accepted separately before W4",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_13_WRITE_BURST_W1_W2_W3_AW_WITH_W4",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete W1, W2, and W3 handshakes in order before AW"
+        },
+        {
+          "action": "complete AW and the final W4 handshake together"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "W1 through W3 are accepted, then AW is accepted together with W4",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_14_WRITE_BURST_ALL_W_BEFORE_AW",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "write",
+        "request_type": "burst",
+        "burst_beats": 4,
+        "amo": "NONE",
+        "response_type": "non_returning",
+        "backend_behavior": "legal AXI write burst and response"
+      },
+      "stimulus": [
+        {
+          "action": "offer one four-beat burst write request"
+        },
+        {
+          "action": "complete W1, W2, W3, and W4 handshakes in order before AW"
+        },
+        {
+          "action": "complete the AW handshake after all four W beats"
+        },
+        {
+          "action": "provide one legal B response after AW and all four W beats are accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "burst-write workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "validity": [
+          "all four W beats are accepted before AW",
+          "W1 through W4 are accepted in order",
+          "baseline AW handshake occurs exactly once for the burst",
+          "baseline B handshake occurs only after request-channel completion",
+          "baseline burst write is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ]
+      }
+    },
+    {
+      "id": "AXI_DOS_15_AMO_AW_W_TOGETHER_B_R_TOGETHER",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "SWAP",
+        "amo_value_binary": "0011",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete AW and W handshakes together"
+        },
+        {
+          "action": "present B and R responses together and hold each valid signal until accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW and W are accepted together",
+          "B and R are presented together",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning SWAP AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_16_AMO_AW_W_TOGETHER_B_THEN_R",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "ADD",
+        "amo_value_binary": "0100",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete AW and W handshakes together"
+        },
+        {
+          "action": "present and complete the B response first"
+        },
+        {
+          "action": "present the returning R response afterward and hold RVALID until accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW and W are accepted together",
+          "B is completed before R is presented",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning ADD AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_17_AMO_AW_W_TOGETHER_R_THEN_B",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "MAX",
+        "amo_value_binary": "1000",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete AW and W handshakes together"
+        },
+        {
+          "action": "assert the returning R response first and hold RVALID pending acceptance"
+        },
+        {
+          "action": "present the B response later"
+        },
+        {
+          "action": "keep the earlier R response available until the adapter accepts it after the required write-response progression"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW and W are accepted together",
+          "R is presented first and held valid until B arrives and the adapter can accept R",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning MAX AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_18_AMO_W_BEFORE_AW_B_R_TOGETHER",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "ADD",
+        "amo_value_binary": "0100",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete the W handshake before AW"
+        },
+        {
+          "action": "complete the AW handshake later"
+        },
+        {
+          "action": "present B and R responses together and hold each valid signal until accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "W is accepted before AW",
+          "B and R are presented together",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning ADD AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_19_AMO_W_BEFORE_AW_B_THEN_R",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "MAX",
+        "amo_value_binary": "1000",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete the W handshake before AW"
+        },
+        {
+          "action": "complete the AW handshake later"
+        },
+        {
+          "action": "present and complete the B response first"
+        },
+        {
+          "action": "present the returning R response afterward and hold RVALID until accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "W is accepted before AW",
+          "B is completed before R is presented",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning MAX AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_20_AMO_W_BEFORE_AW_R_THEN_B",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "SWAP",
+        "amo_value_binary": "0011",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete the W handshake before AW"
+        },
+        {
+          "action": "complete the AW handshake later"
+        },
+        {
+          "action": "assert the returning R response first and hold RVALID pending acceptance"
+        },
+        {
+          "action": "present the B response later"
+        },
+        {
+          "action": "keep the earlier R response available until the adapter accepts it after the required write-response progression"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "W is accepted before AW",
+          "R is presented first and held valid until B arrives and the adapter can accept R",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning SWAP AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_21_AMO_AW_BEFORE_W_B_R_TOGETHER",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "MAX",
+        "amo_value_binary": "1000",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete the AW handshake before W"
+        },
+        {
+          "action": "complete the W handshake later"
+        },
+        {
+          "action": "present B and R responses together and hold each valid signal until accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW is accepted before W",
+          "B and R are presented together",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning MAX AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_22_AMO_AW_BEFORE_W_B_THEN_R",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "SWAP",
+        "amo_value_binary": "0011",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete the AW handshake before W"
+        },
+        {
+          "action": "complete the W handshake later"
+        },
+        {
+          "action": "present and complete the B response first"
+        },
+        {
+          "action": "present the returning R response afterward and hold RVALID until accepted"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW is accepted before W",
+          "B is completed before R is presented",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning SWAP AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    },
+    {
+      "id": "AXI_DOS_23_AMO_AW_BEFORE_W_R_THEN_B",
+      "preconditions": {
+        "initial_state": "IDLE",
+        "operation": "atomic_write_returning_data",
+        "request_type": "single",
+        "amo": "ADD",
+        "amo_value_binary": "0100",
+        "response_type": "returning",
+        "backend_behavior": "legal AXI atomic write response with returned read data"
+      },
+      "stimulus": [
+        {
+          "action": "offer one returning atomic-memory-operation request"
+        },
+        {
+          "action": "complete the AW handshake before W"
+        },
+        {
+          "action": "complete the W handshake later"
+        },
+        {
+          "action": "assert the returning R response first and hold RVALID pending acceptance"
+        },
+        {
+          "action": "present the B response later"
+        },
+        {
+          "action": "keep the earlier R response available until the adapter accepts it after the required write-response progression"
+        }
+      ],
+      "anchor": {
+        "event": "$candidate_activation_event",
+        "condition": "returning-AMO workload is active and the candidate is applicable to this scenario",
+        "phase": "$candidate_activation_phase"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "valid_o assertion only when the returning AMO has legitimate completion",
+            "purpose": "progress"
+          },
+          {
+            "target": "legitimate returning-AMO completion requiring both write-response and returned-read completion",
+            "purpose": "service"
+          }
+        ],
+        "validity": [
+          "AW is accepted before W",
+          "R is presented first and held valid until B arrives and the adapter can accept R",
+          "baseline AW and W handshakes both occur",
+          "baseline B and returned-R handshakes both occur",
+          "baseline returning AMO is granted and completes",
+          "candidate is applicable to this scenario family",
+          "fault run reaches the candidate-specific activation phase",
+          "candidate value is known (not X/Z) during the injection window",
+          "when candidate sensitization is required by campaign policy, the stuck-at polarity is exercised within the attack window",
+          "no unrelated reset or illegal environment behavior invalidates the trial"
+        ],
+        "oracle": {
+          "baseline": {
+            "require": [
+              "returning ADD AMO completes normally with both B and returned-R completion",
+              "primary valid_o corresponds to legitimate backend completion"
+            ],
+            "record": [
+              "completion_latency",
+              "max_progress_gap",
+              "completed_service_count"
+            ]
+          },
+          "fault": {
+            "PD": {
+              "record": [
+                "completion_latency",
+                "timeout",
+                "recovery_latency"
+              ],
+              "classify": [
+                "FINITE_STALL",
+                "STALL_TIMEOUT_RECOVERY",
+                "RECOVERY_FAILURE"
+              ]
+            },
+            "SRD": {
+              "workload": "repeat_same_legal_workload",
+              "record": [
+                "baseline_service_count",
+                "fault_service_count"
+              ]
+            }
+          },
+          "scenario_rule": "classify delay/recovery and compare legitimate completed-service counts"
+        }
+      }
+    }
+  ]
+}

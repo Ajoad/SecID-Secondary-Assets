@@ -1,0 +1,24 @@
+{
+  "candidate": "neorv32_cpu_control.csr.dcsr_prv",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "neorv32_cpu_control.csr.dcsr_prv",
+          "destination": "neorv32_cpu_control.csr.mstatus_mprv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.dcsr_prv"
+          ]
+        },
+        {
+          "source": "neorv32_cpu_control.csr.mstatus_mprv",
+          "destination": "neorv32_cpu_control.ctrl_o.lsu_priv",
+          "control_signal": [
+            "neorv32_cpu_control.csr.mstatus_mprv"
+          ]
+        }
+      ]
+    }
+  ]
+}

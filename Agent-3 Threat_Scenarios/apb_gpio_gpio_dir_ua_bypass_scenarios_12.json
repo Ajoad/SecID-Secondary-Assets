@@ -1,0 +1,812 @@
+{
+  "threat feature": "bypass_sensitivity",
+  "design": {
+    "name": "APB GPIO",
+    "top": "apb_gpio",
+    "rtl_language": "SystemVerilog"
+  },
+  "primary": {
+    "signal": "gpio_dir[31:0]",
+    "security_objective": "integrity"
+  },
+  "threat": "unauthorized_access",
+  "feature": "bypass_sensitivity",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "gpio_dir[31:0]"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "HCLK",
+    "reset": {
+      "signal": "HRESETn",
+      "active_level": "low"
+    },
+    "parameters": {
+      "$candidate_bit": "the selected bit of the bound candidate"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Measure the candidate-bit fraction of valid perturbation opportunities that converts a baseline-denied protected operation into an effective access or write.",
+    "execution_model": "paired secure-baseline and candidate-perturbed executions from the same legal state",
+    "calculation": "maximum candidate-bit deny-to-accept fraction over applicable legal scenarios",
+    "required_observation_roles": [
+      "candidate perturbation",
+      "baseline denial",
+      "protected operation or authorization decision"
+    ],
+    "validity_policy": [
+      "legal protected-operation context is reached",
+      "baseline denial is witnessed",
+      "paired executions agree before intervention",
+      "candidate and decision observations are known"
+    ],
+    "classification": {
+      "bypass": "candidate mutation changes DENY to an effective protected action",
+      "no_bypass": "valid mutation preserves denial",
+      "not_applicable": "scenario is outside the candidate's declared scope",
+      "invalid": "setup, denial, pairing, activation, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": [
+        "PWRITE"
+      ],
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "confirm the requested candidate mutation",
+        "target": "$candidate_bit"
+      },
+      {
+        "purpose": "observe the protected decision",
+        "target": "$primary"
+      },
+      {
+        "purpose": "distinguish secure denial from effective acceptance",
+        "target": "later_protected_PADDIR_write"
+      }
+    ],
+    "validity": [
+      "scenario-specific legal protected-operation setup and denial anchor are reached"
+    ]
+  },
+  "scenario_count": 12,
+  "scenarios": [
+    {
+      "id": "DIRECT_PADDIR_SETUP_ENABLE",
+      "family": "DIRECT_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "DIRECT_TARGET",
+        "candidate_scope": [
+          "PENABLE"
+        ],
+        "intervention_window": "SETUP",
+        "transaction": "PADDIR_write",
+        "PSEL": 1,
+        "PENABLE": 0,
+        "PWRITE": 1
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "APB_transfer_still_in_SETUP",
+        "candidate_effect": "PENABLE_0_to_1_causes_early_accept"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PENABLE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate_bit",
+            "purpose": "confirm the requested candidate mutation"
+          },
+          {
+            "target": "$primary",
+            "purpose": "observe the protected decision"
+          },
+          {
+            "target": "protected_PADDIR_write",
+            "purpose": "distinguish secure denial from effective acceptance"
+          }
+        ],
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PENABLE_0_to_1_causes_early_accept"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "SETUP",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "APB_transfer_still_in_SETUP",
+            "candidate_effect": "PENABLE_0_to_1_causes_early_accept"
+          }
+        }
+      }
+    },
+    {
+      "id": "DIRECT_PADDIR_READ_TO_WRITE",
+      "family": "DIRECT_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "DIRECT_TARGET",
+        "candidate_scope": [
+          "PWRITE"
+        ],
+        "intervention_window": "ACCESS",
+        "transaction": "PADDIR_read",
+        "PSEL": 1,
+        "PENABLE": 1,
+        "PWRITE": 0
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "transaction_is_read",
+        "candidate_effect": "PWRITE_0_to_1_converts_read_to_write"
+      },
+      "overrides": {
+        "observations": [
+          {
+            "target": "$candidate_bit",
+            "purpose": "confirm the requested candidate mutation"
+          },
+          {
+            "target": "$primary",
+            "purpose": "observe the protected decision"
+          },
+          {
+            "target": "protected_PADDIR_write",
+            "purpose": "distinguish secure denial from effective acceptance"
+          }
+        ],
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PWRITE_0_to_1_converts_read_to_write"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "transaction_is_read",
+            "candidate_effect": "PWRITE_0_to_1_converts_read_to_write"
+          }
+        }
+      }
+    },
+    {
+      "id": "DIRECT_WRONG_ADDR_TO_PADDIR",
+      "family": "DIRECT_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "DIRECT_TARGET",
+        "candidate_scope": [
+          "PADDR[6:2]",
+          "s_apb_addr[4:0]"
+        ],
+        "candidate_bit_sweep": "all_5_effective_bits",
+        "intervention_window": "ACCESS",
+        "transaction": "write",
+        "address_class": "one_bit_hamming_neighbor_of_REG_PADDIR",
+        "PSEL": 1,
+        "PENABLE": 1,
+        "PWRITE": 1
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "address_does_not_decode_as_REG_PADDIR",
+        "candidate_effect": "one_address_bit_inversion_redirects_write_to_REG_PADDIR"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]",
+            "s_apb_addr[4:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate_bit",
+            "purpose": "confirm the requested candidate mutation"
+          },
+          {
+            "target": "$primary",
+            "purpose": "observe the protected decision"
+          },
+          {
+            "target": "protected_PADDIR_write",
+            "purpose": "distinguish secure denial from effective acceptance"
+          }
+        ],
+        "oracle": {
+          "baseline": "DENY",
+          "success": "one_address_bit_inversion_redirects_write_to_REG_PADDIR"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "address_does_not_decode_as_REG_PADDIR",
+            "candidate_effect": "one_address_bit_inversion_redirects_write_to_REG_PADDIR"
+          }
+        }
+      }
+    },
+    {
+      "id": "DIRECT_LOCKED_PADDIR_UNLOCK",
+      "family": "DIRECT_TARGET",
+      "preconditions": {
+        "initial_lock": 1,
+        "family": "DIRECT_TARGET",
+        "candidate_scope": [
+          "r_gpio_lock[0]"
+        ],
+        "intervention_window": "ACCESS",
+        "transaction": "PADDIR_write",
+        "PSEL": 1,
+        "PENABLE": 1,
+        "PWRITE": 1
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "r_gpio_lock[0]_is_set",
+        "candidate_effect": "r_gpio_lock[0]_1_to_0_bypasses_lock"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "r_gpio_lock[0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "observations": [
+          {
+            "target": "$candidate_bit",
+            "purpose": "confirm the requested candidate mutation"
+          },
+          {
+            "target": "$primary",
+            "purpose": "observe the protected decision"
+          },
+          {
+            "target": "protected_PADDIR_write",
+            "purpose": "distinguish secure denial from effective acceptance"
+          }
+        ],
+        "oracle": {
+          "baseline": "DENY",
+          "success": "r_gpio_lock[0]_1_to_0_bypasses_lock"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "r_gpio_lock[0]_is_set",
+            "candidate_effect": "r_gpio_lock[0]_1_to_0_bypasses_lock"
+          }
+        }
+      }
+    },
+    {
+      "id": "PREVENT_LOCK_BY_PSEL",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PSEL"
+        ],
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_write",
+          "PWDATA[0]": 1,
+          "baseline_effect": "set_lock"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "preparation_establishes_lock",
+        "candidate_effect": "PSEL_1_to_0_suppresses_lock_write"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PSEL"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PSEL_1_to_0_suppresses_lock_write"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "preparation_establishes_lock",
+            "candidate_effect": "PSEL_1_to_0_suppresses_lock_write"
+          }
+        }
+      }
+    },
+    {
+      "id": "PREVENT_LOCK_BY_PENABLE",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PENABLE"
+        ],
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_write",
+          "PWDATA[0]": 1,
+          "baseline_effect": "set_lock"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "preparation_establishes_lock",
+        "candidate_effect": "PENABLE_1_to_0_suppresses_lock_write"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PENABLE"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PENABLE_1_to_0_suppresses_lock_write"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "preparation_establishes_lock",
+            "candidate_effect": "PENABLE_1_to_0_suppresses_lock_write"
+          }
+        }
+      }
+    },
+    {
+      "id": "PREVENT_LOCK_BY_PWRITE",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PWRITE"
+        ],
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_write",
+          "PWDATA[0]": 1,
+          "baseline_effect": "set_lock"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "preparation_establishes_lock",
+        "candidate_effect": "PWRITE_1_to_0_prevents_lock_write"
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PWRITE_1_to_0_prevents_lock_write"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "preparation_establishes_lock",
+            "candidate_effect": "PWRITE_1_to_0_prevents_lock_write"
+          }
+        }
+      }
+    },
+    {
+      "id": "PREVENT_LOCK_BY_ADDR_REDIRECT",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PADDR[6:2]",
+          "s_apb_addr[4:0]"
+        ],
+        "candidate_bit_sweep": "all_5_effective_bits",
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_write",
+          "PWDATA[0]": 1,
+          "baseline_effect": "set_lock"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "preparation_establishes_lock",
+        "candidate_effect": "address_bit_inversion_redirects_preparation_away_from_REG_GPIOLOCK"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]",
+            "s_apb_addr[4:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "oracle": {
+          "baseline": "DENY",
+          "success": "address_bit_inversion_redirects_preparation_away_from_REG_GPIOLOCK"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "preparation_establishes_lock",
+            "candidate_effect": "address_bit_inversion_redirects_preparation_away_from_REG_GPIOLOCK"
+          }
+        }
+      }
+    },
+    {
+      "id": "PREVENT_LOCK_BY_PWDATA",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 0,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PWDATA[0]"
+        ],
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_write",
+          "PWDATA[0]": 1,
+          "baseline_effect": "set_lock"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "preparation_establishes_lock",
+        "candidate_effect": "PWDATA[0]_1_to_0_prevents_lock_bit_from_being_set"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWDATA[0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PWDATA[0]_1_to_0_prevents_lock_bit_from_being_set"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "preparation_establishes_lock",
+            "candidate_effect": "PWDATA[0]_1_to_0_prevents_lock_bit_from_being_set"
+          }
+        }
+      }
+    },
+    {
+      "id": "CREATE_UNLOCK_READ_TO_WRITE",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 1,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PWRITE"
+        ],
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_read",
+          "PWDATA": "0x00000000",
+          "baseline_effect": "lock_remains_set"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "lock_remains_set",
+        "candidate_effect": "PWRITE_0_to_1_converts_read_to_unlock_write"
+      },
+      "overrides": {
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PWRITE_0_to_1_converts_read_to_unlock_write"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "lock_remains_set",
+            "candidate_effect": "PWRITE_0_to_1_converts_read_to_unlock_write"
+          }
+        }
+      }
+    },
+    {
+      "id": "CREATE_UNLOCK_ADDR_REDIRECT",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 1,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PADDR[6:2]",
+          "s_apb_addr[4:0]"
+        ],
+        "candidate_bit_sweep": "all_5_effective_bits",
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "write_zero",
+          "address_class": "one_bit_hamming_neighbor_of_REG_GPIOLOCK",
+          "baseline_effect": "lock_remains_set"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "lock_remains_set",
+        "candidate_effect": "address_bit_inversion_redirects_zero_write_to_REG_GPIOLOCK_and_clears_lock"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PADDR[6:2]",
+            "s_apb_addr[4:0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "oracle": {
+          "baseline": "DENY",
+          "success": "address_bit_inversion_redirects_zero_write_to_REG_GPIOLOCK_and_clears_lock"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "lock_remains_set",
+            "candidate_effect": "address_bit_inversion_redirects_zero_write_to_REG_GPIOLOCK_and_clears_lock"
+          }
+        }
+      }
+    },
+    {
+      "id": "CREATE_UNLOCK_BY_PWDATA",
+      "family": "PREP_THEN_TARGET",
+      "preconditions": {
+        "initial_lock": 1,
+        "family": "PREP_THEN_TARGET",
+        "candidate_scope": [
+          "PWDATA[0]"
+        ],
+        "intervention_window": "PREP_ACCESS",
+        "preparation": {
+          "transaction": "GPIOLOCK_write",
+          "PWDATA[0]": 1,
+          "baseline_effect": "preserve_lock"
+        }
+      },
+      "stimulus": [
+        {
+          "action": "establish_preconditions",
+          "source": "preconditions"
+        },
+        {
+          "action": "execute_target_context",
+          "source": "anchor"
+        }
+      ],
+      "anchor": {
+        "event": "later_protected_PADDIR_write",
+        "expected": "DENY",
+        "baseline_reason": "lock_remains_set",
+        "candidate_effect": "PWDATA[0]_1_to_0_clears_lock"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": [
+            "PWDATA[0]"
+          ],
+          "outside_scope": "not_applicable"
+        },
+        "oracle": {
+          "baseline": "DENY",
+          "success": "PWDATA[0]_1_to_0_clears_lock"
+        },
+        "intervention": {
+          "target": "$candidate_bit",
+          "operation": "invert_or_semantically_mutate",
+          "when": "PREP_ACCESS",
+          "duration": "one semantic decision window",
+          "protected_operation": {
+            "event": "later_protected_PADDIR_write",
+            "expected": "DENY",
+            "baseline_reason": "lock_remains_set",
+            "candidate_effect": "PWDATA[0]_1_to_0_clears_lock"
+          }
+        }
+      }
+    }
+  ]
+}

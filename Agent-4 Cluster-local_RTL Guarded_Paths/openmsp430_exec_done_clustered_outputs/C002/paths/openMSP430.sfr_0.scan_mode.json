@@ -1,0 +1,109 @@
+{
+  "candidate": "openMSP430.sfr_0.scan_mode",
+  "relation": "fan-in",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "openMSP430.sfr_0.scan_mode",
+          "destination": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "control_signal": [
+            "openMSP430.sfr_0.scan_mode"
+          ]
+        },
+        {
+          "source": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "destination": "openMSP430.frontend_0.exec_jmp",
+          "control_signal": [
+            "openMSP430.clock_module_0.scan_mux_puc_rst.data_out"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.exec_jmp",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_jmp"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "openMSP430.sfr_0.scan_mode",
+          "destination": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "control_signal": [
+            "openMSP430.sfr_0.scan_mode"
+          ]
+        },
+        {
+          "source": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "destination": "openMSP430.frontend_0.exec_src_wr",
+          "control_signal": [
+            "openMSP430.clock_module_0.scan_mux_puc_rst.data_out"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.exec_src_wr",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_dst_wr",
+            "openMSP430.frontend_0.exec_jmp",
+            "openMSP430.frontend_0.exec_src_wr"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "openMSP430.sfr_0.scan_mode",
+          "destination": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "control_signal": [
+            "openMSP430.sfr_0.scan_mode"
+          ]
+        },
+        {
+          "source": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "destination": "openMSP430.frontend_0.e_state",
+          "control_signal": [
+            "openMSP430.clock_module_0.scan_mux_puc_rst.data_out"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.e_state",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_jmp"
+          ]
+        }
+      ]
+    },
+    {
+      "hops": [
+        {
+          "source": "openMSP430.sfr_0.scan_mode",
+          "destination": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "control_signal": [
+            "openMSP430.sfr_0.scan_mode"
+          ]
+        },
+        {
+          "source": "openMSP430.clock_module_0.scan_mux_puc_rst.data_out",
+          "destination": "openMSP430.frontend_0.exec_dst_wr",
+          "control_signal": [
+            "openMSP430.clock_module_0.scan_mux_puc_rst.data_out"
+          ]
+        },
+        {
+          "source": "openMSP430.frontend_0.exec_dst_wr",
+          "destination": "openMSP430.frontend_0.exec_done",
+          "control_signal": [
+            "openMSP430.frontend_0.exec_dst_wr",
+            "openMSP430.frontend_0.exec_jmp"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "candidate": "keccak.padder_.p0.out",
+  "relation": "fan-out",
+  "paths": [
+    {
+      "hops": [
+        {
+          "source": "keccak.in",
+          "destination": "keccak.padder_.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.in",
+          "destination": "keccak.padder_.p0.in",
+          "control_signal": []
+        },
+        {
+          "source": "keccak.padder_.p0.in",
+          "destination": "keccak.padder_.p0.out",
+          "control_signal": [
+            "keccak.padder_.p0.byte_num"
+          ]
+        }
+      ]
+    }
+  ]
+}

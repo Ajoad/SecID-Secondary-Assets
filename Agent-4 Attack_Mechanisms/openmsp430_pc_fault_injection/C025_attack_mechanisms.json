@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "openMSP430.fe_mdb_in",
+    "attack_mechanism": "A fault on `openMSP430.fe_mdb_in` during a fetch or vector read can substitute a wrong instruction/extension or address the wrong program-memory location. Instruction words, extension words, and interrupt vectors return through the memory-backbone path before they influence decode or `pc_nxt`. `openMSP430.fe_mdb_in` carries an address, returned word, or memory-path qualifier on that route; the active mux/state branches are selected by `openMSP430.frontend_0.pc_sw_wr`. The effect traverses `openMSP430.fe_mdb_in -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The resulting decode or vector value drives an incorrect PC transition and breaks control-flow integrity."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.dest_reg",
+    "attack_mechanism": "Injecting a transient or stuck fault into `openMSP430.frontend_0.dest_reg` before `pc` is enabled can add the wrong increment or prevent the expected increment. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. `openMSP430.frontend_0.dest_reg` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the active mux/state branches are selected by `openMSP430.frontend_0.pc_sw_wr`. The effect traverses `openMSP430.frontend_0.dest_reg -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The next instruction is skipped, repeated, or fetched from an unintended address."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.irq_all",
+    "attack_mechanism": "Faulting `openMSP430.frontend_0.irq_all` in the interrupt-entry window can select the wrong vector, suppress vectoring, or capture an incorrect return address. When `i_state` is `I_IRQ_FETCH`, `pc_nxt` selects `{9'h1ff, irq_num, 1'b0}`; in `I_IRQ_DONE` it instead selects the vector word returned on `mdb_in`. `openMSP430.frontend_0.irq_all` affects interrupt recognition, vector selection, or the state transition that activates one of those two PC sources; the active mux/state branches are selected by `openMSP430.frontend_0.irq_all`, `openMSP430.frontend_0.pc_sw_wr`. The effect traverses `openMSP430.frontend_0.irq_all -> openMSP430.frontend_0.irq_num -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The processor enters an attacker-chosen or invalid control-flow location rather than the intended interrupt handler."
+  },
+  {
+    "candidate": "openMSP430.frontend_0.irq_num",
+    "attack_mechanism": "Faulting `openMSP430.frontend_0.irq_num` in the interrupt-entry window can select the wrong vector, suppress vectoring, or capture an incorrect return address. When `i_state` is `I_IRQ_FETCH`, `pc_nxt` selects `{9'h1ff, irq_num, 1'b0}`; in `I_IRQ_DONE` it instead selects the vector word returned on `mdb_in`. `openMSP430.frontend_0.irq_num` affects interrupt recognition, vector selection, or the state transition that activates one of those two PC sources; the active mux/state branches are selected by `openMSP430.frontend_0.pc_sw_wr`. The effect traverses `openMSP430.frontend_0.irq_num -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The processor enters an attacker-chosen or invalid control-flow location rather than the intended interrupt handler."
+  },
+  {
+    "candidate": "openMSP430.mem_backbone_0.pmem_dout",
+    "attack_mechanism": "A fault on `openMSP430.mem_backbone_0.pmem_dout` during a fetch or vector read can substitute a wrong instruction/extension or address the wrong program-memory location. Instruction words, extension words, and interrupt vectors return through the memory-backbone path before they influence decode or `pc_nxt`. `openMSP430.mem_backbone_0.pmem_dout` carries an address, returned word, or memory-path qualifier on that route; the active mux/state branches are selected by `openMSP430.mem_backbone_0.pmem_dout_bckup_sel`, `openMSP430.frontend_0.pc_sw_wr`. The effect traverses `openMSP430.mem_backbone_0.pmem_dout -> openMSP430.mem_backbone_0.fe_mdb_in -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. The resulting decode or vector value drives an incorrect PC transition and breaks control-flow integrity."
+  }
+]

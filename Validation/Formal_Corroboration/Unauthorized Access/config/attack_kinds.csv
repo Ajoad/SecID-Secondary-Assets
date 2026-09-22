@@ -1,0 +1,7 @@
+kind_id,name,ucp_signal,semantics
+0,XBUS_DATA_1BIT,xbus_dat_i,Flip exactly one bit of one instruction-response word
+1,XBUS_ACK_DROP,xbus_ack_i,Suppress exactly one nominal instruction-response acknowledgement for one cycle
+2,XBUS_ERR,xbus_err_i,Assert error on exactly one nominal instruction response while acknowledging it
+3,IRQ_MEI_PULSE,irq_mei_i,One-cycle machine external interrupt pulse
+4,IRQ_MSI_PULSE,irq_msi_i,One-cycle machine software interrupt pulse
+5,IRQ_MTI_PULSE,irq_mti_i,One-cycle machine timer interrupt pulse

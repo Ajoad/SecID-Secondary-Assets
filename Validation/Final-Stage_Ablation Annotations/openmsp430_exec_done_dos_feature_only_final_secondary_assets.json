@@ -1,0 +1,145 @@
+[
+  {
+    "Name": "e_state",
+    "threat": "denial_of_service",
+    "Structural Path": "e_state -> execution-state decode -> terminal execution phase -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.45427268129474013,
+      "service_rate_degradation": 0.9668537414965986
+    },
+    "Justification": "For `e_state`, the measured profile shows moderate progress disruption (0.45427268129474013) and very strong service-rate degradation (0.9668537414965986), with service-rate loss providing the stronger indication. Because the signal records the active execution phase used by the completion decoder, this quantitative behavior supports relevance to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_state_nxt",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.40387167366946775,
+      "service_rate_degradation": 0.965187075
+    },
+    "Justification": "`frontend_0.e_state_nxt` is selected from its feature evidence: limited progress disruption (0.40387167366946775) and very strong service-rate degradation (0.965187075), with service-rate loss providing the stronger indication. Its RTL role, where it selects the execution phase that will be entered on the next clock, gives those measurements a meaningful connection to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.1838293650793651,
+      "service_rate_degradation": 0.6305707962672249
+    },
+    "Justification": "The quantitative case for `frontend_0.e_first_state` combines limited progress disruption (0.1838293650793651) and moderate service-rate degradation (0.6305707962672249), with service-rate loss providing the stronger indication. As `frontend_0.e_first_state` chooses the first micro-state for the decoded instruction class, the score pattern is consistent with a secondary asset influencing `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_jmp",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
+    "Normalized Evidence": {
+      "progress_disruption": 0.15874183006535947,
+      "service_rate_degradation": 0.5008333333333334
+    },
+    "Justification": "Measurements for `frontend_0.exec_jmp` indicate limited progress disruption (0.15874183006535947) and moderate service-rate degradation (0.5008333333333334), with service-rate loss providing the stronger indication. This is significant because it marks jump execution and changes the state-machine completion route; consequently, the feature response supports retaining the candidate around `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_dst_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.19176915557889823,
+      "service_rate_degradation": 0.578358844
+    },
+    "Justification": "A feature-based review of `frontend_0.exec_dst_wr` finds limited progress disruption (0.19176915557889823) and moderate service-rate degradation (0.578358844), with service-rate loss providing the stronger indication. Coupled with the fact that the signal qualifies the destination-write phase before instruction retirement, the observed values make it pertinent to protection of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.1375,
+      "service_rate_degradation": 0.5
+    },
+    "Justification": "The evidence pair for `frontend_0.exec_src_wr` reflects weak progress disruption (0.1375) and moderate service-rate degradation (0.5), with service-rate loss providing the stronger indication. Since `frontend_0.exec_src_wr` controls whether the source-write phase participates in execution, the quantitative response is not incidental and favors its inclusion for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_sext_rdy",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.2,
+      "service_rate_degradation": 0.4938979591836734
+    },
+    "Justification": "Retention of `frontend_0.inst_sext_rdy` follows from limited progress disruption (0.2) and moderate service-rate degradation (0.4938979591836734), with service-rate loss providing the stronger indication. The candidate reports readiness of the extended source operand, so this score combination points to measurable influence on the behavior surrounding `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.inst_dext_en",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.14285714285714285,
+      "service_rate_degradation": 0.4927113702623906
+    },
+    "Justification": "For the `exec_done` case, `frontend_0.inst_dext_en` exhibits weak progress disruption (0.14285714285714285) and moderate service-rate degradation (0.4927113702623906), with service-rate loss providing the stronger indication. Given its function—where it enables the destination-extension transfer required by selected instructions—the feature values provide sufficient quantitative support for selection.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "`frontend_0.decode` receives quantitative support through moderate progress disruption (0.4928174603174603) and strong service-rate degradation (0.8633333333333333), with service-rate loss providing the stronger indication. That profile matters in context because the signal launches decoded work into the execution state machine, linking the measurements to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "The normalized results distinguish `decode_noirq` through moderate progress disruption (0.4928174603174603) and strong service-rate degradation (0.8633333333333333), with service-rate loss providing the stronger indication. Its RTL role is that it qualifies instruction decoding when no interrupt supersedes the instruction; therefore, the feature evidence favors treating it as secondary to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.irq_detect",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.irq_detect -> PDG fan-in layer 1 -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.21424996572055396,
+      "service_rate_degradation": 0.9899913202460471
+    },
+    "Justification": "Feature analysis assigns `frontend_0.irq_detect` a profile of limited progress disruption (0.21424996572055396) and very strong service-rate degradation (0.9899913202460471), with service-rate loss providing the stronger indication. Because `frontend_0.irq_detect` arbitrates interrupt entry against ordinary instruction progress, these values substantiate a measurable relationship with `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.dst_acalc_pre",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.dst_acalc_pre -> PDG fan-in layer 1 -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0,
+      "service_rate_degradation": 0.9797084548104955
+    },
+    "Justification": "What supports `frontend_0.dst_acalc_pre` quantitatively is weak progress disruption (0) and very strong service-rate degradation (0.9797084548104955), with service-rate loss providing the stronger indication. The signal prepares destination-address calculation before later execution phases, and that functional position makes the measured response relevant to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.src_acalc_pre",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.src_acalc_pre -> PDG fan-in layer 1 -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0,
+      "service_rate_degradation": 0.9307142857142857
+    },
+    "Justification": "For `frontend_0.src_acalc_pre`, the measured profile shows weak progress disruption (0) and very strong service-rate degradation (0.9307142857142857), with service-rate loss providing the stronger indication. Because the signal initiates source-address calculation for memory-oriented instructions, this quantitative behavior supports relevance to `exec_done`.",
+    "decision": "retain"
+  }
+]

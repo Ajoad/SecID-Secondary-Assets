@@ -1,0 +1,1045 @@
+{
+  "threat feature": "icmi",
+  "design": {
+    "name": "SHA-3",
+    "top": "keccak",
+    "rtl_language": "Verilog"
+  },
+  "primary": {
+    "signal": "keccak.in[63:0]",
+    "security_objective": "confidentiality"
+  },
+  "threat": "information_leakage",
+  "feature": "temporal_incremental_conditional_mutual_information_auc",
+  "bindings": {
+    "primary": {
+      "placeholder": "$primary",
+      "rtl_signal": "keccak.in[63:0]"
+    },
+    "candidate": {
+      "placeholder": "$candidate",
+      "source": "functionally retained candidate supplied to the downstream agent"
+    },
+    "clock": "clk",
+    "reset": {
+      "signal": "reset",
+      "active_level": "high"
+    },
+    "uop": {
+      "placeholder": "$uop",
+      "rtl_signal": "keccak.out[511:0]"
+    },
+    "parameters": {
+      "$anchor": "the current scenario's testbench-observable anchor",
+      "$primary_variations": "trial parameter inferred and recorded before simulation"
+    }
+  },
+  "feature_contract": {
+    "provenance": "independent threat definition and RTL semantics; no downstream implementation or result input",
+    "trial_parameter_policy": "candidate bits, legal values, seeds, repetitions, and bounded timing sweeps are inferred and recorded before simulation; they do not create additional semantic scenarios",
+    "definition": "Measure context-averaged normalized information between primary-value groups and cumulative candidate history; conditional increments avoid recounting prior information and temporal weighting rewards earlier acquisition.",
+    "execution_model": "compare legal executions that vary the primary while holding the nonsecret context and control schedule fixed",
+    "calculation": "temporal incremental conditional mutual information area under the curve",
+    "required_observation_roles": [
+      "primary variation",
+      "candidate history",
+      "sampling cycles",
+      "context and knownness"
+    ],
+    "validity_policy": [
+      "legal setup and anchor are reached",
+      "only the intended primary group varies within a comparison",
+      "candidate samples used by the estimator are known"
+    ],
+    "classification": {
+      "measured_nonzero": "valid positive information measurement",
+      "measured_zero": "valid zero-information measurement",
+      "not_applicable": "scenario is outside the candidate's declared scope",
+      "invalid": "setup, variation, anchor, or knownness requirement fails"
+    }
+  },
+  "scenario_defaults": {
+    "applicability": {
+      "candidate_scope": "all frozen primary-reachable candidates",
+      "outside_scope": "not_applicable"
+    },
+    "observations": [
+      {
+        "purpose": "measure temporal information dependence on variations of $primary",
+        "target": "$candidate"
+      }
+    ],
+    "validity": [
+      "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+      "The scenario-specific anchor condition is reached.",
+      "Candidate dependence is evaluated only in the scenario-defined observation window."
+    ],
+    "oracle": {
+      "information_dependence": {
+        "compare_over": "$primary_variations",
+        "measurement": "candidate_information_dependence",
+        "success": "nonzero_candidate_information_dependence"
+      },
+      "scenario_measurement": "measure temporal information dependence over the declared observation window"
+    },
+    "variation": {
+      "held_constant": [
+        "nonsecret context",
+        "control schedule",
+        "reset history"
+      ],
+      "mode": "legal_primary_group_variation",
+      "sampling_window": "from sensitive-word acceptance through completion of the transaction",
+      "target": "$primary",
+      "when": "$anchor"
+    }
+  },
+  "scenario_count": 19,
+  "scenarios": [
+    {
+      "id": "ICMI01",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 0,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 0; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 0,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI02",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 1,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 1; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 1,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI03",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 2,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 2; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 2,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI04",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 3,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 3; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 3,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI05",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 4,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 4; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 4,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI06",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 5,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 5; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 5,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI07",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 6,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 6; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 6,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI08",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 7,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 7; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 7,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI09",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "rate_block_words": 9,
+        "sensitive_rate_word_position": 8,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "construct_rate_block",
+          "parameters": {
+            "detail": "Present nine legal non-final 64-bit input beats to form one complete 576-bit SHA-3 rate block."
+          }
+        },
+        {
+          "action": "place_sensitive_word",
+          "parameters": {
+            "detail": "Use $primary as rate-word position 8; all other rate words are deterministic and identical across paired executions."
+          }
+        },
+        {
+          "action": "complete_absorb",
+          "parameters": {
+            "detail": "Allow the complete rate block to be accepted and processed by the permutation."
+          }
+        },
+        {
+          "action": "terminate_message",
+          "parameters": {
+            "detail": "After the block/permutation sequence, terminate with a legal zero-byte final block."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_rate_word",
+        "condition": "the selected non-final rate-word position is legally accepted",
+        "rate_word_position": 8,
+        "observation_window": "from sensitive-word acceptance through completion of the transaction"
+      }
+    },
+    {
+      "id": "ICMI10",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 1,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 1 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 1,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 1-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI11",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 2,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 2 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 2,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 2-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI12",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 3,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 3 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 3,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 3-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI13",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 4,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 4 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 4,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 4-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI14",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 5,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 5 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 5,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 5-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI15",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 6,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 6 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 6,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 6-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI16",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "fresh SHA-3 transaction",
+        "final_beat": true,
+        "valid_byte_count": 7,
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "prepare_partial_final_beat",
+          "parameters": {
+            "detail": "Present $primary as a legal final input beat with 7 valid byte(s)."
+          }
+        },
+        {
+          "action": "accept_final_beat",
+          "parameters": {
+            "detail": "Assert the final-beat semantics so the padder preserves the architecturally valid prefix and inserts SHA-3 padding."
+          }
+        },
+        {
+          "action": "complete_permutation",
+          "parameters": {
+            "detail": "Allow the padded block to propagate through the permutation to transaction completion."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_partial_final_sensitive_beat",
+        "condition": "the final sensitive beat is legally accepted",
+        "valid_byte_count": 7,
+        "observation_window": "from final-beat acceptance through completion of the transaction"
+      },
+      "overrides": {
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Only the architecturally valid 7-byte prefix of $primary is required to be preserved before padding."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "from final-beat acceptance through completion of the transaction"
+        }
+      }
+    },
+    {
+      "id": "ICMI17",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "multi-block SHA-3 transaction",
+        "prior_state_requirement": "a deterministic first full rate block has already been absorbed and permuted, producing nonzero prior permutation state",
+        "candidate_scope": "all frozen primary-reachable candidates"
+      },
+      "stimulus": [
+        {
+          "action": "absorb_prior_block",
+          "parameters": {
+            "detail": "Absorb and permute a deterministic complete first rate block to establish nonzero prior permutation state."
+          }
+        },
+        {
+          "action": "start_later_block",
+          "parameters": {
+            "detail": "Begin a later rate block using the same non-sensitive context in both paired executions."
+          }
+        },
+        {
+          "action": "accept_sensitive_word",
+          "parameters": {
+            "detail": "Accept $primary in the later block while the previous permutation state is nonzero."
+          }
+        },
+        {
+          "action": "complete_later_permutation",
+          "parameters": {
+            "detail": "Complete the block so the new rate data is combined with the prior state and propagated through the permutation."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_word_in_later_block",
+        "condition": "$primary is legally accepted after a prior block has produced nonzero permutation state",
+        "block_index": 1,
+        "observation_window": "second-block preparation and second permutation"
+      },
+      "overrides": {
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "second-block preparation and second permutation"
+        }
+      }
+    },
+    {
+      "id": "ICMI18",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "at least two non-final/full-block phases followed by legal completion",
+        "candidate_scope": "state/permutation candidates; front-end candidates may legitimately show no dependence in the later observation window"
+      },
+      "stimulus": [
+        {
+          "action": "absorb_sensitive_first_block",
+          "parameters": {
+            "detail": "Place $primary in the first complete non-final rate block and absorb/permute it."
+          }
+        },
+        {
+          "action": "absorb_deterministic_second_block",
+          "parameters": {
+            "detail": "Absorb a second deterministic block that is identical across paired executions."
+          }
+        },
+        {
+          "action": "observe_later_state",
+          "parameters": {
+            "detail": "Do not count candidate dependence until the second permutation is accepted; then observe whether information from the earlier $primary persists."
+          }
+        },
+        {
+          "action": "complete_transaction",
+          "parameters": {
+            "detail": "Finish the SHA-3 transaction legally."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "accept_sensitive_word_in_preceding_block",
+        "condition": "$primary is accepted in the first non-final block and a later block is subsequently accepted",
+        "observation_window": "second permutation acceptance onward",
+        "observe_from_permutation_accept": 2
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": "state/permutation candidates; front-end candidates may legitimately show no dependence in the later observation window",
+          "outside_scope": "not_applicable"
+        },
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "Dependence before the second permutation acceptance is excluded from this scenario's oracle."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "second permutation acceptance onward"
+        }
+      }
+    },
+    {
+      "id": "ICMI19",
+      "preconditions": {
+        "reset_state": "released",
+        "message_state": "permutation busy while a subsequent rate buffer is full",
+        "handshake_requirement": "$primary is presented with input-valid intent while the design cannot accept the beat",
+        "candidate_scope": "primarily front-end combinational candidates such as padder p0.out and v1"
+      },
+      "stimulus": [
+        {
+          "action": "start_first_permutation",
+          "parameters": {
+            "detail": "Fill and launch a first block so the permutation becomes busy."
+          }
+        },
+        {
+          "action": "fill_next_rate_buffer",
+          "parameters": {
+            "detail": "While the permutation remains busy, fill the next padder/rate buffer until backpressure is asserted."
+          }
+        },
+        {
+          "action": "hold_sensitive_input",
+          "parameters": {
+            "detail": "Present paired variations of $primary during the backpressure interval without allowing the beat to be accepted."
+          }
+        },
+        {
+          "action": "measure_contemporaneous_dependence",
+          "parameters": {
+            "detail": "Observe candidate dependence only while the sensitive value is being held under backpressure."
+          }
+        }
+      ],
+      "anchor": {
+        "event": "backpressured_sensitive_input_hold",
+        "condition": "buffer_full is asserted while the permutation is busy and the sensitive beat is not accepted",
+        "accept_expected": false,
+        "observation_window": "the backpressure hold interval only"
+      },
+      "overrides": {
+        "applicability": {
+          "candidate_scope": "primarily front-end combinational candidates such as padder p0.out and v1",
+          "outside_scope": "not_applicable"
+        },
+        "validity": [
+          "Both paired executions follow the same legal SHA-3 protocol sequence except for the intended $primary variation.",
+          "The scenario-specific anchor condition is reached.",
+          "Candidate dependence is evaluated only in the scenario-defined observation window.",
+          "The sensitive beat must remain unaccepted throughout the measured hold interval.",
+          "Any dependence counted by the oracle must be contemporaneous with the backpressured $primary hold."
+        ],
+        "variation": {
+          "target": "$primary",
+          "mode": "legal_primary_group_variation",
+          "when": "$anchor",
+          "held_constant": [
+            "nonsecret context",
+            "control schedule",
+            "reset history"
+          ],
+          "sampling_window": "the backpressure hold interval only"
+        }
+      }
+    }
+  ]
+}

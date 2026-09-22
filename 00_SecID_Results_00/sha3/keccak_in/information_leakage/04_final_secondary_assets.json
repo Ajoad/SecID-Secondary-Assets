@@ -1,0 +1,89 @@
+[
+  {
+    "Name": "keccak.padder_.v1",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> keccak.padder_.v1 -> keccak.padder_.out -> permutation state -> keccak.out",
+    "Attack Mechanisms": [
+      "The padder accepts an input word when `~state && in_ready && ~buffer_full`; on the final word, `is_last` and `byte_num` determine where the SHA-3 suffix and terminal bit are inserted. Reading or probing `keccak.padder_.v1` while `padder_out_ready` is asserted exposes message bytes before the Keccak permutation provides diffusion. `keccak.padder_.v1` holds or forwards the assembled 576-bit rate block before `f_ack` allows the buffer to be reused. The confidential `keccak_in` block, including its valid-byte boundary, can be recovered directly from the padded representation. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_.v1`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent input-buffer state captures the sensitive beat with full early information preservation and an output witness.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.padder_.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> keccak.padder_.out -> f_permutation_.round_in -> permutation state -> keccak.out",
+    "Attack Mechanisms": [
+      "The padder accepts an input word when `~state && in_ready && ~buffer_full`; on the final word, `is_last` and `byte_num` determine where the SHA-3 suffix and terminal bit are inserted. Reading or probing `keccak.padder_.out` while `padder_out_ready` is asserted exposes message bytes before the Keccak permutation provides diffusion. `keccak.padder_.out` holds or forwards the assembled 576-bit rate block before `f_ack` allows the buffer to be reused. The confidential `keccak_in` block, including its valid-byte boundary, can be recovered directly from the padded representation. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_.v1 -> keccak.padder_.out`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 1.0,
+      "uop_observability": 1.0
+    },
+    "Justification": "The assembled padded block contains the sensitive input before permutation and is observable at valid output.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.padder_.p0.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> keccak.padder_.p0.out -> padder selection -> f_permutation_.round_in -> keccak.out",
+    "Attack Mechanisms": [
+      "The padder accepts an input word when `~state && in_ready && ~buffer_full`; on the final word, `is_last` and `byte_num` determine where the SHA-3 suffix and terminal bit are inserted. Reading or probing `keccak.padder_.p0.out` while `padder_out_ready` is asserted exposes message bytes before the Keccak permutation provides diffusion. `keccak.padder_.p0.out` holds or forwards the assembled 576-bit rate block before `f_ack` allows the buffer to be reused. The confidential `keccak_in` block, including its valid-byte boundary, can be recovered directly from the padded representation. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_.p0.in -> keccak.padder_.p0.out`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.875,
+      "uop_observability": 1.0
+    },
+    "Justification": "The active padder lane preserves input information early; the legal-don't-care audit still yields strong worst-case leakage evidence.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.f_permutation_.round_in",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> padded block -> f_permutation_.round_in -> round_.out -> keccak.out",
+    "Attack Mechanisms": [
+      "When `accept = in_ready && ~calc`, `round_in` is formed as `{in ^ out[1599:1024], out[1023:0]}` rather than the feedback state alone. Observing `keccak.f_permutation_.round_in` together with a known reset/previous state reveals the absorbed `keccak_in` block; repeated observations disclose block-to-block differences. `keccak.f_permutation_.round_in` therefore contains the newly absorbed 576-bit block XORed with the previous sponge state at the start of permutation. Input confidentiality is lost before the round function's nonlinear mixing can conceal the rate portion. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_out_1 -> keccak.f_permutation_.in -> keccak.f_permutation_.round_in`.",
+      "While `calc` remains active after acceptance, the same round-input point is driven by the registered permutation output for the next two-round iteration. A probe that samples `keccak.f_permutation_.round_in` over successive calculation cycles obtains temporally aligned internal states. `keccak.f_permutation_.round_in` then exposes a full intermediate sponge state whose rate lanes are deterministic functions of the accepted input. Those states reveal substantially more input-dependent information than the external digest and can support inversion or differential recovery of secret input structure. The concrete design route is `keccak.in -> keccak.padder_.in -> keccak.padder_out_1 -> keccak.f_permutation_.in -> keccak.f_permutation_.round_in`."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.6190476190476191,
+      "uop_observability": 1.0
+    },
+    "Justification": "This canonical permutation-round input carries the absorbed state and has a concrete path to keccak_out.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.f_permutation_.round_.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> f_permutation_.round_in -> round_.out -> f_permutation_.out -> keccak.out",
+    "Attack Mechanisms": [
+      "On the first calculation step after `accept`, the padded rate block has just been XORed into the persistent state and is being evaluated by the two-round Keccak network. `keccak.f_permutation_.round_.out` is the combined two-round output presented to the permutation state register; its bits are deterministic functions of the newly accepted `keccak_in` block and the previous state. Probing `keccak.f_permutation_.round_.out` in this early-round window exposes an internal representation before all 24 rounds have diffused the input. The supporting RTL chain is `keccak.in -> keccak.padder_.in -> keccak.f_permutation_.round_.d[0][0] -> keccak.f_permutation_.round_.gg[0][0] -> keccak.f_permutation_.round_.out`. The observation leaks lane-level information about the secret input that is not present as a directly accessible architectural signal.",
+      "On subsequent `calc` cycles, feedback from the registered permutation output re-enters the same combinational round network. `keccak.f_permutation_.round_.out` is recomputed for later round pairs and therefore yields a time series of input-dependent values from the combined two-round output presented to the permutation state register. Sampling `keccak.f_permutation_.round_.out` at a fixed cycle offset across repeated operations supplies aligned intermediate values for differential or correlation analysis. The supporting RTL chain is `keccak.in -> keccak.padder_.in -> keccak.f_permutation_.round_.d[0][0] -> keccak.f_permutation_.round_.gg[0][0] -> keccak.f_permutation_.round_.out`. Combining those observations can recover secret-dependent relationships even when a single lane observation is insufficient to reconstruct the input."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.6190476190476191,
+      "uop_observability": 1.0
+    },
+    "Justification": "The round output retains input-dependent state immediately upstream of the externally observable permutation chain.",
+    "decision": "retain"
+  },
+  {
+    "Name": "keccak.f_permutation_.out",
+    "threat": "information_leakage",
+    "Structural Path": "keccak.in -> padded block -> round_.out -> f_permutation_.out -> keccak.out",
+    "Attack Mechanisms": [
+      "At each active permutation clock, the registered 1600-bit `out` state captures `round_out`; on a new block, the rate portion first incorporates `in ^ out[1599:1024]`. `keccak.f_permutation_.out` exposes that persistent state across absorption and round iterations. A scan read or internal probe of `keccak.f_permutation_.out` immediately after block acceptance reveals the capacity and rate state surrounding the secret input. The supporting RTL chain is `keccak.in -> keccak.padder_.in -> keccak.f_permutation_.round_.e[0][0] -> keccak.f_permutation_.round_out -> keccak.f_permutation_.out`. Possession of the full sponge state bypasses the intended 512-bit output restriction and can disclose the absorbed input or chaining state.",
+      "During later `calc` cycles, the same register successively stores outputs of the two-round combinational block until the round counter completes. `keccak.f_permutation_.out` thus provides a cycle-indexed trace of the evolving permutation state. Repeated observations of `keccak.f_permutation_.out` allow an attacker to relate consecutive internal states under the known Keccak round function. The supporting RTL chain is `keccak.in -> keccak.padder_.in -> keccak.f_permutation_.round_.e[0][0] -> keccak.f_permutation_.round_out -> keccak.f_permutation_.out`. The trace exposes input-dependent state transitions that are unavailable at the architectural digest interface."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5714285714285714,
+      "uop_observability": 1.0
+    },
+    "Justification": "This persistent permutation-state register carries input-dependent state across rounds and has measured temporal information and a valid-output observability witness.",
+    "decision": "retain"
+  }
+]

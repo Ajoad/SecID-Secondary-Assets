@@ -1,0 +1,22 @@
+[
+  {
+    "candidate": "aes_cipher_top.u0.u1.a",
+    "attack_mechanism": "Probing `aes_cipher_top.u0.u1.a` at a known expansion cycle discloses that key-schedule byte without an additional unknown transformation. This behavior is connected through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.tmp_w -> aes_cipher_top.u0.u1.a`. `aes_cipher_top.u0.u1.a` is one rotated byte selected directly from `w[3]` before substitution. With `kld = 0`, `w[3]` drives `tmp_w`; four byte S-boxes rotate/substitute its bytes to form `subword`, which is XORed into every next key word. The candidate leaks key-schedule bytes that can be combined with other word observations to recover the AES-128 master key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.u2.a",
+    "attack_mechanism": "Probing `aes_cipher_top.u0.u2.a` at a known expansion cycle discloses that key-schedule byte without an additional unknown transformation. This behavior is connected through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.tmp_w -> aes_cipher_top.u0.u2.a`. `aes_cipher_top.u0.u2.a` is one rotated byte selected directly from `w[3]` before substitution. With `kld = 0`, `w[3]` drives `tmp_w`; four byte S-boxes rotate/substitute its bytes to form `subword`, which is XORed into every next key word. The candidate leaks key-schedule bytes that can be combined with other word observations to recover the AES-128 master key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.u2.d",
+    "attack_mechanism": "Probing `aes_cipher_top.u0.u2.d` exposes a known bijective S-box transform; applying the inverse S-box recovers the corresponding byte of `w[3]`. This behavior is connected through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.tmp_w -> aes_cipher_top.u0.u2.a -> aes_cipher_top.u0.u2.d`. `aes_cipher_top.u0.u2.d` is the S-box output for one rotated byte of `w[3]` and contributes to `subword`. With `kld = 0`, `w[3]` drives `tmp_w`; four byte S-boxes rotate/substitute its bytes to form `subword`, which is XORed into every next key word. The candidate leaks key-schedule bytes that can be combined with other word observations to recover the AES-128 master key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.u3.a",
+    "attack_mechanism": "Probing `aes_cipher_top.u0.u3.a` at a known expansion cycle discloses that key-schedule byte without an additional unknown transformation. This behavior is connected through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.tmp_w -> aes_cipher_top.u0.u3.a`. `aes_cipher_top.u0.u3.a` is one rotated byte selected directly from `w[3]` before substitution. With `kld = 0`, `w[3]` drives `tmp_w`; four byte S-boxes rotate/substitute its bytes to form `subword`, which is XORed into every next key word. The candidate leaks key-schedule bytes that can be combined with other word observations to recover the AES-128 master key."
+  },
+  {
+    "candidate": "aes_cipher_top.u0.u3.d",
+    "attack_mechanism": "Probing `aes_cipher_top.u0.u3.d` exposes a known bijective S-box transform; applying the inverse S-box recovers the corresponding byte of `w[3]`. This behavior is connected through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.tmp_w -> aes_cipher_top.u0.u3.a -> aes_cipher_top.u0.u3.d`. `aes_cipher_top.u0.u3.d` is the S-box output for one rotated byte of `w[3]` and contributes to `subword`. With `kld = 0`, `w[3]` drives `tmp_w`; four byte S-boxes rotate/substitute its bytes to form `subword`, which is XORed into every next key word. The candidate leaks key-schedule bytes that can be combined with other word observations to recover the AES-128 master key."
+  }
+]
