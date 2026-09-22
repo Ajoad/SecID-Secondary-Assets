@@ -1,4 +1,4 @@
-# SecID: Threat-Aware RTL Secondary-Asset Identification Artifacts
+# SecID
 
 This is the repository for *SecID: An LLM-Guided Framework for Threat-Aware Secondary Asset Identification with Quantitative RTL Analysis*. The repository seven open-source processor and IP designs with twelve primary-asset–threat cases. It evaluates information leakage (IL), unauthorized access (UA), fault injection (FI), and denial of service (DoS).
 
@@ -30,9 +30,9 @@ under two threats.
 | openMSP430 | `pc` | FI | 19 |
 | openMSP430 | `r4` | IL | 10 |
 | openMSP430 | `exec_done` | DoS | 11 |
-| NEORV32 | `lsu_priv` | UA; FI | 12; 8 |
-| CV32E40P | `csr_we_int` | UA; FI | 4; 7 |
-| APB GPIO | `gpio_dir` | UA; FI | 3; 6 |
+| NEORV32 | `lsu_priv` | UA & FI | 12 & 8 |
+| CV32E40P | `csr_we_int` | UA & FI | 4 & 7 |
+| APB GPIO | `gpio_dir` | UA & FI | 3 & 6 |
 | AXI adapter | `valid_o` | DoS | 9 |
 | SHA-3 | `keccak_in` | IL | 6 |
 | AES core | `key` | IL | 20 |
