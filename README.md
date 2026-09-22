@@ -41,7 +41,7 @@ under two threats.
 
 | File | Interpretation |
 |---|---|
-| `01_initial_candidates.csv` | Canonical RTL candidates obtained from the program-dependence graph. |
-| `02_filtered_candidates.csv` | Candidates retained by Boolean functional-influence analysis, with aggregate, path, guard, and legal-mode influence values. |
-| `03a_*.csv`, `03b_*.csv` | The two normalized, threat-specific evidence channels and their available measurement metadata. |
-| `04_final_secondary_assets.json` | Final retained assets with structural paths, attack mechanisms, normalized evidence, and decision rationales. |
+| `01_initial_candidates.csv` | RTL candidates obtained from the program dependence graph. |
+| `02_filtered_candidates.csv` | Candidates retained by Boolean functional influence analysis, with aggregate, path, guard, and legal-mode influence values. |
+| `03a_*.csv`, `03b_*.csv` | The two threat-specific evidence and their available measurement metadata, per threat model. |
+| `04_final_secondary_assets.json` | Final retained assets with structural paths, attack mechanisms, normalized feature evidence, and decision rationales. |
