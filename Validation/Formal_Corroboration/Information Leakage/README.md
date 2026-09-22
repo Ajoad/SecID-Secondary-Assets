@@ -35,16 +35,4 @@ verifier.
   original generator/parser/summarizer/validator scripts.
 - Separate original-source and sanitized-public hashes plus a complete inventory.
 
-The ten obsolete 11-asset result directories, old asset CSV, patch backups,
-Jasper logs/work databases, RTL, and machine-specific paths are excluded.
 
-## Claim boundary
-
-Longer proof/search time after an exclusion corroborates that the modeled search
-became harder and is evidence about path/search importance. It does not establish
-security severity or prove that an individual signal is necessary. Because all
-exclusions still found flow, each run demonstrates an alternate modeled route;
-it does not demonstrate that the excluded asset is irrelevant.
-
-To reuse a generated TCL, set `SECID_ROOT` to a full source-package checkout
-that contains `rtl/`. The public artifact intentionally does not contain RTL.

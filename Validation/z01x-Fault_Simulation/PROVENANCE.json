@@ -1,5 +1,5 @@
 {
-  "schema": "secid_openmsp430_z01x_windows_safe_provenance_v1",
+  "schema": "secid_openmsp430_z01x",
   "artifact": "z01x-review-v1.1.1",
   "source_package": "openmsp430_pc_reverse_zoix_fault_stats_v1_1_1",
   "windows_path_policy": {

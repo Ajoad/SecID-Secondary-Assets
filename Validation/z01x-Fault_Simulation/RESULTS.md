@@ -64,3 +64,7 @@ Complete rankings and per-workload/seed statistics are under `results/full_run/a
 ## Seed-diversity evidence
 
 Every workload has three distinct realized stimulus hashes. The raw seed label is excluded from the hash source, preventing labels alone from manufacturing diversity. Seven workloads retain the same nominal PC trace across seeds; `dma_contention` produces three distinct PC traces. The appropriate claim is therefore three distinct realized stimulus variants per workload, not three independent control-flow paths per workload.
+
+
+## NB
+However, this experiment had been done on the 148 filtered candidates, excluding the 2 H_legal-passed candidates,

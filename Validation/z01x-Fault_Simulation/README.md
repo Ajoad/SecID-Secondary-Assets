@@ -2,7 +2,6 @@
 
 This Windows-safe compact package contains the exact Z01X/testbench configuration, fault manifests, completed structured results, all 24 campaign audits, sanitized run logs, and integrity metadata.
 
-Campaign audit filenames are shortened to `c00`–`c23` to avoid the Windows `MAX_PATH` extraction error. Their complete original campaign names remain inside each audit and in `results/full_run/audits/audit_file_map.csv`.
 
 ## Verify
 
@@ -29,6 +28,4 @@ PASS: reviewer artifact integrity and accounting verified
 - `verification/verify_artifact.py`: offline integrity/accounting check.
 - `PROVENANCE.json` and `SHA256SUMS.txt`: traceability and file-integrity records.
 
-The package intentionally excludes RTL, run/analysis scripts, simulator executables/databases, repetitive raw reports, and the separately discussed FIF/FM comparison.
 
-If an older Windows extractor still reports an error, extract the ZIP to a short location such as `C:\z01x`.
