@@ -1,6 +1,6 @@
 # SecID
 
-This is the repository for *SecID: An LLM-Guided Framework for Threat-Aware Secondary Asset Identification with Quantitative RTL Analysis*. The repository seven open-source processor and IP designs with twelve primary-asset–threat cases. It evaluates information leakage (IL), unauthorized access (UA), fault injection (FI), and denial of service (DoS).
+This repository provides the experimental results for SecID: An LLM-Guided Framework for Threat-Aware Secondary Asset Identification with Quantitative RTL Analysis. It contains seven open-source processor and IP designs and twelve primary-asset–threat evaluation cases spanning information leakage (IL), unauthorized access (UA), fault injection (FI), and denial of service (DoS).
 
 ## Repository organization
 
