@@ -98,17 +98,17 @@
     "decision": "retain"
   },
   {
-    "Name": "inst_type",
-    "threat": "denial_of_service",
-    "Structural Path": "inst_type -> PDG fan-in layer 1 -> exec_done",
-    "Justification": "The structural analysis retains `inst_type` because it encodes the instruction class that selects the execution path; in that position, a wrong class can choose a path whose completion predicate is not satisfied. This gives `inst_type` a plausible supporting role in compromise of `exec_done`.",
-    "decision": "retain"
-  },
-  {
     "Name": "cpu_halt_st",
     "threat": "denial_of_service",
     "Structural Path": "cpu_halt_st -> PDG fan-in layer 1 -> exec_done",
     "Justification": "A review of the local logic shows that `cpu_halt_st` holds the architectural halt state seen by frontend sequencing. Since remaining halted prevents legitimate instruction retirement, excluding `cpu_halt_st` would omit a meaningful dependency of `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_type",
+    "threat": "denial_of_service",
+    "Structural Path": "inst_type -> PDG fan-in layer 1 -> exec_done",
+    "Justification": "The structural analysis retains `inst_type` because it encodes the instruction class that selects the execution path; in that position, a wrong class can choose a path whose completion predicate is not satisfied. This gives `inst_type` a plausible supporting role in compromise of `exec_done`.",
     "decision": "retain"
   },
   {

@@ -22,17 +22,6 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.u0.w[2]",
-    "threat": "information_leakage",
-    "Structural Path": "key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out",
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.5357142857142857,
-      "uop_observability": 1
-    },
-    "Justification": "The quantitative case for `aes_cipher_top.u0.w[2]` combines moderate incremental information (0.5357142857142857) together with very strong UOP observability (1). As `aes_cipher_top.u0.w[2]` holds expanded-key word 2 before its bytes enter AddRoundKey, the score pattern is consistent with a secondary asset influencing `key`.",
-    "decision": "retain"
-  },
-  {
     "Name": "aes_cipher_top.sa00",
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
@@ -41,6 +30,17 @@
       "uop_observability": 1
     },
     "Justification": "Measurements for `aes_cipher_top.sa00` indicate strong incremental information (0.8525926959651349) together with very strong UOP observability (1). This is significant because it stores the round-state byte at row 0, column 0; consequently, the feature response supports retaining the candidate around `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.u0.w[2]",
+    "threat": "information_leakage",
+    "Structural Path": "key -> aes_cipher_top.u0.w[2] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1
+    },
+    "Justification": "The quantitative case for `aes_cipher_top.u0.w[2]` combines moderate incremental information (0.5357142857142857) together with very strong UOP observability (1). As `aes_cipher_top.u0.w[2]` holds expanded-key word 2 before its bytes enter AddRoundKey, the score pattern is consistent with a secondary asset influencing `key`.",
     "decision": "retain"
   },
   {
@@ -110,17 +110,6 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.sa13",
-    "threat": "information_leakage",
-    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.8724075674115211,
-      "uop_observability": 1
-    },
-    "Justification": "Feature analysis assigns `aes_cipher_top.sa13` a profile of strong incremental information (0.8724075674115211) together with very strong UOP observability (1). Because `aes_cipher_top.sa13` stores the round-state byte at row 1, column 3, these values substantiate a measurable relationship with `key`.",
-    "decision": "retain"
-  },
-  {
     "Name": "aes_cipher_top.sa20",
     "threat": "information_leakage",
     "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
@@ -129,6 +118,17 @@
       "uop_observability": 1
     },
     "Justification": "What supports `aes_cipher_top.sa20` quantitatively is strong incremental information (0.8527281514185157) together with very strong UOP observability (1). The signal stores the round-state byte at row 2, column 0, and that functional position makes the measured response relevant to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa13",
+    "threat": "information_leakage",
+    "Structural Path": "key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8724075674115211,
+      "uop_observability": 1
+    },
+    "Justification": "Feature analysis assigns `aes_cipher_top.sa13` a profile of strong incremental information (0.8724075674115211) together with very strong UOP observability (1). Because `aes_cipher_top.sa13` stores the round-state byte at row 1, column 3, these values substantiate a measurable relationship with `key`.",
     "decision": "retain"
   },
   {

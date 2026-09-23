@@ -42,17 +42,17 @@
     "decision": "retain"
   },
   {
-    "Name": "PWRITE",
-    "threat": "unauthorized_access",
-    "Structural Path": "PWRITE -> PDG fan-in layer 1 -> gpio_dir",
-    "Justification": "Within the analyzed cone, `PWRITE` distinguishes write transfers from reads in the PADDIR guard. This behavior can matter to `gpio_dir` because forcing write intent can turn a non-writing access into a direction update, which supports retaining `PWRITE` on structural and functional grounds.",
-    "decision": "retain"
-  },
-  {
     "Name": "pwdata_l",
     "threat": "unauthorized_access",
     "Structural Path": "pwdata_l -> PDG fan-in layer 1 -> gpio_dir",
     "Justification": "`pwdata_l` sits at a functional boundary where it holds the write payload consumed by the GPIO register logic. Because `pwdata_l` occupies that point, tampering with the latched payload controls the unauthorized direction value, so the signal can mediate behavior of `gpio_dir` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWRITE",
+    "threat": "unauthorized_access",
+    "Structural Path": "PWRITE -> PDG fan-in layer 1 -> gpio_dir",
+    "Justification": "Within the analyzed cone, `PWRITE` distinguishes write transfers from reads in the PADDIR guard. This behavior can matter to `gpio_dir` because forcing write intent can turn a non-writing access into a direction update, which supports retaining `PWRITE` on structural and functional grounds.",
     "decision": "retain"
   },
   {

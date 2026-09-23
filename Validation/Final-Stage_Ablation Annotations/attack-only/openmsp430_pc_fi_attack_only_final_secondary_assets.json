@@ -40,16 +40,6 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.exec_done",
-    "threat": "fault_injection",
-    "Structural Path": "frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
-    "Attack Scenarios": [
-      "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. A fault on `openMSP430.exec_done` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. `openMSP430.exec_done` controls that execution sequencing before the frontend selects the next PC update; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase. The pertinent register-transfer chain is `openMSP430.exec_done -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
-    ],
-    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `frontend_0.exec_done` in operation. As it signals the boundary at which instruction execution has completed, a premature or missing boundary changes when the PC progresses, which makes the candidate security-relevant to `pc`.",
-    "decision": "retain"
-  },
-  {
     "Name": "execution_unit_0.reg_pc_call",
     "threat": "fault_injection",
     "Structural Path": "execution_unit_0.reg_pc_call -> call-target datapath -> next-PC selection -> omsp_frontend.pc",
@@ -60,13 +50,13 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.fetch",
+    "Name": "frontend_0.exec_done",
     "threat": "fault_injection",
-    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Structural Path": "frontend_0.exec_done -> instruction completion -> PC progress control -> omsp_frontend.pc",
     "Attack Scenarios": [
-      "`openMSP430.frontend_0.fetch` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The implicated RTL chain is `openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. Injecting a transient or stuck fault into `openMSP430.frontend_0.fetch` before `pc` is enabled can add the wrong increment or prevent the expected increment. The next instruction is skipped, repeated, or fetched from an unintended address."
+      "Instruction fetch is released from `I_DEC` only when `exec_done` or `E_IDLE` is observed, and `e_state` also determines whether jump, source-write, or destination-write completion is pending. A fault on `openMSP430.exec_done` can falsely complete an instruction or hold the execution machine in an earlier phase when `pc_nxt` is evaluated. `openMSP430.exec_done` controls that execution sequencing before the frontend selects the next PC update; the intervening RTL assignments are qualified by `openMSP430.frontend_0.pc_sw_wr`. The PC is advanced too early, held too long, or updated with operands belonging to the wrong instruction phase. The pertinent register-transfer chain is `openMSP430.exec_done -> openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`."
     ],
-    "Justification": "Evidence for `frontend_0.fetch` comes from one authoritative exploitation route. The documented conditions exploit the fact that it qualifies instruction fetch and contributes to the sequential PC increment; the resulting concern is that a fault can skip, repeat, or suppress an instruction address, thereby affecting `pc`.",
+    "Justification": "Rather than relying on connectivity alone, one authoritative exploitation route shows `frontend_0.exec_done` in operation. As it signals the boundary at which instruction execution has completed, a premature or missing boundary changes when the PC progresses, which makes the candidate security-relevant to `pc`.",
     "decision": "retain"
   },
   {
@@ -77,6 +67,16 @@
       "Injecting a transient or stuck fault into `openMSP430.frontend_0.pc_incr` before `pc` is enabled can add the wrong increment or prevent the expected increment. The mechanism is grounded in the path `openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. `openMSP430.frontend_0.pc_incr` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the implementation qualifies this propagation with `openMSP430.frontend_0.pc_sw_wr`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. The next instruction is skipped, repeated, or fetched from an unintended address."
     ],
     "Justification": "`frontend_0.pc_incr` is not merely adjacent to `pc`: one authoritative exploitation route shows how it can be exercised. Because the signal computes the sequential next address, an erroneous increment directly sends execution to the wrong instruction, making it a plausible point of compromise.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.fetch` affects `fetch`, instruction length, or the instruction-state decision used by this sequential increment; the transfer is guarded in the RTL by `openMSP430.frontend_0.pc_sw_wr`. The implicated RTL chain is `openMSP430.frontend_0.fetch -> openMSP430.frontend_0.pc_incr -> openMSP430.frontend_0.pc_nxt -> openMSP430.frontend_0.pc`. With no software PC write and no interrupt-vector state active, `pc_nxt` falls through to `pc_incr = pc + {14'h0, fetch, 1'b0}`. Injecting a transient or stuck fault into `openMSP430.frontend_0.fetch` before `pc` is enabled can add the wrong increment or prevent the expected increment. The next instruction is skipped, repeated, or fetched from an unintended address."
+    ],
+    "Justification": "Evidence for `frontend_0.fetch` comes from one authoritative exploitation route. The documented conditions exploit the fact that it qualifies instruction fetch and contributes to the sequential PC increment; the resulting concern is that a fault can skip, repeat, or suppress an instruction address, thereby affecting `pc`.",
     "decision": "retain"
   },
   {

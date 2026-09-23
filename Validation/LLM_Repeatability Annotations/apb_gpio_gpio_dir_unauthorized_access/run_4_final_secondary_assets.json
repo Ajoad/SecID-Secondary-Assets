@@ -4,7 +4,7 @@
     "threat": "unauthorized_access",
     "Structural Path": "RTL dependency sequence: PADDR[6:2] -> s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance -> gpio_dir",
     "Attack Scenarios": [
-      "A crafted value at PADDR[6:2] propagates through PADDR[6:2] -> s_apb_addr -> PADDIR/GPIOLOCK decode -> protected-write acceptance -> gpio_dir and can turn an otherwise disallowed GPIO-direction operation into an effective write."
+      "On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. `apb_gpio_gpio_dir_cone.PADDR` supplies the address decode that distinguishes `REG_PADDIR` from the other GPIO registers. An attacker can alter `apb_gpio_gpio_dir_cone.PADDR` during an otherwise valid APB write so that a transaction intended for another register is decoded as `REG_PADDIR`. The supporting RTL chain is `apb_gpio_gpio_dir_cone.PADDR -> apb_gpio_gpio_dir_cone.gpio_dir`. The presented `PWDATA` is captured into `r_gpio_dir`, changing pad directions without the intended direction-register access."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 0.5,
@@ -14,31 +14,31 @@
     "decision": "retain"
   },
   {
-    "Name": "PWDATA[0]",
-    "threat": "unauthorized_access",
-    "Structural Path": "RTL dependency sequence: PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir",
-    "Attack Scenarios": [
-      "A crafted value at PWDATA[0] propagates through PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir and can turn an otherwise disallowed GPIO-direction operation into an effective write."
-    ],
-    "Normalized Evidence": {
-      "ucp_controllability": 0.5,
-      "bypass_sensitivity": 0.0013123359580052493
-    },
-    "Justification": "The candidate sits on a concrete threat-relevant dependency, PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir, rather than being merely correlated with the primary asset. The normalized evidence is ucp_controllability=0.5, bypass_sensitivity=0.00131234.",
-    "decision": "retain"
-  },
-  {
     "Name": "r_gpio_lock[0]",
     "threat": "unauthorized_access",
     "Structural Path": "RTL dependency sequence: r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir",
     "Attack Scenarios": [
-      "A crafted value at r_gpio_lock[0] propagates through r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir and can turn an otherwise disallowed GPIO-direction operation into an effective write."
+      "`apb_gpio_gpio_dir_cone.r_gpio_lock[0]` selects whether `PWDATA` or zero is assigned to `pwdata_l` in the PADDIR case. The relevant dataflow is `apb_gpio_gpio_dir_cone.r_gpio_lock -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Clearing `apb_gpio_gpio_dir_cone.r_gpio_lock[0]` before the access bypasses the lock and lets attacker-controlled `PWDATA` reach `r_gpio_dir`. The lock policy no longer preserves the authorized pad-direction configuration."
     ],
     "Normalized Evidence": {
       "ucp_controllability": 1.0,
       "bypass_sensitivity": 0.16666666666666666
     },
     "Justification": "The candidate sits on a concrete threat-relevant dependency, r_gpio_lock[0] -> PADDIR write authorization -> r_gpio_dir -> gpio_dir, rather than being merely correlated with the primary asset. The normalized evidence is ucp_controllability=1, bypass_sensitivity=0.166667.",
+    "decision": "retain"
+  },
+  {
+    "Name": "PWDATA[0]",
+    "threat": "unauthorized_access",
+    "Structural Path": "RTL dependency sequence: PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir",
+    "Attack Scenarios": [
+      "`apb_gpio_gpio_dir_cone.PWDATA` carries the direction bitmap selected by the lock check immediately before `r_gpio_dir <= pwdata_l`. The relevant dataflow is `apb_gpio_gpio_dir_cone.PWDATA -> apb_gpio_gpio_dir_cone.pwdata_l -> apb_gpio_gpio_dir_cone.gpio_dir`. On a rising `HCLK`, `r_gpio_dir` is updated only inside `PSEL && PENABLE && PWRITE`, when `s_apb_addr` decodes `REG_PADDIR`; `r_gpio_lock[0] == 0` passes `PWDATA`, otherwise the RTL writes zero. Once a PADDIR write is admitted, controlling `apb_gpio_gpio_dir_cone.PWDATA` substitutes attacker-selected input/output directions. Pins are configured as outputs or inputs contrary to the authorized software value."
+    ],
+    "Normalized Evidence": {
+      "ucp_controllability": 0.5,
+      "bypass_sensitivity": 0.0013123359580052493
+    },
+    "Justification": "The candidate sits on a concrete threat-relevant dependency, PWDATA[0] -> GPIOLOCK write data -> r_gpio_lock[0] -> PADDIR authorization -> gpio_dir, rather than being merely correlated with the primary asset. The normalized evidence is ucp_controllability=0.5, bypass_sensitivity=0.00131234.",
     "decision": "retain"
   }
 ]

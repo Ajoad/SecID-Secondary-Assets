@@ -42,17 +42,17 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.fetch",
-    "threat": "fault_injection",
-    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
-    "Justification": "Within the analyzed cone, `frontend_0.fetch` qualifies instruction fetch and contributes to the sequential PC increment. This behavior can matter to `pc` because a fault can skip, repeat, or suppress an instruction address, which supports retaining `frontend_0.fetch` on structural and functional grounds.",
-    "decision": "retain"
-  },
-  {
     "Name": "frontend_0.pc_incr",
     "threat": "fault_injection",
     "Structural Path": "frontend_0.pc_incr -> incremented-PC datapath -> next-PC mux -> omsp_frontend.pc",
     "Justification": "`frontend_0.pc_incr` sits at a functional boundary where it computes the sequential next address. Because `frontend_0.pc_incr` occupies that point, an erroneous increment directly sends execution to the wrong instruction, so the signal can mediate behavior of `pc` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.fetch",
+    "threat": "fault_injection",
+    "Structural Path": "frontend_0.fetch -> instruction-fetch qualification -> PC increment/update -> omsp_frontend.pc",
+    "Justification": "Within the analyzed cone, `frontend_0.fetch` qualifies instruction fetch and contributes to the sequential PC increment. This behavior can matter to `pc` because a fault can skip, repeat, or suppress an instruction address, which supports retaining `frontend_0.fetch` on structural and functional grounds.",
     "decision": "retain"
   },
   {
@@ -168,17 +168,17 @@
     "decision": "retain"
   },
   {
-    "Name": "inst_bw",
-    "threat": "fault_injection",
-    "Structural Path": "inst_bw -> PDG fan-in layer 1 -> pc",
-    "Justification": "RTL inspection identifies `inst_bw` as the element that controls byte-versus-word instruction operand handling. Because an erroneous width decision can perturb PC-related arithmetic and sequencing, `inst_bw` is a credible secondary asset for `pc`.",
-    "decision": "retain"
-  },
-  {
     "Name": "cpu_en_s",
     "threat": "fault_injection",
     "Structural Path": "cpu_en_s -> PDG fan-in layer 1 -> pc",
     "Justification": "Although `cpu_en_s` is not the protected object, it synchronizes the effective processor-enable condition. The dependency matters because a fault can gate PC state updates on the wrong cycle, placing `cpu_en_s` inside the security-relevant RTL cone of `pc`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "inst_bw",
+    "threat": "fault_injection",
+    "Structural Path": "inst_bw -> PDG fan-in layer 1 -> pc",
+    "Justification": "RTL inspection identifies `inst_bw` as the element that controls byte-versus-word instruction operand handling. Because an erroneous width decision can perturb PC-related arithmetic and sequencing, `inst_bw` is a credible secondary asset for `pc`.",
     "decision": "retain"
   },
   {
@@ -210,17 +210,17 @@
     "decision": "retain"
   },
   {
-    "Name": "execution_unit_0.op_src",
-    "threat": "fault_injection",
-    "Structural Path": "execution_unit_0.op_src -> PDG fan-in layer 1 -> pc",
-    "Justification": "Within the analyzed cone, `execution_unit_0.op_src` holds the decoded source operand. This behavior can matter to `pc` because a faulty source value can change an address selected for control transfer, which supports retaining `execution_unit_0.op_src` on structural and functional grounds.",
-    "decision": "retain"
-  },
-  {
     "Name": "execution_unit_0.alu_0.alu_add",
     "threat": "fault_injection",
     "Structural Path": "execution_unit_0.alu_0.alu_add -> PDG fan-in layer 1 -> pc",
     "Justification": "`execution_unit_0.alu_0.alu_add` sits at a functional boundary where it produces ALU addition results used by address and branch operations. Because `execution_unit_0.alu_0.alu_add` occupies that point, an arithmetic fault can generate an unintended PC target, so the signal can mediate behavior of `pc` without being the primary asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "execution_unit_0.op_src",
+    "threat": "fault_injection",
+    "Structural Path": "execution_unit_0.op_src -> PDG fan-in layer 1 -> pc",
+    "Justification": "Within the analyzed cone, `execution_unit_0.op_src` holds the decoded source operand. This behavior can matter to `pc` because a faulty source value can change an address selected for control transfer, which supports retaining `execution_unit_0.op_src` on structural and functional grounds.",
     "decision": "retain"
   },
   {

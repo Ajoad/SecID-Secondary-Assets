@@ -1,24 +1,10 @@
 [
   {
-    "Name": "e_state",
-    "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: e_state then execution-state decode then terminal execution phase then exec_done",
-    "Attack Scenarios": [
-      "Holding e_state at an adverse value perturbs e_state -> execution-state decode -> terminal execution phase -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.45427268129474013,
-      "service_rate_degradation": 0.9668537414965986
-    },
-    "Justification": "A legal activation condition connects e_state to the protected outcome through e_state -> execution-state decode -> terminal execution phase -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.454273, service_rate_degradation=0.966854.",
-    "decision": "retain"
-  },
-  {
     "Name": "frontend_0.decode",
     "threat": "denial_of_service",
     "Structural Path": "Threat-relevant route: frontend_0.decode then execution launch then e_state sequencing then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.decode at an adverse value perturbs frontend_0.decode -> execution launch -> e_state sequencing -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "An attacker who forces `openMSP430.frontend_0.decode` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.decode` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.4928174603174603,
@@ -28,31 +14,45 @@
     "decision": "retain"
   },
   {
-    "Name": "decode_noirq",
+    "Name": "frontend_0.inst_dext_en",
     "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: decode_noirq then qualified instruction launch then execution sequencing then exec_done",
+    "Structural Path": "Threat-relevant route: frontend_0.inst_dext_en/inst_dext_rdy then E_DST_AD exit condition then e_state then exec_done",
     "Attack Scenarios": [
-      "Holding decode_noirq at an adverse value perturbs decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "`openMSP430.frontend_0.inst_dext_en` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.inst_dext_en -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.inst_dext_en` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
-      "progress_disruption": 0.4928174603174603,
-      "service_rate_degradation": 0.8633333333333333
+      "progress_disruption": 0.14285714285714285,
+      "service_rate_degradation": 0.4927113702623906
     },
-    "Justification": "A legal activation condition connects decode_noirq to the protected outcome through decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.492817, service_rate_degradation=0.863333.",
+    "Justification": "A legal activation condition connects frontend_0.inst_dext_en to the protected outcome through frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.142857, service_rate_degradation=0.492711.",
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.e_first_state",
+    "Name": "frontend_0.inst_sext_rdy",
     "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: frontend_0.e_first_state then first execution state then terminal-state progression then exec_done",
+    "Structural Path": "Threat-relevant route: inst_sext_rdy then E_SRC_AD transition then execution progress then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.e_first_state at an adverse value perturbs frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "`openMSP430.frontend_0.inst_sext_rdy` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.inst_sext_rdy`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.inst_sext_rdy -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.inst_sext_rdy` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
-      "progress_disruption": 0.1838293650793651,
-      "service_rate_degradation": 0.6305707962672249
+      "progress_disruption": 0.2,
+      "service_rate_degradation": 0.4938979591836734
     },
-    "Justification": "A legal activation condition connects frontend_0.e_first_state to the protected outcome through frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.183829, service_rate_degradation=0.630571.",
+    "Justification": "A legal activation condition connects frontend_0.inst_sext_rdy to the protected outcome through inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.2, service_rate_degradation=0.493898.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_jmp",
+    "threat": "denial_of_service",
+    "Structural Path": "Threat-relevant route: frontend_0.exec_jmp then exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
+    "Attack Scenarios": [
+      "The corresponding control/data route is `openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_jmp` sets the selected completion class, execution state, or transition into the required terminal state; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. An attacker who forces `openMSP430.frontend_0.exec_jmp` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.15874183006535947,
+      "service_rate_degradation": 0.5008333333333334
+    },
+    "Justification": "A legal activation condition connects frontend_0.exec_jmp to the protected outcome through frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.158742, service_rate_degradation=0.500833.",
     "decision": "retain"
   },
   {
@@ -60,7 +60,7 @@
     "threat": "denial_of_service",
     "Structural Path": "Threat-relevant route: frontend_0.exec_dst_wr then destination-write phase then execution completion then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.exec_dst_wr at an adverse value perturbs frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "`openMSP430.frontend_0.exec_dst_wr` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.exec_dst_wr -> openMSP430.frontend_0.exec_done`. For a destination-write instruction, `exec_done` is produced by `exec_dst_wr ? (e_state == E_DST_WR)`. An attacker who forces `openMSP430.frontend_0.exec_dst_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.19176915557889823,
@@ -74,7 +74,7 @@
     "threat": "denial_of_service",
     "Structural Path": "Threat-relevant route: frontend_0.exec_src_wr then source-write phase then execution completion then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.exec_src_wr at an adverse value perturbs frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "An attacker who forces `openMSP430.frontend_0.exec_src_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_src_wr` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`. For a source-writeback instruction, `exec_done` is produced by `exec_src_wr ? (e_state == E_SRC_WR)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.1375,
@@ -84,17 +84,45 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.inst_sext_rdy",
+    "Name": "frontend_0.irq_detect",
     "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: inst_sext_rdy then E_SRC_AD transition then execution progress then exec_done",
+    "Structural Path": "Threat-relevant route: frontend_0.irq_detect then interrupt/decode arbitration then execution launch and state sequencing then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.inst_sext_rdy at an adverse value perturbs inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. `openMSP430.frontend_0.irq_detect` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.irq_detect` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.frontend_0.irq_detect -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
-      "progress_disruption": 0.2,
-      "service_rate_degradation": 0.4938979591836734
+      "progress_disruption": 0.21424996572055396,
+      "service_rate_degradation": 0.9899913202460471
     },
-    "Justification": "A legal activation condition connects frontend_0.inst_sext_rdy to the protected outcome through inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.2, service_rate_degradation=0.493898.",
+    "Justification": "A legal activation condition connects frontend_0.irq_detect to the protected outcome through frontend_0.irq_detect -> interrupt/decode arbitration -> execution launch and state sequencing -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.21425, service_rate_degradation=0.989991.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "Threat-relevant route: decode_noirq then qualified instruction launch then execution sequencing then exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.decode_noirq` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.decode_noirq -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.decode_noirq` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "A legal activation condition connects decode_noirq to the protected outcome through decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.492817, service_rate_degradation=0.863333.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "Threat-relevant route: frontend_0.e_first_state then first execution state then terminal-state progression then exec_done",
+    "Attack Scenarios": [
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_first_state` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_first_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1838293650793651,
+      "service_rate_degradation": 0.6305707962672249
+    },
+    "Justification": "A legal activation condition connects frontend_0.e_first_state to the protected outcome through frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.183829, service_rate_degradation=0.630571.",
     "decision": "retain"
   },
   {
@@ -102,7 +130,7 @@
     "threat": "denial_of_service",
     "Structural Path": "Threat-relevant route: frontend_0.e_state_nxt then e_state register then terminal-state comparison then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.e_state_nxt at an adverse value perturbs frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_state_nxt` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_state_nxt` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.40387167366946775,
@@ -112,45 +140,17 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.exec_jmp",
+    "Name": "e_state",
     "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: frontend_0.exec_jmp then exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
+    "Structural Path": "Threat-relevant route: e_state then execution-state decode then terminal execution phase then exec_done",
     "Attack Scenarios": [
-      "Holding frontend_0.exec_jmp at an adverse value perturbs frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions; the resulting failure to advance can delay or eliminate exec_done assertions."
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.e_state` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.e_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
-      "progress_disruption": 0.15874183006535947,
-      "service_rate_degradation": 0.5008333333333334
+      "progress_disruption": 0.45427268129474013,
+      "service_rate_degradation": 0.9668537414965986
     },
-    "Justification": "A legal activation condition connects frontend_0.exec_jmp to the protected outcome through frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.158742, service_rate_degradation=0.500833.",
-    "decision": "retain"
-  },
-  {
-    "Name": "frontend_0.inst_dext_en",
-    "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: frontend_0.inst_dext_en/inst_dext_rdy then E_DST_AD exit condition then e_state then exec_done",
-    "Attack Scenarios": [
-      "Holding frontend_0.inst_dext_en at an adverse value perturbs frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.14285714285714285,
-      "service_rate_degradation": 0.4927113702623906
-    },
-    "Justification": "A legal activation condition connects frontend_0.inst_dext_en to the protected outcome through frontend_0.inst_dext_en/inst_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.142857, service_rate_degradation=0.492711.",
-    "decision": "retain"
-  },
-  {
-    "Name": "frontend_0.irq_detect",
-    "threat": "denial_of_service",
-    "Structural Path": "Threat-relevant route: frontend_0.irq_detect then interrupt/decode arbitration then execution launch and state sequencing then exec_done",
-    "Attack Scenarios": [
-      "Holding frontend_0.irq_detect at an adverse value perturbs frontend_0.irq_detect -> interrupt/decode arbitration -> execution launch and state sequencing -> exec_done; the resulting failure to advance can delay or eliminate exec_done assertions."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.21424996572055396,
-      "service_rate_degradation": 0.9899913202460471
-    },
-    "Justification": "A legal activation condition connects frontend_0.irq_detect to the protected outcome through frontend_0.irq_detect -> interrupt/decode arbitration -> execution launch and state sequencing -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.21425, service_rate_degradation=0.989991.",
+    "Justification": "A legal activation condition connects e_state to the protected outcome through e_state -> execution-state decode -> terminal execution phase -> exec_done, which supplies a plausible causal mechanism. Recorded normalized values are progress_disruption=0.454273, service_rate_degradation=0.966854.",
     "decision": "retain"
   }
 ]

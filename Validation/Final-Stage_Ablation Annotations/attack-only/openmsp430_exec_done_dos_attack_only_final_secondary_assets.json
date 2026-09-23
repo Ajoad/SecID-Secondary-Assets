@@ -80,16 +80,6 @@
     "decision": "retain"
   },
   {
-    "Name": "decode_noirq",
-    "threat": "denial_of_service",
-    "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
-    "Attack Scenarios": [
-      "An attacker who forces `openMSP430.decode_noirq` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.decode_noirq -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.decode_noirq` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
-    ],
-    "Justification": "The source descriptions place `decode_noirq` on an actionable route through one authoritative exploitation route. Its RTL function—where it qualifies instruction decoding when no interrupt supersedes the instruction—allows loss of this launch condition can deny the execution unit new work to complete, so the candidate merits retention for `exec_done`.",
-    "decision": "retain"
-  },
-  {
     "Name": "frontend_0.decode",
     "threat": "denial_of_service",
     "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
@@ -97,6 +87,16 @@
       "An attacker who forces `openMSP430.frontend_0.decode` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.decode` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Justification": "A causal basis for `frontend_0.decode` is provided by one authoritative exploitation route. This evidence leverages how the signal launches decoded work into the execution state machine; as a result, disturbing the launch boundary can stall or repeatedly restart completion sequencing, with consequences for `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.decode_noirq` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.decode_noirq -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.decode_noirq` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Justification": "The source descriptions place `decode_noirq` on an actionable route through one authoritative exploitation route. Its RTL function—where it qualifies instruction decoding when no interrupt supersedes the instruction—allows loss of this launch condition can deny the execution unit new work to complete, so the candidate merits retention for `exec_done`.",
     "decision": "retain"
   },
   {

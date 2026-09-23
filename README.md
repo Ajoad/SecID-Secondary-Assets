@@ -10,7 +10,7 @@ This repository provides the experimental results for SecID: An LLM-Guided Frame
 | [`Agent-3 Threat_Scenarios/`](./Agent-3%20Threat_Scenarios/) | Eighteen feature-specific scenario sets containing 856 structured dynamic-simulation requirements. |
 | [`Agent-4 Cluster-local_RTL Guarded_Paths/`](./Agent-4%20Cluster-local_RTL%20Guarded_Paths/) | 133 candidate clusters with localized RTL and guarded dependency-path evidence. |
 | [`Agent-4 Attack_Mechanisms/`](./Agent-4%20Attack_Mechanisms/) | Candidate-local threat-specific attack mechanisms derived from the localized RTL evidence. |
-| [`reference_asset_annotations four-cases.xlsx`](./reference_asset_annotations%20four-cases.xlsx) | Expert-curated reference assets for four validation cases, with signal-specific attack justifications and explicit alias documentation. |
+| [`reference_asset_annotations four-cases.xlsx`](./reference_asset_annotations%20four-cases.xlsx) | Expert-curated reference assets for four validation cases, with signal-specific attack justifications. |
 | [`Validation/`](./Validation/) | Formal corroboration for representative IL, UA, and FI cases; final-stage ablation and repeatability annotations; threshold-sensitivity analysis; and a Z01X fault-simulation result package. |
 
 The validation materials are organized as

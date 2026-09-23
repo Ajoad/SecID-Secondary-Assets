@@ -1,44 +1,17 @@
 [
   {
-    "Name": "aes_cipher_top.u0.w[0]",
+    "Name": "aes_cipher_top.sa33",
     "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.u0.w[0] while the legal datapath follows key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa33` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. `aes_cipher_top.sa33` contains the byte at state position (3,3) produced from a `text_in_r` byte XORed with the matching byte of `w[3]`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization. The causal signal chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa33`.",
+      "After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa33` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. `aes_cipher_top.sa33` carries this key-dependent intermediate on each active encryption round. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key. The causal signal chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa33`."
     ],
     "Normalized Evidence": {
-      "incremental_mutual_information": 0.5357142857142857,
+      "incremental_mutual_information": 0.8659336971190678,
       "uop_observability": 1.0
     },
-    "Justification": "aes_cipher_top.u0.w[0] is retained because the explicit RTL route (key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.535714, uop_observability=1.",
-    "decision": "retain"
-  },
-  {
-    "Name": "aes_cipher_top.sa00",
-    "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
-    "Attack Scenarios": [
-      "Observing aes_cipher_top.sa00 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
-    ],
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.8525926959651349,
-      "uop_observability": 1.0
-    },
-    "Justification": "aes_cipher_top.sa00 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.852593, uop_observability=1.",
-    "decision": "retain"
-  },
-  {
-    "Name": "aes_cipher_top.sa01",
-    "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out",
-    "Attack Scenarios": [
-      "Observing aes_cipher_top.sa01 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
-    ],
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.8595860472072872,
-      "uop_observability": 1.0
-    },
-    "Justification": "aes_cipher_top.sa01 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.859586, uop_observability=1.",
+    "Justification": "aes_cipher_top.sa33 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.865934, uop_observability=1.",
     "decision": "retain"
   },
   {
@@ -46,7 +19,8 @@
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa02 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa02 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa02`. `aes_cipher_top.sa02` contains the byte at state position (0,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa02` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa02`. `aes_cipher_top.sa02` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa02` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8592206793211533,
@@ -56,11 +30,27 @@
     "decision": "retain"
   },
   {
+    "Name": "aes_cipher_top.sa20",
+    "threat": "information_leakage",
+    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "`aes_cipher_top.sa20` contains the byte at state position (2,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa20`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa20` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "`aes_cipher_top.sa20` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa20`. Cycle-aligned observations of `aes_cipher_top.sa20` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8527281514185157,
+      "uop_observability": 1.0
+    },
+    "Justification": "aes_cipher_top.sa20 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.852728, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
     "Name": "aes_cipher_top.sa03",
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa03 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa03 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "`aes_cipher_top.sa03` contains the byte at state position (0,3) produced from a `text_in_r` byte XORed with the matching byte of `w[3]`. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa03`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa03` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "`aes_cipher_top.sa03` carries this key-dependent intermediate on each active encryption round. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa03`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa03` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8724405538073227,
@@ -74,7 +64,8 @@
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa10 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa10 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "`aes_cipher_top.sa10` contains the byte at state position (1,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa10`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa10` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "`aes_cipher_top.sa10` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa10`. Cycle-aligned observations of `aes_cipher_top.sa10` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8597025417349266,
@@ -84,39 +75,12 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.sa11",
-    "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out",
-    "Attack Scenarios": [
-      "Observing aes_cipher_top.sa11 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
-    ],
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.8594989739663381,
-      "uop_observability": 1.0
-    },
-    "Justification": "aes_cipher_top.sa11 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.859499, uop_observability=1.",
-    "decision": "retain"
-  },
-  {
-    "Name": "aes_cipher_top.sa12",
-    "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out",
-    "Attack Scenarios": [
-      "Observing aes_cipher_top.sa12 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
-    ],
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.8726203449799843,
-      "uop_observability": 1.0
-    },
-    "Justification": "aes_cipher_top.sa12 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.87262, uop_observability=1.",
-    "decision": "retain"
-  },
-  {
     "Name": "aes_cipher_top.sa13",
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa13 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa13 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "`aes_cipher_top.sa13` contains the byte at state position (1,3) produced from a `text_in_r` byte XORed with the matching byte of `w[3]`. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa13`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa13` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "`aes_cipher_top.sa13` carries this key-dependent intermediate on each active encryption round. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa13`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa13` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8724075674115211,
@@ -126,25 +90,12 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.sa20",
-    "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out",
-    "Attack Scenarios": [
-      "Observing aes_cipher_top.sa20 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
-    ],
-    "Normalized Evidence": {
-      "incremental_mutual_information": 0.8527281514185157,
-      "uop_observability": 1.0
-    },
-    "Justification": "aes_cipher_top.sa20 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa20 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.852728, uop_observability=1.",
-    "decision": "retain"
-  },
-  {
     "Name": "aes_cipher_top.sa21",
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa21 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa21 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa21`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa21` contains the byte at state position (2,1) produced from a `text_in_r` byte XORed with the matching byte of `w[1]`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa21` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa21`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa21` carries this key-dependent intermediate on each active encryption round. Cycle-aligned observations of `aes_cipher_top.sa21` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8659322860426549,
@@ -158,7 +109,8 @@
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa22 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa22 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa22`. `aes_cipher_top.sa22` contains the byte at state position (2,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa22` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa22`. `aes_cipher_top.sa22` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa22` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8658576502133549,
@@ -172,7 +124,8 @@
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa23 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa23 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "If the plaintext byte is known or chosen, reading `aes_cipher_top.sa23` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa23` contains the byte at state position (2,3) produced from a `text_in_r` byte XORed with the matching byte of `w[3]`. The candidate and asset are linked by `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa23`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "Cycle-aligned observations of `aes_cipher_top.sa23` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa23` carries this key-dependent intermediate on each active encryption round. The candidate and asset are linked by `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[3] -> aes_cipher_top.u0.wo_3 -> aes_cipher_top.w3 -> aes_cipher_top.sa23`. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.872904019146111,
@@ -186,7 +139,8 @@
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa30 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa30 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "`aes_cipher_top.sa30` contains the byte at state position (3,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. The relevant dataflow is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa30`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa30` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "`aes_cipher_top.sa30` carries this key-dependent intermediate on each active encryption round. The relevant dataflow is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa30`. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa30` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8592996506681537,
@@ -200,7 +154,8 @@
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa31 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa31 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "If the plaintext byte is known or chosen, reading `aes_cipher_top.sa31` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa31` contains the byte at state position (3,1) produced from a `text_in_r` byte XORed with the matching byte of `w[1]`. Signal propagation follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa31`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "Cycle-aligned observations of `aes_cipher_top.sa31` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa31` carries this key-dependent intermediate on each active encryption round. Signal propagation follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa31`. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8590728795728072,
@@ -210,11 +165,27 @@
     "decision": "retain"
   },
   {
+    "Name": "aes_cipher_top.u0.w[0]",
+    "threat": "information_leakage",
+    "Structural Path": "Causal influence route: key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out",
+    "Attack Scenarios": [
+      "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0]`. Top-level `ld` drives the key expander's `kld` input high at the rising `clk` edge used for key loading. The key-expansion register `aes_cipher_top.u0.w[0]` executes its load arm and captures `key[127:96]` without transformation. A scan read or internal probe of `aes_cipher_top.u0.w[0]` during or after this load obtains that 32-bit portion of the primary key directly. One quarter of the 128-bit AES key is disclosed from a single observation, and the four word registers together reveal the complete key.",
+      "RTL connectivity realizes this dependence as `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0]`. On later rising edges with `kld = 0`, the key schedule updates its word registers using XORs of prior words, `subword`, and `rcon`. `aes_cipher_top.u0.w[0]` then holds a deterministic expanded-key word and drives the corresponding `wo_0` round-key output. Observing `aes_cipher_top.u0.w[0]` over one or more expansion cycles yields round-key material; a complete round key can be inverted through the AES-128 key schedule. The original key can be reconstructed from the collected expanded words even after the direct key-load window has passed."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.5357142857142857,
+      "uop_observability": 1.0
+    },
+    "Justification": "aes_cipher_top.u0.w[0] is retained because the explicit RTL route (key -> aes_cipher_top.u0.w[0] -> round-key generation -> AddRoundKey -> AES state -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.535714, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
     "Name": "aes_cipher_top.sa32",
     "threat": "information_leakage",
     "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa32 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa32 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa32` contains the byte at state position (3,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa32` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa32`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa32` carries this key-dependent intermediate on each active encryption round. Cycle-aligned observations of `aes_cipher_top.sa32` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The supporting RTL chain is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa32`. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
       "incremental_mutual_information": 0.8660904101330569,
@@ -224,17 +195,63 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.sa33",
+    "Name": "aes_cipher_top.sa12",
     "threat": "information_leakage",
-    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out",
+    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out",
     "Attack Scenarios": [
-      "Observing aes_cipher_top.sa33 while the legal datapath follows key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out exposes a key-dependent intermediate that can be correlated with the protected key."
+      "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa12`. `aes_cipher_top.sa12` contains the byte at state position (1,2) produced from a `text_in_r` byte XORed with the matching byte of `w[2]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa12` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "The corresponding control/data route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[2] -> aes_cipher_top.u0.wo_2 -> aes_cipher_top.w2 -> aes_cipher_top.sa12`. `aes_cipher_top.sa12` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. Cycle-aligned observations of `aes_cipher_top.sa12` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
     ],
     "Normalized Evidence": {
-      "incremental_mutual_information": 0.8659336971190678,
+      "incremental_mutual_information": 0.8726203449799843,
       "uop_observability": 1.0
     },
-    "Justification": "aes_cipher_top.sa33 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa33 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.865934, uop_observability=1.",
+    "Justification": "aes_cipher_top.sa12 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa12 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.87262, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa01",
+    "threat": "information_leakage",
+    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa01` contains the byte at state position (0,1) produced from a `text_in_r` byte XORed with the matching byte of `w[1]`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa01` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa01`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa01` carries this key-dependent intermediate on each active encryption round. Cycle-aligned observations of `aes_cipher_top.sa01` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa01`. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8595860472072872,
+      "uop_observability": 1.0
+    },
+    "Justification": "aes_cipher_top.sa01 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa01 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.859586, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa11",
+    "threat": "information_leakage",
+    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. `aes_cipher_top.sa11` contains the byte at state position (1,1) produced from a `text_in_r` byte XORed with the matching byte of `w[1]`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa11` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa11`. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. `aes_cipher_top.sa11` carries this key-dependent intermediate on each active encryption round. Cycle-aligned observations of `aes_cipher_top.sa11` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[1] -> aes_cipher_top.u0.wo_1 -> aes_cipher_top.w1 -> aes_cipher_top.sa11`. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8594989739663381,
+      "uop_observability": 1.0
+    },
+    "Justification": "aes_cipher_top.sa11 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa11 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.859499, uop_observability=1.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.sa00",
+    "threat": "information_leakage",
+    "Structural Path": "Causal influence route: key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out",
+    "Attack Scenarios": [
+      "`aes_cipher_top.sa00` contains the byte at state position (0,0) produced from a `text_in_r` byte XORed with the matching byte of `w[0]`. One cycle after `ld`, `ld_r` selects the initial AddRoundKey arm for every AES state byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa00`. If the plaintext byte is known or chosen, reading `aes_cipher_top.sa00` allows the attacker to XOR away that plaintext and recover the corresponding master-key byte. The candidate therefore provides direct byte-wise key disclosure during cipher initialization.",
+      "`aes_cipher_top.sa00` carries this key-dependent intermediate on each active encryption round. After the initial load, `ld_r` is low and the same state location is updated from SubBytes/ShiftRows/MixColumns data XORed with the current expanded-key byte. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.u0.w[0] -> aes_cipher_top.u0.wo_0 -> aes_cipher_top.w0 -> aes_cipher_top.sa00`. Cycle-aligned observations of `aes_cipher_top.sa00` across chosen plaintexts reveal internal round states that can be related to the known AES transformations and candidate key hypotheses. The resulting intermediate-value oracle supports recovery of round-key bytes and, through the invertible AES-128 schedule, the primary key."
+    ],
+    "Normalized Evidence": {
+      "incremental_mutual_information": 0.8525926959651349,
+      "uop_observability": 1.0
+    },
+    "Justification": "aes_cipher_top.sa00 is retained because the explicit RTL route (key -> round key -> AddRoundKey -> aes_cipher_top.sa00 -> AES round transformations -> text_out) gives it a causal way to realize the stated threat; its normalized measurements are incremental_mutual_information=0.852593, uop_observability=1.",
     "decision": "retain"
   }
 ]

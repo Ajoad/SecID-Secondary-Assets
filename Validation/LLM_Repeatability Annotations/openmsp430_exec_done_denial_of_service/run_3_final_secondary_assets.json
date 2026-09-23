@@ -1,66 +1,10 @@
 [
   {
-    "Name": "e_state",
-    "threat": "denial_of_service",
-    "Structural Path": "Security propagation chain: e_state ⇒ execution-state decode ⇒ terminal execution phase ⇒ exec_done",
-    "Attack Scenarios": [
-      "Manipulation of e_state in a reachable operating state can divert or stall e_state -> execution-state decode -> terminal execution phase -> exec_done, leaving instructions unable to reach the exec_done service point."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.45427268129474013,
-      "service_rate_degradation": 0.9668537414965986
-    },
-    "Justification": "Selection follows from the reachable propagation chain through e_state -> execution-state decode -> terminal execution phase -> exec_done: changing or observing e_state can affect the protected behavior. Quantitative support is progress_disruption=0.454273, service_rate_degradation=0.966854.",
-    "decision": "retain"
-  },
-  {
-    "Name": "frontend_0.decode",
-    "threat": "denial_of_service",
-    "Structural Path": "Security propagation chain: frontend_0.decode ⇒ execution launch ⇒ e_state sequencing ⇒ exec_done",
-    "Attack Scenarios": [
-      "Manipulation of frontend_0.decode in a reachable operating state can divert or stall frontend_0.decode -> execution launch -> e_state sequencing -> exec_done, leaving instructions unable to reach the exec_done service point."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.4928174603174603,
-      "service_rate_degradation": 0.8633333333333333
-    },
-    "Justification": "Selection follows from the reachable propagation chain through frontend_0.decode -> execution launch -> e_state sequencing -> exec_done: changing or observing frontend_0.decode can affect the protected behavior. Quantitative support is progress_disruption=0.492817, service_rate_degradation=0.863333.",
-    "decision": "retain"
-  },
-  {
-    "Name": "decode_noirq",
-    "threat": "denial_of_service",
-    "Structural Path": "Security propagation chain: decode_noirq ⇒ qualified instruction launch ⇒ execution sequencing ⇒ exec_done",
-    "Attack Scenarios": [
-      "Manipulation of decode_noirq in a reachable operating state can divert or stall decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done, leaving instructions unable to reach the exec_done service point."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.4928174603174603,
-      "service_rate_degradation": 0.8633333333333333
-    },
-    "Justification": "Selection follows from the reachable propagation chain through decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done: changing or observing decode_noirq can affect the protected behavior. Quantitative support is progress_disruption=0.492817, service_rate_degradation=0.863333.",
-    "decision": "retain"
-  },
-  {
-    "Name": "frontend_0.e_first_state",
-    "threat": "denial_of_service",
-    "Structural Path": "Security propagation chain: frontend_0.e_first_state ⇒ first execution state ⇒ terminal-state progression ⇒ exec_done",
-    "Attack Scenarios": [
-      "Manipulation of frontend_0.e_first_state in a reachable operating state can divert or stall frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done, leaving instructions unable to reach the exec_done service point."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.1838293650793651,
-      "service_rate_degradation": 0.6305707962672249
-    },
-    "Justification": "Selection follows from the reachable propagation chain through frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done: changing or observing frontend_0.e_first_state can affect the protected behavior. Quantitative support is progress_disruption=0.183829, service_rate_degradation=0.630571.",
-    "decision": "retain"
-  },
-  {
     "Name": "frontend_0.exec_dst_wr",
     "threat": "denial_of_service",
     "Structural Path": "Security propagation chain: frontend_0.exec_dst_wr ⇒ destination-write phase ⇒ execution completion ⇒ exec_done",
     "Attack Scenarios": [
-      "Manipulation of frontend_0.exec_dst_wr in a reachable operating state can divert or stall frontend_0.exec_dst_wr -> destination-write phase -> execution completion -> exec_done, leaving instructions unable to reach the exec_done service point."
+      "`openMSP430.frontend_0.exec_dst_wr` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.exec_dst_wr -> openMSP430.frontend_0.exec_done`. For a destination-write instruction, `exec_done` is produced by `exec_dst_wr ? (e_state == E_DST_WR)`. An attacker who forces `openMSP430.frontend_0.exec_dst_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.19176915557889823,
@@ -70,39 +14,11 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.exec_src_wr",
-    "threat": "denial_of_service",
-    "Structural Path": "Security propagation chain: frontend_0.exec_src_wr ⇒ source-write phase ⇒ execution completion ⇒ exec_done",
-    "Attack Scenarios": [
-      "Manipulation of frontend_0.exec_src_wr in a reachable operating state can divert or stall frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done, leaving instructions unable to reach the exec_done service point."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.1375,
-      "service_rate_degradation": 0.5
-    },
-    "Justification": "Selection follows from the reachable propagation chain through frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done: changing or observing frontend_0.exec_src_wr can affect the protected behavior. Quantitative support is progress_disruption=0.1375, service_rate_degradation=0.5.",
-    "decision": "retain"
-  },
-  {
-    "Name": "frontend_0.inst_sext_rdy",
-    "threat": "denial_of_service",
-    "Structural Path": "Security propagation chain: inst_sext_rdy ⇒ E_SRC_AD transition ⇒ execution progress ⇒ exec_done",
-    "Attack Scenarios": [
-      "Manipulation of frontend_0.inst_sext_rdy in a reachable operating state can divert or stall inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done, leaving instructions unable to reach the exec_done service point."
-    ],
-    "Normalized Evidence": {
-      "progress_disruption": 0.2,
-      "service_rate_degradation": 0.4938979591836734
-    },
-    "Justification": "Selection follows from the reachable propagation chain through inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done: changing or observing frontend_0.inst_sext_rdy can affect the protected behavior. Quantitative support is progress_disruption=0.2, service_rate_degradation=0.493898.",
-    "decision": "retain"
-  },
-  {
     "Name": "frontend_0.e_state_nxt",
     "threat": "denial_of_service",
     "Structural Path": "Security propagation chain: frontend_0.e_state_nxt ⇒ e_state register ⇒ terminal-state comparison ⇒ exec_done",
     "Attack Scenarios": [
-      "Manipulation of frontend_0.e_state_nxt in a reachable operating state can divert or stall frontend_0.e_state_nxt -> e_state register -> terminal-state comparison -> exec_done, leaving instructions unable to reach the exec_done service point."
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_state_nxt` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_state_nxt` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.40387167366946775,
@@ -112,11 +28,53 @@
     "decision": "retain"
   },
   {
+    "Name": "frontend_0.inst_sext_rdy",
+    "threat": "denial_of_service",
+    "Structural Path": "Security propagation chain: inst_sext_rdy ⇒ E_SRC_AD transition ⇒ execution progress ⇒ exec_done",
+    "Attack Scenarios": [
+      "`openMSP430.frontend_0.inst_sext_rdy` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.inst_sext_rdy`, `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.inst_sext_rdy -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.inst_sext_rdy` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.2,
+      "service_rate_degradation": 0.4938979591836734
+    },
+    "Justification": "Selection follows from the reachable propagation chain through inst_sext_rdy -> E_SRC_AD transition -> execution progress -> exec_done: changing or observing frontend_0.inst_sext_rdy can affect the protected behavior. Quantitative support is progress_disruption=0.2, service_rate_degradation=0.493898.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.exec_src_wr",
+    "threat": "denial_of_service",
+    "Structural Path": "Security propagation chain: frontend_0.exec_src_wr ⇒ source-write phase ⇒ execution completion ⇒ exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.frontend_0.exec_src_wr` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.exec_src_wr -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_src_wr` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_dst_wr`, `openMSP430.frontend_0.exec_jmp`, `openMSP430.frontend_0.exec_src_wr`. For a source-writeback instruction, `exec_done` is produced by `exec_src_wr ? (e_state == E_SRC_WR)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1375,
+      "service_rate_degradation": 0.5
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.exec_src_wr -> source-write phase -> execution completion -> exec_done: changing or observing frontend_0.exec_src_wr can affect the protected behavior. Quantitative support is progress_disruption=0.1375, service_rate_degradation=0.5.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "Security propagation chain: frontend_0.decode ⇒ execution launch ⇒ e_state sequencing ⇒ exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.frontend_0.decode` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.decode` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.decode -> execution launch -> e_state sequencing -> exec_done: changing or observing frontend_0.decode can affect the protected behavior. Quantitative support is progress_disruption=0.492817, service_rate_degradation=0.863333.",
+    "decision": "retain"
+  },
+  {
     "Name": "frontend_0.exec_jmp",
     "threat": "denial_of_service",
     "Structural Path": "Security propagation chain: frontend_0.exec_jmp ⇒ exec_done terminal-state mux and E_EXEC/E_DST_WR transitions",
     "Attack Scenarios": [
-      "Manipulation of frontend_0.exec_jmp in a reachable operating state can divert or stall frontend_0.exec_jmp -> exec_done terminal-state mux and E_EXEC/E_DST_WR transitions, leaving instructions unable to reach the exec_done service point."
+      "The corresponding control/data route is `openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.frontend_0.exec_jmp` sets the selected completion class, execution state, or transition into the required terminal state; the implementation qualifies this propagation with `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. An attacker who forces `openMSP430.frontend_0.exec_jmp` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.15874183006535947,
@@ -126,17 +84,59 @@
     "decision": "retain"
   },
   {
+    "Name": "decode_noirq",
+    "threat": "denial_of_service",
+    "Structural Path": "Security propagation chain: decode_noirq ⇒ qualified instruction launch ⇒ execution sequencing ⇒ exec_done",
+    "Attack Scenarios": [
+      "An attacker who forces `openMSP430.decode_noirq` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. This behavior is connected through `openMSP430.decode_noirq -> openMSP430.frontend_0.decode -> openMSP430.frontend_0.exec_jmp -> openMSP430.frontend_0.exec_done`. `openMSP430.decode_noirq` sets the selected completion class, execution state, or transition into the required terminal state; the active mux/state branches are selected by `openMSP430.frontend_0.exec_jmp`. For a jump-completion instruction, `exec_done` is produced by `exec_jmp ? (e_state == E_JUMP)`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "Selection follows from the reachable propagation chain through decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done: changing or observing decode_noirq can affect the protected behavior. Quantitative support is progress_disruption=0.492817, service_rate_degradation=0.863333.",
+    "decision": "retain"
+  },
+  {
+    "Name": "e_state",
+    "threat": "denial_of_service",
+    "Structural Path": "Security propagation chain: e_state ⇒ execution-state decode ⇒ terminal execution phase ⇒ exec_done",
+    "Attack Scenarios": [
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.e_state` sets the selected completion class, execution state, or transition into the required terminal state; the transfer is guarded in the RTL by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.e_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The operative RTL path is `openMSP430.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.45427268129474013,
+      "service_rate_degradation": 0.9668537414965986
+    },
+    "Justification": "Selection follows from the reachable propagation chain through e_state -> execution-state decode -> terminal execution phase -> exec_done: changing or observing e_state can affect the protected behavior. Quantitative support is progress_disruption=0.454273, service_rate_degradation=0.966854.",
+    "decision": "retain"
+  },
+  {
     "Name": "frontend_0.exec_dext_rdy",
     "threat": "denial_of_service",
     "Structural Path": "Security propagation chain: frontend_0.exec_dext_rdy ⇒ E_DST_AD exit condition ⇒ e_state ⇒ exec_done",
     "Attack Scenarios": [
-      "Manipulation of frontend_0.exec_dext_rdy in a reachable operating state can divert or stall frontend_0.exec_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done, leaving instructions unable to reach the exec_done service point."
+      "`openMSP430.frontend_0.exec_dext_rdy` sets the selected completion class, execution state, or transition into the required terminal state; the state and data choices on this path depend on `openMSP430.frontend_0.exec_jmp`. The hardware dependence follows `openMSP430.frontend_0.exec_dext_rdy -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. An attacker who forces `openMSP430.frontend_0.exec_dext_rdy` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
     ],
     "Normalized Evidence": {
       "progress_disruption": 0.0,
       "service_rate_degradation": 0.1399416909620991
     },
     "Justification": "Selection follows from the reachable propagation chain through frontend_0.exec_dext_rdy -> E_DST_AD exit condition -> e_state -> exec_done: changing or observing frontend_0.exec_dext_rdy can affect the protected behavior. Quantitative support is progress_disruption=0, service_rate_degradation=0.139942. The quantitative evidence is weak, but the direct, condition-specific attack mechanism justifies retaining the asset.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.e_first_state",
+    "threat": "denial_of_service",
+    "Structural Path": "Security propagation chain: frontend_0.e_first_state ⇒ first execution state ⇒ terminal-state progression ⇒ exec_done",
+    "Attack Scenarios": [
+      "For a ordinary execution instruction, `exec_done` is produced by the default `(e_state == E_EXEC)` completion arm. `openMSP430.frontend_0.e_first_state` sets the selected completion class, execution state, or transition into the required terminal state; the intervening RTL assignments are qualified by `openMSP430.frontend_0.exec_jmp`. An attacker who forces `openMSP430.frontend_0.e_first_state` away from its terminal value can keep the selected predicate false on successive `mclk` cycles. The supporting RTL chain is `openMSP430.frontend_0.e_first_state -> openMSP430.frontend_0.e_state_nxt -> openMSP430.frontend_0.e_state -> openMSP430.frontend_0.exec_done`. Decode and fetch remain blocked waiting for completion, creating a persistent loss of instruction retirement."
+    ],
+    "Normalized Evidence": {
+      "progress_disruption": 0.1838293650793651,
+      "service_rate_degradation": 0.6305707962672249
+    },
+    "Justification": "Selection follows from the reachable propagation chain through frontend_0.e_first_state -> first execution state -> terminal-state progression -> exec_done: changing or observing frontend_0.e_first_state can affect the protected behavior. Quantitative support is progress_disruption=0.183829, service_rate_degradation=0.630571.",
     "decision": "retain"
   }
 ]

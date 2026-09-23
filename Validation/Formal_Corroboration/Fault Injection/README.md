@@ -23,7 +23,7 @@ different estimands and must not be interchanged.
   control signal/opportunity manifests.
 - Selected and control aggregate `per_job`, `per_signal`, and `summary` JSON/CSV
   for all 100 valid jobs.
-- Reuse-patch, comparison, aggregation, and five-seed analysis scripts.
+- Reuse-patch, comparison, and aggregation scripts used to construct the final-seven five-seed analysis.
 - Explicit selected-result provenance and separate source/public hashes.
 
 ## Sampling and inference boundary
@@ -37,3 +37,13 @@ every seed comparison.
 
 UNKNOWN outcomes remain unresolved and are never reclassified as safe. Results
 apply to the included one-cycle fault and 24-cycle observation contract.
+
+
+## A slight discrepancy with the paper
+
+Fault Injection. For CV32E40P, the 7-signal SecID cohort is compared in JasperGold FPV with 
+equal-size randomly selected structurally connected sets across five seeds. The SecID cohort achieves 
+a 100% primary-asset fault-witness yield, compared with a 17.9% mean for the random cohorts. Moreover, 
+the SecID cohort achieves a 78.6% attack-relevant semantic witness yield along the fault-propagation 
+path, versus a 17.9% random-cohort mean. These results show that the SecID-selected signals are 
+enriched in fault sites capable of corrupting the primary asset.

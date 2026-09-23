@@ -88,17 +88,6 @@
     "decision": "retain"
   },
   {
-    "Name": "frontend_0.decode",
-    "threat": "denial_of_service",
-    "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
-    "Normalized Evidence": {
-      "progress_disruption": 0.4928174603174603,
-      "service_rate_degradation": 0.8633333333333333
-    },
-    "Justification": "`frontend_0.decode` receives quantitative support through moderate progress disruption (0.4928174603174603) and strong service-rate degradation (0.8633333333333333), with service-rate loss providing the stronger indication. That profile matters in context because the signal launches decoded work into the execution state machine, linking the measurements to `exec_done`.",
-    "decision": "retain"
-  },
-  {
     "Name": "decode_noirq",
     "threat": "denial_of_service",
     "Structural Path": "decode_noirq -> qualified instruction launch -> execution sequencing -> exec_done",
@@ -107,6 +96,17 @@
       "service_rate_degradation": 0.8633333333333333
     },
     "Justification": "The normalized results distinguish `decode_noirq` through moderate progress disruption (0.4928174603174603) and strong service-rate degradation (0.8633333333333333), with service-rate loss providing the stronger indication. Its RTL role is that it qualifies instruction decoding when no interrupt supersedes the instruction; therefore, the feature evidence favors treating it as secondary to `exec_done`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "frontend_0.decode",
+    "threat": "denial_of_service",
+    "Structural Path": "frontend_0.decode -> execution launch -> e_state sequencing -> exec_done",
+    "Normalized Evidence": {
+      "progress_disruption": 0.4928174603174603,
+      "service_rate_degradation": 0.8633333333333333
+    },
+    "Justification": "`frontend_0.decode` receives quantitative support through moderate progress disruption (0.4928174603174603) and strong service-rate degradation (0.8633333333333333), with service-rate loss providing the stronger indication. That profile matters in context because the signal launches decoded work into the execution state machine, linking the measurements to `exec_done`.",
     "decision": "retain"
   },
   {

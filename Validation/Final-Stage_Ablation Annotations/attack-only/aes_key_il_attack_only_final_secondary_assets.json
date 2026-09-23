@@ -219,16 +219,6 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.us01.d",
-    "threat": "information_leakage",
-    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us01.d",
-    "Attack Scenarios": [
-      "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us01.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us01.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w1 -> aes_cipher_top.us01.a -> aes_cipher_top.us01.d`. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
-    ],
-    "Justification": "The source descriptions place `aes_cipher_top.us01.d` on an actionable route through one authoritative exploitation route. Its RTL function—where it emits the substitution result for state position (0,1)—allows the nonlinear byte remains dependent on the key-influenced round state before later rounds, so the candidate merits retention for `key`.",
-    "decision": "retain"
-  },
-  {
     "Name": "aes_cipher_top.us02.d",
     "threat": "information_leakage",
     "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us02.d",
@@ -236,6 +226,16 @@
       "The active signal route is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w2 -> aes_cipher_top.us02.a -> aes_cipher_top.us02.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us02.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us02.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
     ],
     "Justification": "A causal basis for `aes_cipher_top.us02.d` is provided by one authoritative exploitation route. This evidence leverages how the signal emits the substitution result for state position (0,2); as a result, the nonlinear byte remains dependent on the key-influenced round state before later rounds, with consequences for `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us01.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us01.d",
+    "Attack Scenarios": [
+      "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us01.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us01.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w1 -> aes_cipher_top.us01.a -> aes_cipher_top.us01.d`. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+    ],
+    "Justification": "The source descriptions place `aes_cipher_top.us01.d` on an actionable route through one authoritative exploitation route. Its RTL function—where it emits the substitution result for state position (0,1)—allows the nonlinear byte remains dependent on the key-influenced round state before later rounds, so the candidate merits retention for `key`.",
     "decision": "retain"
   },
   {
@@ -259,16 +259,6 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.us11.d",
-    "threat": "information_leakage",
-    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us11.d",
-    "Attack Scenarios": [
-      "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us11.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us11.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w1 -> aes_cipher_top.us11.a -> aes_cipher_top.us11.d`. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
-    ],
-    "Justification": "For `aes_cipher_top.us11.d`, one authoritative exploitation route shows that the signal emits the substitution result for state position (1,1). Because the nonlinear byte remains dependent on the key-influenced round state before later rounds, the documented behavior makes `aes_cipher_top.us11.d` relevant to compromise of `key`.",
-    "decision": "retain"
-  },
-  {
     "Name": "aes_cipher_top.us12.d",
     "threat": "information_leakage",
     "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us12.d",
@@ -279,13 +269,13 @@
     "decision": "retain"
   },
   {
-    "Name": "aes_cipher_top.us13.d",
+    "Name": "aes_cipher_top.us11.d",
     "threat": "information_leakage",
-    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us13.d",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us11.d",
     "Attack Scenarios": [
-      "`aes_cipher_top.us13.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w3 -> aes_cipher_top.us13.a -> aes_cipher_top.us13.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us13.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+      "During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. `aes_cipher_top.us11.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. An attacker who probes `aes_cipher_top.us11.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. The operative RTL path is `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w1 -> aes_cipher_top.us11.a -> aes_cipher_top.us11.d`. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
     ],
-    "Justification": "Mechanism evidence for `aes_cipher_top.us13.d` consists of one authoritative exploitation route. The candidate emits the substitution result for state position (1,3), so the nonlinear byte remains dependent on the key-influenced round state before later rounds; this connects `aes_cipher_top.us13.d` causally to adverse behavior of `key`.",
+    "Justification": "For `aes_cipher_top.us11.d`, one authoritative exploitation route shows that the signal emits the substitution result for state position (1,1). Because the nonlinear byte remains dependent on the key-influenced round state before later rounds, the documented behavior makes `aes_cipher_top.us11.d` relevant to compromise of `key`.",
     "decision": "retain"
   },
   {
@@ -296,6 +286,16 @@
       "`aes_cipher_top.us20.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. The implemented dependency runs through `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w0 -> aes_cipher_top.us20.a -> aes_cipher_top.us20.d`. An attacker who probes `aes_cipher_top.us20.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
     ],
     "Justification": "`aes_cipher_top.us20.d` is retained on the basis of one authoritative exploitation route. In the documented behavior it emits the substitution result for state position (2,0), and the nonlinear byte remains dependent on the key-influenced round state before later rounds, providing a direct threat-specific link to `key`.",
+    "decision": "retain"
+  },
+  {
+    "Name": "aes_cipher_top.us13.d",
+    "threat": "information_leakage",
+    "Structural Path": "key -> PDG fan-out layer 7 -> aes_cipher_top.us13.d",
+    "Attack Scenarios": [
+      "`aes_cipher_top.us13.d` is therefore a nonlinear function of a state byte that already includes AddRoundKey material. The hardware dependence follows `aes_cipher_top.key -> aes_cipher_top.u0.key -> aes_cipher_top.w3 -> aes_cipher_top.us13.a -> aes_cipher_top.us13.d`. During an active encryption round, the associated `saXY` register drives an AES S-box and this candidate carries the substituted byte before ShiftRows/MixColumns. An attacker who probes `aes_cipher_top.us13.d` for chosen or known plaintexts obtains the exact S-box intermediate normally targeted by byte-wise key-recovery attacks. Correlating the observed byte with plaintext and key hypotheses reveals the corresponding round-key byte and ultimately the master key."
+    ],
+    "Justification": "Mechanism evidence for `aes_cipher_top.us13.d` consists of one authoritative exploitation route. The candidate emits the substitution result for state position (1,3), so the nonlinear byte remains dependent on the key-influenced round state before later rounds; this connects `aes_cipher_top.us13.d` causally to adverse behavior of `key`.",
     "decision": "retain"
   },
   {
