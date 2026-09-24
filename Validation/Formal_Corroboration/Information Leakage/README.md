@@ -1,8 +1,12 @@
 # Information leakage: ten-asset repeated exclusion effort
 
-This package represents the logical `v1.3.1-reuse10` state: ten current assets,
-five baseline repeats, and five exclusion repeats per asset, for 55 runs total.
-Every run exited cleanly and returned `FLOW_FOUND`.
+This directory archives the JasperGold results used for the openMSP430
+information-leakage formal corroboration. The artifacts are provided as result
+evidence and are not intended as a self-contained reproduction environment.
+
+The archived campaign contains ten current assets, five baseline repeats, and
+five exclusion repeats per asset, for 55 runs total. Every archived run exited
+cleanly and returned `FLOW_FOUND`.
 
 ## Result
 
@@ -20,19 +24,24 @@ Every run exited cleanly and returned `FLOW_FOUND`.
 | `dbg_0.dbg_uart_0.xfer_buf_nxt` | 5/5 | 31.460 | 7.185 |
 
 The baseline median proof/search time is 4.390 s (MAD 0.080 s). Exact values,
-including all proof/wall-time MADs and paired ratios, are in `evidence/summary.json`
-and `evidence/asset_effort_summary.csv` and are recomputed by the top-level
-verifier.
+including the proof/wall-time statistics and paired ratios, are archived in
+`evidence/summary.json` and `evidence/asset_effort_summary.csv`.
 
 ## Included
 
-- Four headline files: `EFFORT_REPORT.md`, `summary.json`,
-  `asset_effort_summary.csv`, and `raw_runs.csv`.
-- For exactly the 55 current run IDs: parsed result, status, report, signoff,
-  consistency, timing, command, metadata, and exit code.
-- Current ten-asset CSV, Jasper configuration, source asset JSON, candidate
-  reference CSV, 55 portable environment-rooted generated TCL files, and the
-  original generator/parser/summarizer/validator scripts.
-- Separate original-source and sanitized-public hashes plus a complete inventory.
+- `EFFORT_REPORT.md`, `summary.json`, `asset_effort_summary.csv`, and
+  `raw_runs.csv`.
+- For each of the 55 archived runs: parsed result, status, report, signoff,
+  consistency information, timing, command, metadata, and exit code.
+- The current ten-asset configuration, Jasper configuration, source asset JSON,
+  and candidate-reference files.
 
+## Interpretation
 
+All exclusions still produce an information-flow witness, indicating the
+existence of alternative leakage paths. However, exclusion of several assets
+substantially increases JasperGold search effort. In particular,
+`dbg_0.mem_data_rd`, `dbg_0.mem_data`,
+`dbg_0.dbg_uart_0.xfer_buf_nxt`, and `dbg_reg_din` produce the largest
+increases relative to the baseline, providing formal corroboration that these
+SecID-selected assets strongly mediate the modeled leakage path.

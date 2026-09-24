@@ -1,8 +1,12 @@
 # Conclusion: UA three-candidate individual exclusion
 
+This directory archives the JasperGold results used for the NEORV32
+unauthorized-access formal corroboration. The artifacts are provided as result
+evidence and are not intended as a self-contained reproduction environment.
+
 ## Supported conclusion
 
-The original Jasper v1.1.1 campaign supports the following bounded statement:
+The archived Jasper campaign supports the following bounded statement:
 
 > Under the included post-PMP UCP attack model, semantic contexts, assumptions,
 > relational equality exclusions, and 900-cycle property construction,
@@ -14,7 +18,7 @@ The original Jasper v1.1.1 campaign supports the following bounded statement:
 The three selected-candidate outcomes are therefore two
 `NO_BYPASS_PROVEN` results and one `BYPASS_CEX` result.
 
-| Case | Candidate | Original exclusion outcome | Jasper-reported property time | Evidence completeness |
+| Case | Candidate | Individual exclusion outcome | Jasper-reported property time | Evidence completeness |
 |---|---|---|---:|---|
 | `prv_level_s0` | `neorv32_cpu_control.csr.prv_level` | `NO_BYPASS_PROVEN` | 305.610 s | `LOG_RECOVERED` |
 | `mstatus_mpp_s2` | `neorv32_cpu_control.csr.mstatus_mpp` | `NO_BYPASS_PROVEN` | 1194.927 s | `COMPLETE_EXPORTED_STATUS` |
@@ -26,13 +30,13 @@ as though they measure the same search task.
 
 ## Evidence basis
 
-For every candidate, the package contains a valid UCP bypass baseline and a
-same-trace mediated-bypass result. For the two clean individual exclusions,
-the bundled classifier re-derives the reported outcomes from exported
-`status.tsv` files.
+For every candidate, the archived results contain a valid UCP bypass baseline
+and a same-trace mediated-bypass result. For `mstatus_mpp` and
+`mstatus_mprv`, the individual-exclusion outcomes are recorded in the exported
+`status.tsv` evidence.
 
-The original `prv_level_s0` run is different. Its Jasper log contains all four
-conditions required by the exclusion classifier:
+The `prv_level_s0` exclusion run is different. Its Jasper log contains all four
+conditions supporting the archived exclusion result:
 
 1. `UA_COVER_ATTACK` was covered in 42 cycles.
 2. `UA_GOLDEN_NONVACUOUS_BY_BOUND:precondition1` was covered in 901 cycles.
@@ -40,8 +44,13 @@ conditions required by the exclusion classifier:
 4. `UA_EXCLUSION_NO_BYPASS_BY_BOUND` was proven in 305.61 seconds.
 
 The enclosing `prove -all` continued working on an auxiliary cover and the
-process later exited with code 1 before the TCL export statements ran. No
-tool-generated `status.tsv` or `report.rpt` exists for that original exclusion
-run. The package therefore retains the complete sanitized log and labels the
-outcome `LOG_RECOVERED`; it does not fabricate an exported report.
+process later exited with code 1 before the TCL export statements ran.
+Therefore, no tool-generated `status.tsv` or `report.rpt` exists for that
+individual exclusion run. The complete archived Jasper log is retained and the
+outcome is explicitly labeled `LOG_RECOVERED`; no exported report is inferred
+or fabricated.
 
+## Claim boundary
+
+These results apply only to the included post-PMP UCP model, semantic contexts,
+relational equality exclusions, and 900-cycle bound.
